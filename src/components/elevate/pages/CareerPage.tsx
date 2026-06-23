@@ -333,18 +333,15 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                 >
                   Hiring Manager
                 </div>
-                <a
-                  href="https://wa.me/923110523073"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <div
                   style={{
                     color: "var(--text)",
                     fontWeight: 600,
                     fontSize: "1.05rem",
                   }}
                 >
-                  +92 311 0523073
-                </a>
+                  Apply via WhatsApp below
+                </div>
               </div>
             </div>
 
