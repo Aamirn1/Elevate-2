@@ -1,0 +1,723 @@
+     1→"use client";
+     2→
+     3→import { useState, useRef } from "react";
+     4→import { useScrollReveal } from "../useScrollReveal";
+     5→
+     6→interface PricingPageProps {
+     7→  onNavigate: (path: string) => void;
+     8→}
+     9→
+    10→type Feature = {
+    11→  label: string;
+    12→  included: boolean;
+    13→};
+    14→
+    15→type Package = {
+    16→  id: string;
+    17→  icon: string;
+    18→  name: string;
+    19→  tagline: string;
+    20→  currency: string;
+    21→  amount: string;
+    22→  period: string;
+    23→  features: Feature[];
+    24→  featured?: boolean;
+    25→  badge?: string;
+    26→  ctaLabel: string;
+    27→  ctaHref: string;
+    28→  ctaIsAnchor?: boolean;
+    29→};
+    30→
+    31→const packages: Package[] = [
+    32→  {
+    33→    id: "standard",
+    34→    icon: "fa-rocket",
+    35→    name: "Standard Package",
+    36→    tagline:
+    37→      "Perfect for small businesses and startups looking to establish their online presence with a clean, professional website.",
+    38→    currency: "PKR",
+    39→    amount: "25k - 30k",
+    40→    period: "One-time project fee",
+    41→    features: [
+    42→      { label: "Professional website design", included: true },
+    43→      { label: "2-3 pages", included: true },
+    44→      { label: "WhatsApp redirect for checkout", included: true },
+    45→      { label: "Mobile responsive", included: true },
+    46→      { label: "Basic SEO", included: true },
+    47→      { label: "Social media links", included: true },
+    48→      { label: "Fast loading", included: true },
+    49→      { label: "Admin panel", included: false },
+    50→      { label: "User & order management", included: false },
+    51→    ],
+    52→    ctaLabel: "Get Started",
+    53→    ctaHref: "/contact",
+    54→  },
+    55→  {
+    56→    id: "professional",
+    57→    icon: "fa-crown",
+    58→    name: "Professional Package",
+    59→    tagline:
+    60→      "Our most popular package for growing businesses that need a full-featured, database-driven platform with admin controls.",
+    61→    currency: "PKR",
+    62→    amount: "40k - 50k",
+    63→    period: "One-time project fee",
+    64→    featured: true,
+    65→    badge: "Most Popular",
+    66→    features: [
+    67→      { label: "Everything in Standard", included: true },
+    68→      { label: "Multiple pages (unlimited)", included: true },
+    69→      { label: "Admin panel dashboard", included: true },
+    70→      { label: "User management", included: true },
+    71→      { label: "Order management", included: true },
+    72→      { label: "Database connected", included: true },
+    73→      { label: "Secure authentication", included: true },
+    74→      { label: "Payment integration", included: true },
+    75→      { label: "Analytics", included: true },
+    76→    ],
+    77→    ctaLabel: "Get Started",
+    78→    ctaHref: "/contact",
+    79→  },
+    80→  {
+    81→    id: "custom",
+    82→    icon: "fa-gem",
+    83→    name: "Custom Package",
+    84→    tagline:
+    85→      "Tailored solutions for enterprises and unique visions — build exactly what you need with full flexibility and support.",
+    86→    currency: "",
+    87→    amount: "Custom",
+    88→    period: "Quote based on requirements",
+    89→    features: [
+    90→      { label: "Fully customized features", included: true },
+    91→      { label: "Flexible page count", included: true },
+    92→      { label: "Custom integrations", included: true },
+    93→      { label: "Dedicated project manager", included: true },
+    94→      { label: "Priority support", included: true },
+    95→      { label: "Scalable architecture", included: true },
+    96→      { label: "Source code ownership", included: true },
+    97→      { label: "Free revisions", included: true },
+    98→      { label: "Ongoing maintenance", included: true },
+    99→    ],
+   100→    ctaLabel: "Request Custom Quote",
+   101→    ctaHref: "#custom-package",
+   102→    ctaIsAnchor: true,
+   103→  },
+   104→];
+   105→
+   106→const includedServices = [
+   107→  {
+   108→    icon: "fa-mobile-alt",
+   109→    title: "Mobile-First Design",
+   110→    desc: "Every site we build is crafted mobile-first, ensuring pixel-perfect, fluid experiences on phones, tablets, and desktops alike.",
+   111→  },
+   112→  {
+   113→    icon: "fa-bolt",
+   114→    title: "Fast Delivery",
+   115→    desc: "We move fast without cutting corners — most projects ship within agreed timelines, with weekly progress updates throughout.",
+   116→  },
+   117→  {
+   118→    icon: "fa-shield-halved",
+   119→    title: "Secure & Reliable",
+   120→    desc: "SSL, encrypted auth, and best-practice hardening baked in. Your business stays protected and your users stay safe.",
+   121→  },
+   122→  {
+   123→    icon: "fa-headset",
+   124→    title: "Dedicated Support",
+   125→    desc: "A real, responsive team that listens and stays with you long after launch. We grow alongside your business.",
+   126→  },
+   127→  {
+   128→    icon: "fa-arrows-rotate",
+   129→    title: "Free Revisions",
+   130→    desc: "We refine until it feels right. Every package includes revision rounds so the final product matches your vision.",
+   131→  },
+   132→  {
+   133→    icon: "fa-layer-group",
+   134→    title: "Modern Tech Stack",
+   135→    desc: "Next.js, TypeScript, Prisma, and Tailwind — modern, scalable foundations that are fast, maintainable, and future-proof.",
+   136→  },
+   137→];
+   138→
+   139→const customFeatures = [
+   140→  "Website Design",
+   141→  "E-commerce Store",
+   142→  "Admin Panel",
+   143→  "Database Integration",
+   144→  "User Authentication",
+   145→  "Payment Gateway",
+   146→  "API Development",
+   147→  "Mobile App",
+   148→  "SEO Optimization",
+   149→  "Digital Marketing",
+   150→  "Social Media Management",
+   151→  "AI Chatbot",
+   152→  "WhatsApp Integration",
+   153→  "Multi-language Support",
+   154→];
+   155→
+   156→const timelineOptions = [
+   157→  { value: "asap", label: "ASAP (Rush)" },
+   158→  { value: "1-2-weeks", label: "1 - 2 Weeks" },
+   159→  { value: "3-4-weeks", label: "3 - 4 Weeks" },
+   160→  { value: "1-2-months", label: "1 - 2 Months" },
+   161→  { value: "3+months", label: "3+ Months" },
+   162→  { value: "flexible", label: "Flexible / Not Sure" },
+   163→];
+   164→
+   165→const faqs = [
+   166→  {
+   167→    icon: "fa-circle-question",
+   168→    q: "What's the difference between the Standard and Professional packages?",
+   169→    a: "The Standard package is a static, multi-page informational site with WhatsApp checkout redirects — perfect for establishing an online presence. The Professional package adds a full admin dashboard, user and order management, a connected database, secure authentication, payment integration, and analytics — ideal for businesses that need to manage operations online.",
+   170→  },
+   171→  {
+   172→    icon: "fa-clock",
+   173→    q: "How long does a typical project take?",
+   174→    a: "Standard packages usually take 5–10 business days, while Professional packages take 2–4 weeks depending on complexity. Custom projects vary based on scope, but we always agree on a clear timeline upfront and provide weekly progress updates so you're never in the dark.",
+   175→  },
+   176→  {
+   177→    icon: "fa-money-bill-wave",
+   178→    q: "Do you require payment upfront?",
+   179→    a: "We typically work on a 50% advance / 50% on delivery model. For larger custom projects, we can split payments into milestones tied to deliverables. This keeps things fair, transparent, and low-risk for both sides.",
+   180→  },
+   181→  {
+   182→    icon: "fa-code",
+   183→    q: "Do I own the source code?",
+   184→    a: "Yes — especially with the Custom package, you receive full source code ownership. For Standard and Professional packages, you own the deployed project and all final assets. We retain rights only to reusable internal libraries.",
+   185→  },
+   186→  {
+   187→    icon: "fa-pen-ruler",
+   188→    q: "How many revisions are included?",
+   189→    a: "Every package includes free revision rounds during the design and development phases. Standard includes 2 rounds, Professional includes 4 rounds, and Custom packages offer unlimited revisions during active sprints. Additional post-launch changes can be handled via a maintenance plan.",
+   190→  },
+   191→  {
+   192→    icon: "fa-handshake",
+   193→    q: "What if I'm not sure which package fits my business?",
+   194→    a: "No problem! Reach out via WhatsApp or fill out the Custom Package form above with your goals and budget. We'll review your requirements and recommend the most cost-effective package for your needs — no pressure, no obligation.",
+   195→  },
+   196→];
+   197→
+   198→export function PricingPage({ onNavigate }: PricingPageProps) {
+   199→  useScrollReveal();
+   200→
+   201→  const formRef = useRef<HTMLFormElement>(null);
+   202→  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+   203→  const [submitting, setSubmitting] = useState(false);
+   204→  const [success, setSuccess] = useState(false);
+   205→  const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
+   206→
+   207→  const toggleFeature = (feature: string) => {
+   208→    setSelectedFeatures((prev) =>
+   209→      prev.includes(feature)
+   210→        ? prev.filter((f) => f !== feature)
+   211→        : [...prev, feature]
+   212→    );
+   213→  };
+   214→
+   215→  const scrollToCustomPackage = (e: React.MouseEvent) => {
+   216→    e.preventDefault();
+   217→    const el = document.getElementById("custom-package");
+   218→    if (el) {
+   219→      el.scrollIntoView({ behavior: "smooth", block: "start" });
+   220→    }
+   221→  };
+   222→
+   223→  const handleSubmit = async (e: React.FormEvent) => {
+   224→    e.preventDefault();
+   225→    const form = formRef.current;
+   226→    if (!form) return;
+   227→
+   228→    const formData = new FormData(form);
+   229→    const name = (formData.get("name") as string)?.trim();
+   230→    const email = (formData.get("email") as string)?.trim();
+   231→    const budget = (formData.get("budget") as string)?.trim();
+   232→    const timelineRaw = (formData.get("timeline") as string) || "";
+   233→    const timelineLabel =
+   234→      timelineOptions.find((t) => t.value === timelineRaw)?.label || timelineRaw;
+   235→    const details = (formData.get("details") as string)?.trim();
+   236→
+   237→    // Validation
+   238→    const errors: Record<string, boolean> = {};
+   239→    if (!name) errors.name = true;
+   240→    if (!email) errors.email = true;
+   241→    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) errors.email = true;
+   242→    if (!details) errors.details = true;
+   243→    if (selectedFeatures.length === 0) errors.features = true;
+   244→    setFieldErrors(errors);
+   245→    if (Object.keys(errors).length > 0) return;
+   246→
+   247→    setSubmitting(true);
+   248→
+   249→    try {
+   250→      const composedMessage =
+   251→        `--- Custom Package Request ---\n` +
+   252→        `Selected Features: ${
+   253→          selectedFeatures.length > 0 ? selectedFeatures.join(", ") : "None"
+   254→        }\n` +
+   255→        `Budget: ${budget || "Not specified"}\n` +
+   256→        `Timeline: ${timelineLabel || "Not specified"}\n\n` +
+   257→        `Project Details:\n${details}`;
+   258→
+   259→      const orderData = {
+   260→        client_name: name,
+   261→        client_email: email,
+   262→        invite_code: null,
+   263→        status: "pending",
+   264→        business_type: "custom-package",
+   265→        services: selectedFeatures.join(","),
+   266→        budget: budget || null,
+   267→        message: composedMessage,
+   268→      };
+   269→
+   270→      const res = await fetch("/api/orders", {
+   271→        method: "POST",
+   272→        headers: { "Content-Type": "application/json" },
+   273→        body: JSON.stringify(orderData),
+   274→      });
+   275→
+   276→      if (!res.ok) throw new Error("Failed to submit order");
+   277→      setSuccess(true);
+   278→      setTimeout(() => {
+   279→        window.scrollTo({ top: 0, behavior: "smooth" });
+   280→      }, 100);
+   281→    } catch (error) {
+   282→      console.error("FAILED...", error);
+   283→      alert(
+   284→        "Oops! Failed to submit your custom package request. Please try again later or reach us on WhatsApp."
+   285→      );
+   286→      setSubmitting(false);
+   287→    }
+   288→  };
+   289→
+   290→  if (success) {
+   291→    return (
+   292→      <section
+   293→        className="hero"
+   294→        style={{ minHeight: "70vh", padding: "160px 0 60px" }}
+   295→      >
+   296→        <div className="hero-bg">
+   297→          <div className="hero-shape hero-shape-1"></div>
+   298→          <div className="hero-shape hero-shape-2"></div>
+   299→          <div className="hero-grid"></div>
+   300→        </div>
+   301→        <div className="container">
+   302→          <div
+   303→            className="hero-content"
+   304→            style={{ textAlign: "center", maxWidth: "640px", margin: "0 auto" }}
+   305→          >
+   306→            <i
+   307→              className="fas fa-check-circle"
+   308→              style={{
+   309→                fontSize: "3.5rem",
+   310→                color: "var(--primary)",
+   311→                marginBottom: "20px",
+   312→                display: "block",
+   313→              }}
+   314→            ></i>
+   315→            <h1 style={{ marginBottom: "12px" }}>Request Received!</h1>
+   316→            <p style={{ color: "var(--text-muted)", fontSize: "1.05rem" }}>
+   317→              Thank you for your interest in a Custom Package. Our team will
+   318→              review your requirements and reach out within 24 hours with a
+   319→              tailored proposal.
+   320→            </p>
+   321→            <div
+   322→              style={{
+   323→                marginTop: "32px",
+   324→                display: "flex",
+   325→                gap: "16px",
+   326→                justifyContent: "center",
+   327→                flexWrap: "wrap",
+   328→              }}
+   329→            >
+   330→              <a
+   331→                href="https://wa.me/923205719979"
+   332→                target="_blank"
+   333→                rel="noopener noreferrer"
+   334→                className="btn btn-primary btn-pulse"
+   335→                style={{ background: "#25D366" }}
+   336→              >
+   337→                <i className="fab fa-whatsapp"></i> Chat on WhatsApp
+   338→              </a>
+   339→              <a
+   340→                href="#/"
+   341→                className="btn btn-outline"
+   342→                onClick={(e) => {
+   343→                  e.preventDefault();
+   344→                  onNavigate("/");
+   345→                }}
+   346→              >
+   347→                <i className="fas fa-home"></i> Back to Home
+   348→              </a>
+   349→            </div>
+   350→          </div>
+   351→        </div>
+   352→      </section>
+   353→    );
+   354→  }
+   355→
+   356→  return (
+   357→    <>
+   358→      {/* Hero */}
+   359→      <section
+   360→        className="hero"
+   361→        style={{ minHeight: "50vh", padding: "160px 0 60px" }}
+   362→      >
+   363→        <div className="hero-bg">
+   364→          <div className="hero-shape hero-shape-1"></div>
+   365→          <div className="hero-shape hero-shape-2"></div>
+   366→          <div className="hero-grid"></div>
+   367→        </div>
+   368→        <div className="container">
+   369→          <div className="hero-content">
+   370→            <div className="hero-badge">
+   371→              <i className="fas fa-tag"></i> Our Pricing
+   372→            </div>
+   373→            <h1>
+   374→              <span className="gradient-text">Transparent Pricing</span>
+   375→              <br />
+   376→              for Every Business
+   377→            </h1>
+   378→            <p className="hero-sub">
+   379→              No hidden fees, no surprises. Pick a package that fits your goals
+   380→              today, and scale effortlessly as your business grows.
+   381→            </p>
+   382→          </div>
+   383→        </div>
+   384→      </section>
+   385→
+   386→      {/* Pricing Cards */}
+   387→      <section className="pricing-section">
+   388→        <div className="container">
+   389→          <div className="section-header reveal">
+   390→            <h2>
+   391→              Choose Your <span className="gradient-text">Package</span>
+   392→            </h2>
+   393→            <p>
+   394→              Three flexible options designed for businesses at every stage —
+   395→              from first website to full custom platform.
+   396→            </p>
+   397→          </div>
+   398→          <div className="pricing-grid">
+   399→            {packages.map((pkg, i) => (
+   400→              <div
+   401→                className={`pricing-card reveal${pkg.featured ? " featured" : ""}`}
+   402→                key={pkg.id}
+   403→                style={{
+   404→                  transitionDelay: `${i * 80}ms`,
+   405→                  marginTop: pkg.featured ? "0px" : undefined,
+   406→                }}
+   407→              >
+   408→                {pkg.badge && <div className="pricing-badge">{pkg.badge}</div>}
+   409→                <div className="pricing-icon">
+   410→                  <i className={`fas ${pkg.icon}`}></i>
+   411→                </div>
+   412→                <h3>{pkg.name}</h3>
+   413→                <p className="pricing-tagline">{pkg.tagline}</p>
+   414→                <div className="pricing-price">
+   415→                  {pkg.currency && (
+   416→                    <span className="currency">{pkg.currency}</span>
+   417→                  )}
+   418→                  <span className="amount">{pkg.amount}</span>
+   419→                  <span className="period">{pkg.period}</span>
+   420→                </div>
+   421→                <ul className="pricing-features">
+   422→                  {pkg.features.map((f, j) => (
+   423→                    <li
+   424→                      key={j}
+   425→                      className={f.included ? "" : "disabled"}
+   426→                    >
+   427→                      <i
+   428→                        className={`fas ${f.included ? "fa-check-circle" : "fa-times-circle"}`}
+   429→                      ></i>
+   430→                      <span>{f.label}</span>
+   431→                    </li>
+   432→                  ))}
+   433→                </ul>
+   434→                {pkg.ctaIsAnchor ? (
+   435→                  <a
+   436→                    href={pkg.ctaHref}
+   437→                    className="btn btn-outline pricing-cta"
+   438→                    onClick={scrollToCustomPackage}
+   439→                  >
+   440→                    <i className="fas fa-arrow-right"></i> {pkg.ctaLabel}
+   441→                  </a>
+   442→                ) : (
+   443→                  <a
+   444→                    href={`#${pkg.ctaHref}`}
+   445→                    className={`btn pricing-cta ${
+   446→                      pkg.featured ? "btn-primary btn-pulse" : "btn-outline"
+   447→                    }`}
+   448→                    onClick={(e) => {
+   449→                      e.preventDefault();
+   450→                      onNavigate(pkg.ctaHref);
+   451→                    }}
+   452→                  >
+   453→                    <i className="fas fa-arrow-right"></i> {pkg.ctaLabel}
+   454→                  </a>
+   455→                )}
+   456→              </div>
+   457→            ))}
+   458→          </div>
+   459→        </div>
+   460→      </section>
+   461→
+   462→      {/* What's Included */}
+   463→      <section className="services-section">
+   464→        <div className="container">
+   465→          <div className="section-header reveal">
+   466→            <h2>
+   467→              What&apos;s <span className="gradient-text">Included?</span>
+   468→            </h2>
+   469→            <p>
+   470→              Every package — Standard, Professional, or Custom — comes packed
+   471→              with these essentials to ensure your project succeeds.
+   472→            </p>
+   473→          </div>
+   474→          <div className="services-grid">
+   475→            {includedServices.map((s, i) => (
+   476→              <div
+   477→                className="service-card reveal"
+   478→                key={i}
+   479→                style={{ transitionDelay: `${i * 60}ms` }}
+   480→              >
+   481→                <div className="service-icon">
+   482→                  <i className={`fas ${s.icon}`}></i>
+   483→                </div>
+   484→                <h3>{s.title}</h3>
+   485→                <p>{s.desc}</p>
+   486→              </div>
+   487→            ))}
+   488→          </div>
+   489→        </div>
+   490→      </section>
+   491→
+   492→      {/* Custom Package Form */}
+   493→      <section
+   494→        className="custom-package-section"
+   495→        id="custom-package"
+   496→      >
+   497→        <div className="container">
+   498→          <div className="section-header reveal">
+   499→            <h2>
+   500→              Build Your <span className="gradient-text">Custom Package</span>
+   501→            </h2>
+   502→            <p>
+   503→              Select the features you need, share your budget and timeline, and
+   504→              our team will craft a tailored proposal just for you.
+   505→            </p>
+   506→          </div>
+   507→
+   508→          <div className="custom-package-card reveal">
+   509→            <form ref={formRef} onSubmit={handleSubmit} noValidate>
+   510→              {/* Feature chips */}
+   511→              <div className="form-group">
+   512→                <label
+   513→                  htmlFor="features-chips"
+   514→                  style={{
+   515→                    display: "block",
+   516→                    marginBottom: "10px",
+   517→                    color: "var(--text)",
+   518→                    fontWeight: 600,
+   519→                  }}
+   520→                >
+   521→                  Select Features{" "}
+   522→                  <span style={{ color: "var(--primary)" }}>*</span>
+   523→                </label>
+   524→                <div className="feature-chips" id="features-chips">
+   525→                  {customFeatures.map((feature) => {
+   526→                    const selected = selectedFeatures.includes(feature);
+   527→                    return (
+   528→                      <div
+   529→                        key={feature}
+   530→                        className={`feature-chip${selected ? " selected" : ""}`}
+   531→                        onClick={() => toggleFeature(feature)}
+   532→                        role="button"
+   533→                        tabIndex={0}
+   534→                        onKeyDown={(e) => {
+   535→                          if (e.key === "Enter" || e.key === " ") {
+   536→                            e.preventDefault();
+   537→                            toggleFeature(feature);
+   538→                          }
+   539→                        }}
+   540→                      >
+   541→                        <i
+   542→                          className={`fas ${selected ? "fa-check" : "fa-plus"}`}
+   543→                        ></i>
+   544→                        {feature}
+   545→                      </div>
+   546→                    );
+   547→                  })}
+   548→                </div>
+   549→                {fieldErrors.features && (
+   550→                  <p
+   551→                    style={{
+   552→                      color: "#e74c3c",
+   553→                      fontSize: "0.8rem",
+   554→                      marginTop: "8px",
+   555→                    }}
+   556→                  >
+   557→                    Please select at least one feature.
+   558→                  </p>
+   559→                )}
+   560→              </div>
+   561→
+   562→              {/* Name + Email row */}
+   563→              <div
+   564→                style={{
+   565→                  display: "grid",
+   566→                  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+   567→                  gap: "18px",
+   568→                }}
+   569→              >
+   570→                <div className="form-group">
+   571→                  <label htmlFor="cp-name">Your Name</label>
+   572→                  <input
+   573→                    type="text"
+   574→                    id="cp-name"
+   575→                    name="name"
+   576→                    placeholder="John Doe"
+   577→                    style={
+   578→                      fieldErrors.name ? { borderColor: "#e74c3c" } : {}
+   579→                    }
+   580→                  />
+   581→                </div>
+   582→                <div className="form-group">
+   583→                  <label htmlFor="cp-email">Email Address</label>
+   584→                  <input
+   585→                    type="email"
+   586→                    id="cp-email"
+   587→                    name="email"
+   588→                    placeholder="john@example.com"
+   589→                    style={
+   590→                      fieldErrors.email ? { borderColor: "#e74c3c" } : {}
+   591→                    }
+   592→                  />
+   593→                </div>
+   594→              </div>
+   595→
+   596→              {/* Budget + Timeline row */}
+   597→              <div
+   598→                style={{
+   599→                  display: "grid",
+   600→                  gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+   601→                  gap: "18px",
+   602→                }}
+   603→              >
+   604→                <div className="form-group">
+   605→                  <label htmlFor="cp-budget">
+   606→                    Estimated Budget{" "}
+   607→                    <span style={{ color: "var(--text-muted)" }}>
+   608→                      (optional)
+   609→                    </span>
+   610→                  </label>
+   611→                  <input
+   612→                    type="text"
+   613→                    id="cp-budget"
+   614→                    name="budget"
+   615→                    placeholder="e.g. 60k - 80k PKR"
+   616→                  />
+   617→                </div>
+   618→                <div className="form-group">
+   619→                  <label htmlFor="cp-timeline">Project Timeline</label>
+   620→                  <select id="cp-timeline" name="timeline" defaultValue="">
+   621→                    <option value="" disabled>
+   622→                      Select timeline...
+   623→                    </option>
+   624→                    {timelineOptions.map((t) => (
+   625→                      <option key={t.value} value={t.value}>
+   626→                        {t.label}
+   627→                      </option>
+   628→                    ))}
+   629→                  </select>
+   630→                </div>
+   631→              </div>
+   632→
+   633→              {/* Project details */}
+   634→              <div className="form-group">
+   635→                <label htmlFor="cp-details">
+   636→                  Project Details{" "}
+   637→                  <span style={{ color: "var(--primary)" }}>*</span>
+   638→                </label>
+   639→                <textarea
+   640→                  id="cp-details"
+   641→                  name="details"
+   642→                  rows={5}
+   643→                  placeholder="Describe your project goals, target audience, reference websites, must-have features, or any specific instructions..."
+   644→                  style={
+   645→                    fieldErrors.details ? { borderColor: "#e74c3c" } : {}
+   646→                  }
+   647→                ></textarea>
+   648→              </div>
+   649→
+   650→              <button
+   651→                type="submit"
+   652→                className="btn btn-primary btn-pulse form-submit"
+   653→                disabled={submitting}
+   654→                style={{ width: "100%", justifyContent: "center" }}
+   655→              >
+   656→                {submitting ? (
+   657→                  <>
+   658→                    <i className="fas fa-spinner fa-spin"></i> Submitting...
+   659→                  </>
+   660→                ) : (
+   661→                  <>
+   662→                    <i className="fas fa-paper-plane"></i> Request Custom Quote
+   663→                  </>
+   664→                )}
+   665→              </button>
+   666→            </form>
+   667→          </div>
+   668→        </div>
+   669→      </section>
+   670→
+   671→      {/* FAQ Section */}
+   672→      <section className="why-us-section">
+   673→        <div className="container">
+   674→          <div className="section-header reveal">
+   675→            <h2>
+   676→              Frequently Asked <span className="gradient-text">Questions</span>
+   677→            </h2>
+   678→            <p>
+   679→              Everything you need to know about our packages, process, and
+   680→              policies. Still curious? Reach out anytime.
+   681→            </p>
+   682→          </div>
+   683→          <div className="why-us-grid">
+   684→            {faqs.map((faq, i) => (
+   685→              <div
+   686→                className="why-us-card reveal"
+   687→                key={i}
+   688→                style={{ transitionDelay: `${i * 60}ms` }}
+   689→              >
+   690→                <div className="why-us-icon">
+   691→                  <i className={`fas ${faq.icon}`}></i>
+   692→                </div>
+   693→                <h3>{faq.q}</h3>
+   694→                <p>{faq.a}</p>
+   695→              </div>
+   696→            ))}
+   697→          </div>
+   698→        </div>
+   699→      </section>
+   700→
+   701→      {/* CTA Section */}
+   702→      <section className="cta-section">
+   703→        <div className="container reveal">
+   704→          <h2>Still Deciding? Let&apos;s Talk.</h2>
+   705→          <p>
+   706→            Chat with our team on WhatsApp for a free consultation — we&apos;ll
+   707→            help you pick the perfect package for your business goals.
+   708→          </p>
+   709→          <a
+   710→            href="https://wa.me/923205719979"
+   711→            target="_blank"
+   712→            rel="noopener noreferrer"
+   713→            className="btn btn-primary btn-pulse"
+   714→            style={{ background: "#25D366" }}
+   715→          >
+   716→            <i className="fab fa-whatsapp"></i> Message Us on WhatsApp
+   717→          </a>
+   718→        </div>
+   719→      </section>
+   720→    </>
+   721→  );
+   722→}
+   723→

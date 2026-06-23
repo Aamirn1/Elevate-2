@@ -1,0 +1,727 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useState } from "react";
+     4→import { useScrollReveal } from "../useScrollReveal";
+     5→
+     6→interface Partner {
+     7→  id: number;
+     8→  contactInfo: string;
+     9→  inviteCode: string;
+    10→  createdAt: string;
+    11→  referralCount?: number;
+    12→}
+    13→
+    14→interface CareerPageProps {
+    15→  onNavigate: (path: string) => void;
+    16→}
+    17→
+    18→export function CareerPage({ onNavigate }: CareerPageProps) {
+    19→  useScrollReveal();
+    20→  const [isSignupMode, setIsSignupMode] = useState(true);
+    21→  const [contactInput, setContactInput] = useState("");
+    22→  const [submitting, setSubmitting] = useState(false);
+    23→  const [partner, setPartner] = useState<Partner | null>(null);
+    24→  const [error, setError] = useState("");
+    25→  const [updateContact, setUpdateContact] = useState("");
+    26→  const [updating, setUpdating] = useState(false);
+    27→
+    28→  // Auto-login from localStorage
+    29→  useEffect(() => {
+    30→    const savedContact = localStorage.getItem("partner_contact");
+    31→    if (savedContact) {
+    32→      autoLogin(savedContact);
+    33→    }
+    34→  }, []);
+    35→
+    36→  const autoLogin = async (contact: string) => {
+    37→    try {
+    38→      const res = await fetch(
+    39→        `/api/partners/${encodeURIComponent(contact)}?by=contact`
+    40→      );
+    41→      if (res.ok) {
+    42→        const data = await res.json();
+    43→        showDashboard(data);
+    44→      }
+    45→    } catch (e) {
+    46→      console.error("Auto-login failed", e);
+    47→    }
+    48→  };
+    49→
+    50→  const showDashboard = (p: Partner) => {
+    51→    setPartner(p);
+    52→    setUpdateContact(p.contactInfo);
+    53→    localStorage.setItem("partner_contact", p.contactInfo);
+    54→  };
+    55→
+    56→  const handleLogout = () => {
+    57→    localStorage.removeItem("partner_contact");
+    58→    setPartner(null);
+    59→    setContactInput("");
+    60→  };
+    61→
+    62→  const handleSubmit = async (e: React.FormEvent) => {
+    63→    e.preventDefault();
+    64→    const contact = contactInput.trim();
+    65→    if (!contact) return;
+    66→
+    67→    // Super Admin Backdoor
+    68→    if (contact === "16609123456789") {
+    69→      localStorage.setItem("admin_logged_in", "true");
+    70→      onNavigate("/admin");
+    71→      return;
+    72→    }
+    73→
+    74→    setSubmitting(true);
+    75→    setError("");
+    76→
+    77→    try {
+    78→      const res = await fetch("/api/partners", {
+    79→        method: "POST",
+    80→        headers: { "Content-Type": "application/json" },
+    81→        body: JSON.stringify({
+    82→          contact_info: contact,
+    83→          mode: isSignupMode ? "signup" : "signin",
+    84→        }),
+    85→      });
+    86→
+    87→      const data = await res.json();
+    88→
+    89→      if (!res.ok) {
+    90→        setError(data.error || "An error occurred.");
+    91→        setSubmitting(false);
+    92→        return;
+    93→      }
+    94→
+    95→      showDashboard(data);
+    96→    } catch (err) {
+    97→      console.error("Portal Error:", err);
+    98→      setError("An error occurred. Check your connection.");
+    99→    } finally {
+   100→      setSubmitting(false);
+   101→    }
+   102→  };
+   103→
+   104→  const handleUpdateContact = async () => {
+   105→    if (!partner || !updateContact.trim()) return;
+   106→    setUpdating(true);
+   107→    try {
+   108→      const res = await fetch(`/api/partners/${partner.id}`, {
+   109→        method: "PUT",
+   110→        headers: { "Content-Type": "application/json" },
+   111→        body: JSON.stringify({ contact_info: updateContact.trim() }),
+   112→      });
+   113→      if (!res.ok) {
+   114→        alert("Failed to update. Contact info might be taken.");
+   115→        return;
+   116→      }
+   117→      const updated = await res.json();
+   118→      alert("Contact info updated successfully for Profit Sharing!");
+   119→      localStorage.setItem("partner_contact", updated.contactInfo);
+   120→      setPartner({ ...partner, contactInfo: updated.contactInfo });
+   121→    } catch (err) {
+   122→      alert("Failed to update. Contact info might be taken.");
+   123→    } finally {
+   124→      setUpdating(false);
+   125→    }
+   126→  };
+   127→
+   128→  return (
+   129→    <>
+   130→      <section
+   131→        className="hero"
+   132→        style={{ minHeight: "50vh", padding: "160px 0 60px" }}
+   133→      >
+   134→        <div className="hero-bg">
+   135→          <div className="hero-shape hero-shape-1"></div>
+   136→          <div className="hero-shape hero-shape-2"></div>
+   137→          <div className="hero-grid"></div>
+   138→        </div>
+   139→        <div className="container">
+   140→          <div className="hero-content">
+   141→            <div className="hero-badge">
+   142→              <i className="fas fa-briefcase"></i> Join Our Mission
+   143→            </div>
+   144→            <h1>
+   145→              <span className="gradient-text">Build Your Career</span>
+   146→              <br />
+   147→              With ElevateEdge
+   148→            </h1>
+   149→            <p className="hero-sub">
+   150→              Become a strategic partner and earn by connecting businesses with
+   151→              premium digital solutions. No technical skills required — just
+   152→              your passion for growth.
+   153→            </p>
+   154→          </div>
+   155→        </div>
+   156→      </section>
+   157→
+   158→      {!partner && (
+   159→        <section
+   160→          className="career-model-section career-section contact-section"
+   161→          style={{
+   162→            background:
+   163→              "linear-gradient(180deg, rgba(168, 85, 247,0.04) 0%, var(--bg) 100%)",
+   164→            borderTop: "1px solid rgba(168, 85, 247,0.15)",
+   165→            borderBottom: "1px solid rgba(168, 85, 247,0.15)",
+   166→          }}
+   167→        >
+   168→          <div className="container">
+   169→            <div
+   170→              className="section-header reveal"
+   171→              style={{ marginBottom: "40px" }}
+   172→            >
+   173→              <h2>
+   174→                Partner <span className="gradient-text">Portal</span>
+   175→              </h2>
+   176→              <p>
+   177→                Generate your unique Invitation Code or login to view your
+   178→                referrals and step-by-step guidance.
+   179→              </p>
+   180→            </div>
+   181→
+   182→            <div className="contact-grid">
+   183→              <div className="contact-form reveal-left">
+   184→                <h3
+   185→                  id="portal-form-title"
+   186→                  style={{ marginBottom: "24px", fontSize: "1.3rem" }}
+   187→                >
+   188→                  <i
+   189→                    className="fas fa-user-plus"
+   190→                    style={{ color: "var(--primary)", marginRight: "10px" }}
+   191→                  ></i>
+   192→                  {isSignupMode ? "Partner Signup" : "Partner Sign In"}
+   193→                </h3>
+   194→                <form onSubmit={handleSubmit}>
+   195→                  <div className="form-group">
+   196→                    <label id="contact-label" htmlFor="p-contact">
+   197→                      {isSignupMode
+   198→                        ? "WhatsApp or LinkedIn (For Signup)"
+   199→                        : "Enter Registered WhatsApp or LinkedIn"}
+   200→                    </label>
+   201→                    <input
+   202→                      type="text"
+   203→                      id="p-contact"
+   204→                      placeholder="e.g. +923001234567 or linkedin.com/in/johndoe"
+   205→                      value={contactInput}
+   206→                      onChange={(e) => setContactInput(e.target.value)}
+   207→                      required
+   208→                    />
+   209→                  </div>
+   210→                  {error && (
+   211→                    <p
+   212→                      style={{
+   213→                        color: "#e74c3c",
+   214→                        fontSize: "0.85rem",
+   215→                        marginBottom: "12px",
+   216→                      }}
+   217→                    >
+   218→                      {error}
+   219→                    </p>
+   220→                  )}
+   221→                  <div
+   222→                    className="form-group"
+   223→                    style={{
+   224→                      background: "rgba(168, 85, 247, 0.05)",
+   225→                      padding: "15px",
+   226→                      borderRadius: "var(--radius-md)",
+   227→                      border: "1px dashed rgba(168, 85, 247, 0.3)",
+   228→                    }}
+   229→                  >
+   230→                    <p
+   231→                      id="portal-info-text"
+   232→                      style={{
+   233→                        fontSize: "0.85rem",
+   234→                        color: "#a0a0a0",
+   235→                        margin: 0,
+   236→                        lineHeight: 1.5,
+   237→                      }}
+   238→                    >
+   239→                      <i
+   240→                        className={`fas ${
+   241→                          isSignupMode ? "fa-info-circle" : "fa-key"
+   242→                        }`}
+   243→                        style={{ color: "var(--primary)", marginRight: "6px" }}
+   244→                      ></i>
+   245→                      {isSignupMode
+   246→                        ? " We will generate a unique Invitation Code for you. Our team will only contact you for payment on "
+   247→                        : " Use your registered contact info to access your Invitation Code and track referrals."}
+   248→                      {isSignupMode && (
+   249→                        <strong style={{ color: "#fff" }}>completed</strong>
+   250→                      )}
+   251→                      {isSignupMode && " orders."}
+   252→                    </p>
+   253→                  </div>
+   254→                  <button
+   255→                    type="submit"
+   256→                    id="portal-submit-btn"
+   257→                    className="btn btn-primary btn-pulse form-submit"
+   258→                    style={{ width: "100%" }}
+   259→                    disabled={submitting}
+   260→                  >
+   261→                    {submitting ? (
+   262→                      <>
+   263→                        <i className="fas fa-spinner fa-spin"></i> Processing...
+   264→                      </>
+   265→                    ) : isSignupMode ? (
+   266→                      <>
+   267→                        <i className="fas fa-rocket"></i> Access Portal
+   268→                      </>
+   269→                    ) : (
+   270→                      <>
+   271→                        <i className="fas fa-sign-in-alt"></i> Sign In to Portal
+   272→                      </>
+   273→                    )}
+   274→                  </button>
+   275→
+   276→                  <div style={{ marginTop: "20px", textAlign: "center" }}>
+   277→                    <p
+   278→                      style={{
+   279→                        fontSize: "0.9rem",
+   280→                        color: "var(--text-muted)",
+   281→                      }}
+   282→                    >
+   283→                      <span id="portal-toggle-msg">
+   284→                        {isSignupMode
+   285→                          ? "Already have an account?"
+   286→                          : "Don't have an account?"}
+   287→                      </span>
+   288→                      <a
+   289→                        href="javascript:void(0)"
+   290→                        id="portal-toggle-btn"
+   291→                        style={{
+   292→                          color: "var(--primary)",
+   293→                          fontWeight: 600,
+   294→                          textDecoration: "none",
+   295→                          marginLeft: "5px",
+   296→                          cursor: "pointer",
+   297→                        }}
+   298→                        onClick={(e) => {
+   299→                          e.preventDefault();
+   300→                          setIsSignupMode(!isSignupMode);
+   301→                          setError("");
+   302→                        }}
+   303→                      >
+   304→                        {isSignupMode ? "Sign In" : "Sign Up"}
+   305→                      </a>
+   306→                    </p>
+   307→                  </div>
+   308→                </form>
+   309→              </div>
+   310→
+   311→              <div className="contact-info reveal-right">
+   312→                <div className="contact-card">
+   313→                  <div className="icon-box">
+   314→                    <i className="fas fa-rocket"></i>
+   315→                  </div>
+   316→                  <div>
+   317→                    <h4>Zero Upfront Cost</h4>
+   318→                    <p>
+   319→                      No investment needed. Just share our portfolio and start
+   320→                      earning commissions immediately.
+   321→                    </p>
+   322→                  </div>
+   323→                </div>
+   324→                <div className="contact-card">
+   325→                  <div className="icon-box">
+   326→                    <i className="fas fa-wallet"></i>
+   327→                  </div>
+   328→                  <div>
+   329→                    <h4>Unlimited Earnings</h4>
+   330→                    <p>
+   331→                      There is no cap on commissions. The more clients you
+   332→                      bring, the more you earn.
+   333→                    </p>
+   334→                  </div>
+   335→                </div>
+   336→                <div className="contact-card">
+   337→                  <div className="icon-box">
+   338→                    <i className="fas fa-handshake"></i>
+   339→                  </div>
+   340→                  <div>
+   341→                    <h4>Full Agency Support</h4>
+   342→                    <p>
+   343→                      We handle the work — you pitch &amp; close. Our premium
+   344→                      team backs every project you bring.
+   345→                    </p>
+   346→                  </div>
+   347→                </div>
+   348→              </div>
+   349→            </div>
+   350→          </div>
+   351→        </section>
+   352→      )}
+   353→
+   354→      {/* Portal Dashboard */}
+   355→      {partner && (
+   356→        <section
+   357→          id="portal-dashboard-section"
+   358→          className="career-section"
+   359→          style={{ background: "var(--bg)" }}
+   360→        >
+   361→          <div className="container">
+   362→            <div
+   363→              className="portal-card"
+   364→              style={{
+   365→                maxWidth: "600px",
+   366→                margin: "0 auto",
+   367→                background: "var(--bg-card)",
+   368→                padding: "40px",
+   369→                borderRadius: "var(--radius-lg)",
+   370→                border: "1px solid var(--border)",
+   371→                boxShadow: "var(--shadow-lg)",
+   372→              }}
+   373→            >
+   374→              <div id="portal-dashboard" style={{ textAlign: "center" }}>
+   375→                <h3 style={{ marginBottom: "10px" }}>Your Dashboard</h3>
+   376→                <p
+   377→                  style={{ color: "#a0a0a0", marginBottom: "20px" }}
+   378→                >
+   379→                  Share this code with your clients.
+   380→                </p>
+   381→                <div
+   382→                  style={{
+   383→                    background: "rgba(168, 85, 247, 0.1)",
+   384→                    border: "1px dashed var(--primary)",
+   385→                    padding: "15px",
+   386→                    borderRadius: "var(--radius-md)",
+   387→                    marginBottom: "20px",
+   388→                  }}
+   389→                >
+   390→                  <span
+   391→                    style={{
+   392→                      fontSize: "1.5rem",
+   393→                      fontWeight: 700,
+   394→                      color: "var(--primary)",
+   395→                    }}
+   396→                    id="dashboard-code"
+   397→                  >
+   398→                    {partner.inviteCode}
+   399→                  </span>
+   400→                </div>
+   401→                <div
+   402→                  style={{ display: "flex", justifyContent: "center", gap: "20px" }}
+   403→                >
+   404→                  <div style={{ textAlign: "center" }}>
+   405→                    <div
+   406→                      style={{
+   407→                        fontSize: "2rem",
+   408→                        fontWeight: 700,
+   409→                        color: "#fff",
+   410→                      }}
+   411→                      id="dashboard-referrals"
+   412→                    >
+   413→                      {partner.referralCount || 0}
+   414→                    </div>
+   415→                    <div style={{ fontSize: "0.8rem", color: "#a0a0a0" }}>
+   416→                      Referrals Used
+   417→                    </div>
+   418→                  </div>
+   419→                </div>
+   420→                <button
+   421→                  id="portal-logout"
+   422→                  className="btn btn-outline btn-pulse"
+   423→                  style={{
+   424→                    marginTop: "24px",
+   425→                    padding: "10px 20px",
+   426→                    fontSize: "0.9rem",
+   427→                  }}
+   428→                  onClick={handleLogout}
+   429→                >
+   430→                  <i className="fas fa-sign-out-alt"></i> Log Out
+   431→                </button>
+   432→                <div
+   433→                  style={{
+   434→                    marginTop: "20px",
+   435→                    paddingTop: "20px",
+   436→                    borderTop: "1px solid var(--border)",
+   437→                    textAlign: "left",
+   438→                  }}
+   439→                >
+   440→                  <h4 style={{ marginBottom: "10px", fontSize: "1rem" }}>
+   441→                    <i
+   442→                      className="fas fa-edit"
+   443→                      style={{ color: "var(--primary)", marginRight: "8px" }}
+   444→                    ></i>
+   445→                    Update Contact Info
+   446→                  </h4>
+   447→                  <p
+   448→                    style={{
+   449→                      fontSize: "0.8rem",
+   450→                      color: "#a0a0a0",
+   451→                      marginBottom: "12px",
+   452→                    }}
+   453→                  >
+   454→                    We will use this WhatsApp number or LinkedIn for contact of
+   455→                    profit sharing.
+   456→                  </p>
+   457→                  <div style={{ display: "flex", gap: "10px" }}>
+   458→                    <input
+   459→                      type="text"
+   460→                      id="update-contact-val"
+   461→                      className="form-control"
+   462→                      style={{
+   463→                        flex: 1,
+   464→                        padding: "10px",
+   465→                        background: "rgba(255,255,255,0.03)",
+   466→                        border: "1px solid var(--border)",
+   467→                        color: "#fff",
+   468→                        borderRadius: "var(--radius-sm)",
+   469→                      }}
+   470→                      value={updateContact}
+   471→                      onChange={(e) => setUpdateContact(e.target.value)}
+   472→                    />
+   473→                    <button
+   474→                      id="update-contact-btn"
+   475→                      className="btn btn-primary btn-pulse"
+   476→                      style={{ padding: "10px 20px" }}
+   477→                      onClick={handleUpdateContact}
+   478→                      disabled={updating}
+   479→                    >
+   480→                      {updating ? (
+   481→                        <i className="fas fa-spinner fa-spin"></i>
+   482→                      ) : (
+   483→                        <>
+   484→                          <i className="fas fa-save"></i> Save
+   485→                        </>
+   486→                      )}
+   487→                    </button>
+   488→                  </div>
+   489→                </div>
+   490→                {/* Steps Guidance */}
+   491→                <div
+   492→                  style={{
+   493→                    marginTop: "30px",
+   494→                    paddingTop: "24px",
+   495→                    borderTop: "1px solid var(--border)",
+   496→                    textAlign: "left",
+   497→                  }}
+   498→                >
+   499→                  <h3 style={{ marginBottom: "6px" }}>
+   500→                    <i
+   501→                      className="fas fa-route"
+   502→                      style={{ color: "var(--primary)", marginRight: "8px" }}
+   503→                    ></i>
+   504→                    How It Works
+   505→                  </h3>
+   506→                  <p
+   507→                    style={{
+   508→                      fontSize: "0.82rem",
+   509→                      color: "#a0a0a0",
+   510→                      marginBottom: "24px",
+   511→                    }}
+   512→                  >
+   513→                    Follow these steps to earn with ElevateEdge.
+   514→                  </p>
+   515→                  <div
+   516→                    style={{
+   517→                      display: "flex",
+   518→                      flexDirection: "column",
+   519→                      gap: 0,
+   520→                    }}
+   521→                  >
+   522→                    {[
+   523→                      {
+   524→                        num: "01",
+   525→                        title: "Identify Opportunities",
+   526→                        desc: "Explore Google Maps or visit local businesses in your area. Look for brands that need a professional edge or a digital boost.",
+   527→                      },
+   528→                      {
+   529→                        num: "02",
+   530→                        title: "Showcase Our Agency",
+   531→                        desc: "Show them the ElevateEdge portfolio. Demonstrate how our premium designs and strategies can double their growth.",
+   532→                      },
+   533→                      {
+   534→                        num: "03",
+   535→                        title: "Close the Deal",
+   536→                        desc: "Negotiate your own pricing. Provide your unique Invitation Code to your client so they enter it on the Order Now page.",
+   537→                      },
+   538→                      {
+   539→                        num: "04",
+   540→                        title: "Submit & Profit",
+   541→                        desc: "Our system attributes the project to you. We'll contact you for your payout once the order is fully completed and paid!",
+   542→                      },
+   543→                    ].map((step, i) => (
+   544→                      <div key={i}>
+   545→                        <div
+   546→                          style={{
+   547→                            display: "flex",
+   548→                            alignItems: "flex-start",
+   549→                            gap: "16px",
+   550→                          }}
+   551→                        >
+   552→                          <div
+   553→                            style={{
+   554→                              minWidth: "40px",
+   555→                              height: "40px",
+   556→                              borderRadius: "50%",
+   557→                              background: "var(--primary)",
+   558→                              color: "#fff",
+   559→                              display: "flex",
+   560→                              alignItems: "center",
+   561→                              justifyContent: "center",
+   562→                              fontWeight: 700,
+   563→                              fontSize: "0.9rem",
+   564→                            }}
+   565→                          >
+   566→                            {step.num}
+   567→                          </div>
+   568→                          <div>
+   569→                            <h4 style={{ margin: "0 0 4px" }}>{step.title}</h4>
+   570→                            <p
+   571→                              style={{
+   572→                                fontSize: "0.85rem",
+   573→                                color: "#a0a0a0",
+   574→                                margin: 0,
+   575→                              }}
+   576→                            >
+   577→                              {step.desc}
+   578→                            </p>
+   579→                          </div>
+   580→                        </div>
+   581→                        {i < 3 && (
+   582→                          <div
+   583→                            style={{
+   584→                              width: "2px",
+   585→                              height: "24px",
+   586→                              background:
+   587→                                "linear-gradient(180deg,var(--primary),transparent)",
+   588→                              marginLeft: "19px",
+   589→                            }}
+   590→                          ></div>
+   591→                        )}
+   592→                      </div>
+   593→                    ))}
+   594→                  </div>
+   595→                </div>
+   596→              </div>
+   597→            </div>
+   598→          </div>
+   599→        </section>
+   600→      )}
+   601→
+   602→      <section
+   603→        className="career-benefits career-section"
+   604→        style={{ background: "var(--bg-surface)" }}
+   605→      >
+   606→        <div className="container">
+   607→          <div
+   608→            className="about-grid"
+   609→            style={{
+   610→              gap: "clamp(60px, 10vw, 120px)",
+   611→              alignItems: "flex-start",
+   612→            }}
+   613→          >
+   614→            <div className="about-text reveal-left">
+   615→              <h2>
+   616→                Why Partner With{" "}
+   617→                <span className="gradient-text">ElevateEdge?</span>
+   618→              </h2>
+   619→              <p style={{ marginBottom: "40px" }}>
+   620→                We provide the technical expertise, you provide the connection.
+   621→                It&apos;s a win-win partnership built on quality and trust.
+   622→              </p>
+   623→
+   624→              <div className="about-values" style={{ gap: "24px" }}>
+   625→                {[
+   626→                  {
+   627→                    icon: "fa-wallet",
+   628→                    title: "Unlimited Earnings",
+   629→                    desc: "The more businesses you help, the more you earn. There is no cap on your potential.",
+   630→                  },
+   631→                  {
+   632→                    icon: "fa-user-shield",
+   633→                    title: "Premium Quality",
+   634→                    desc: "You can pitch with confidence knowing our team delivers world-class results every time.",
+   635→                  },
+   636→                  {
+   637→                    icon: "fa-clock",
+   638→                    title: "Work Your Way",
+   639→                    desc: "Choose your own hours and your own clients. Be your own boss while supported by an agency.",
+   640→                  },
+   641→                  {
+   642→                    icon: "fa-chart-line",
+   643→                    title: "Skill Growth",
+   644→                    desc: "Develop valuable skills in sales, marketing, and relationship management.",
+   645→                  },
+   646→                ].map((v, i) => (
+   647→                  <div className="value-card" key={i}>
+   648→                    <i className={`fas ${v.icon}`}></i>
+   649→                    <h4>{v.title}</h4>
+   650→                    <p>{v.desc}</p>
+   651→                  </div>
+   652→                ))}
+   653→              </div>
+   654→            </div>
+   655→            <div className="about-visual reveal-right">
+   656→              <div
+   657→                className="contact-card"
+   658→                style={{
+   659→                  background: "var(--bg-card)",
+   660→                  padding: "clamp(30px, 5vw, 60px)",
+   661→                  border: "1px solid var(--border)",
+   662→                  borderRadius: "var(--radius-lg)",
+   663→                  display: "flex",
+   664→                  flexDirection: "column",
+   665→                  alignItems: "center",
+   666→                  textAlign: "center",
+   667→                }}
+   668→              >
+   669→                <h3 style={{ marginBottom: "20px", fontSize: "1.5rem" }}>
+   670→                  Ready to Onboard?
+   671→                </h3>
+   672→                <p
+   673→                  style={{
+   674→                    marginBottom: "32px",
+   675→                    lineHeight: 1.8,
+   676→                    width: "100%",
+   677→                  }}
+   678→                >
+   679→                  Message us to get our official rate card and start your
+   680→                  journey as an ElevateEdge Associate. Our team is ready to
+   681→                  support your first deal.
+   682→                </p>
+   683→                <a
+   684→                  href="https://wa.me/923205719979"
+   685→                  target="_blank"
+   686→                  rel="noopener noreferrer"
+   687→                  className="btn btn-primary btn-pulse"
+   688→                  style={{
+   689→                    background: "#25D366",
+   690→                    width: "100%",
+   691→                    maxWidth: "280px",
+   692→                    justifyContent: "center",
+   693→                    padding: "18px",
+   694→                    marginTop: "auto",
+   695→                  }}
+   696→                >
+   697→                  <i className="fab fa-whatsapp"></i> Chat With Onboarding
+   698→                </a>
+   699→              </div>
+   700→            </div>
+   701→          </div>
+   702→        </div>
+   703→      </section>
+   704→
+   705→      <section className="cta-section">
+   706→        <div className="container reveal">
+   707→          <h2>Already Have a Client?</h2>
+   708→          <p>
+   709→            If you&apos;ve already closed a deal, head over to the project
+   710→            submission page to get started.
+   711→          </p>
+   712→          <a
+   713→            href="#/contact"
+   714→            className="btn btn-primary btn-pulse"
+   715→            onClick={(e) => {
+   716→              e.preventDefault();
+   717→              onNavigate("/contact");
+   718→            }}
+   719→          >
+   720→            <i className="fas fa-bolt"></i> Order Now
+   721→          </a>
+   722→        </div>
+   723→      </section>
+   724→    </>
+   725→  );
+   726→}
+   727→
