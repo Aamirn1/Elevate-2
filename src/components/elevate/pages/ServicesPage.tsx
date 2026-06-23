@@ -11,81 +11,45 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
 
   const services = [
     {
+      slug: "web-development",
       icon: "fa-laptop-code",
       title: "Custom Website Development",
       desc: "We build responsive, multi-page websites tailored to any industry — retail, food, professional services, and more. Each site features modern design elements, mobile-friendly layouts, and engaging animations.",
-      items: [
-        "Fully responsive multi-page designs",
-        "Animated 3D icons & interactive graphics",
-        "SEO optimized for search engines",
-        "Fast loading & modern tech stack",
-        "CMS integration & e-commerce ready",
-      ],
       visual: null,
     },
     {
+      slug: "digital-marketing",
       icon: "fa-bullhorn",
       title: "Digital Marketing & Ads",
       desc: "We run data-driven marketing campaigns across Google Ads, Facebook, and Instagram to boost your online presence. Our budget-friendly packages maximize your ROI with targeted strategies that deliver real, measurable results.",
-      items: [
-        "Google Ads & PPC management",
-        "Facebook & Instagram ad campaigns",
-        "Audience targeting & retargeting",
-        "Performance analytics & reporting",
-        "Budget optimization",
-      ],
       visual: "growth",
     },
     {
+      slug: "social-media",
       icon: "fa-hashtag",
       title: "Social Media Management",
       desc: "Our team creates and manages your business's social media profiles — content calendars, eye-catching graphics, and strategic postings to engage your customers and grow your following organically.",
-      items: [
-        "Content calendar & strategy",
-        "Custom graphic design",
-        "Community management & engagement",
-        "Hashtag research & trend analysis",
-        "Monthly reporting",
-      ],
       visual: "social",
     },
     {
+      slug: "app-development",
       icon: "fa-mobile-alt",
       title: "App Development for Business",
       desc: "We design and develop premium iOS and Android applications that provide a seamless mobile experience for your customers. From intuitive user interfaces to powerful backend integrations, we build apps that drive engagement and growth.",
-      items: [
-        "Custom iOS & Android development",
-        "Native-like hybrid app solutions",
-        "Premium UI/UX mobile design",
-        "API & database integration",
-        "App store deployment & support",
-      ],
       visual: null,
     },
     {
+      slug: "saas-solutions",
       icon: "fa-cogs",
       title: "Software Development (SAAS)",
       desc: "Build scalable, cloud-based software solutions tailored for business management. We specialize in creating custom SaaS platforms that automate workflows, manage data efficiently, and scale as your business grows.",
-      items: [
-        "Custom SaaS platform architecture",
-        "Workflow automation & tools",
-        "Scalable cloud infrastructure",
-        "Advanced data analytics & reporting",
-        "Multi-tenant security & management",
-      ],
       visual: null,
     },
     {
-      icon: "fa-robot",
-      title: "24/7 Smart Chat Support",
-      desc: "We integrate a sleek chat widget on every page for instant assistance. Quick answers about your services, always available. Paired with a WhatsApp direct line for personal contact with your team.",
-      items: [
-        "Instant automated responses",
-        "WhatsApp integration",
-        "Lead capture & CRM integration",
-        "Custom branding & messaging",
-        "Analytics dashboard",
-      ],
+      slug: "virtual-assistant",
+      icon: "fa-headset",
+      title: "Virtual Assistant Service",
+      desc: "A dedicated virtual assistant service for businesses to manage daily business operations and handle client-side queries efficiently.",
       visual: null,
     },
   ];
@@ -125,7 +89,12 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
         <div className="container">
           <div className="services-detail-grid">
             {services.map((s, i) => (
-              <div className="service-detail-card reveal" key={i}>
+              <div
+                className="service-detail-card reveal"
+                key={i}
+                style={{ cursor: "pointer" }}
+                onClick={() => onNavigate(`/services/${s.slug}`)}
+              >
                 <div className="service-detail-icon">
                   <i className={`fas ${s.icon}`}></i>
                   {s.visual === "growth" && (
@@ -204,20 +173,21 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
                 <div>
                   <h3>{s.title}</h3>
                   <p>{s.desc}</p>
-                  <ul>
-                    {s.items.map((item, j) => (
-                      <li key={j}>
-                        <i
-                          className="fas fa-check-circle"
-                          style={{
-                            color: "var(--primary)",
-                            marginRight: "8px",
-                          }}
-                        ></i>{" "}
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
+                  <button
+                    type="button"
+                    className="btn btn-outline"
+                    style={{
+                      marginTop: "12px",
+                      padding: "8px 18px",
+                      fontSize: "0.85rem",
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onNavigate(`/services/${s.slug}`);
+                    }}
+                  >
+                    <i className="fas fa-arrow-right"></i> View Features
+                  </button>
                 </div>
               </div>
             ))}

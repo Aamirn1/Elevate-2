@@ -238,6 +238,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
           <div className="services-grid">
             {[
               {
+                slug: "web-development",
                 icon: "fa-code",
                 title: "Custom Website Development",
                 desc: "Responsive, modern websites tailored to your industry with animated visuals and mobile-friendly layouts.",
@@ -248,6 +249,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 ],
               },
               {
+                slug: "digital-marketing",
                 icon: "fa-chart-line",
                 title: "Digital Marketing & Ads",
                 desc: "Data-driven campaigns on Google Ads, Facebook & Instagram to maximize your ROI with targeted strategies.",
@@ -258,6 +260,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 ],
               },
               {
+                slug: "social-media",
                 icon: "fa-share-alt",
                 title: "Social Media Management",
                 desc: "Content calendars, engaging graphics, and strategic postings to grow your audience and build your brand.",
@@ -268,6 +271,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 ],
               },
               {
+                slug: "app-development",
                 icon: "fa-mobile-alt",
                 title: "App Development",
                 desc: "Premium mobile applications for iOS & Android built for performance and user engagement.",
@@ -278,6 +282,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 ],
               },
               {
+                slug: "saas-solutions",
                 icon: "fa-cogs",
                 title: "SaaS Solutions",
                 desc: "Custom cloud-based business software designed to automate and scale your operations.",
@@ -288,17 +293,23 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 ],
               },
               {
+                slug: "virtual-assistant",
                 icon: "fa-headset",
-                title: "24/7 Smart Chat Support",
-                desc: "Integrated chat widget for instant assistance. Quick answers about services, always available for your visitors.",
+                title: "Virtual Assistant Service",
+                desc: "A dedicated virtual assistant service to manage daily business operations and handle client queries efficiently.",
                 items: [
-                  "Instant responses",
-                  "WhatsApp integration",
-                  "Always available",
+                  "Business admin support",
+                  "Client query handling",
+                  "Daily reporting",
                 ],
               },
             ].map((s, i) => (
-              <div className="service-card reveal" key={i}>
+              <div
+                className="service-card reveal"
+                key={i}
+                style={{ cursor: "pointer" }}
+                onClick={() => onNavigate(`/services/${s.slug}`)}
+              >
                 <div className="service-icon">
                   <i className={`fas ${s.icon}`}></i>
                 </div>
@@ -311,6 +322,22 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     </li>
                   ))}
                 </ul>
+                <a
+                  href={`#/services/${s.slug}`}
+                  className="btn btn-outline"
+                  style={{
+                    marginTop: "12px",
+                    padding: "8px 18px",
+                    fontSize: "0.85rem",
+                  }}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    onNavigate(`/services/${s.slug}`);
+                  }}
+                >
+                  <i className="fas fa-arrow-right"></i> Learn More
+                </a>
               </div>
             ))}
           </div>

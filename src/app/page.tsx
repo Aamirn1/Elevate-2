@@ -12,11 +12,18 @@ import { AboutPage } from "@/components/elevate/pages/AboutPage";
 import { ContactPage } from "@/components/elevate/pages/ContactPage";
 import { CareerPage } from "@/components/elevate/pages/CareerPage";
 import { PricingPage } from "@/components/elevate/pages/PricingPage";
+import { ServiceDetailPage } from "@/components/elevate/pages/ServiceDetailPage";
 import { AdminPage } from "@/components/elevate/pages/AdminPage";
 
 const routeTitles: Record<string, string> = {
   "/": "Home | ElevateEdge Digital",
   "/services": "Services | ElevateEdge Digital",
+  "/services/web-development": "Web Development | ElevateEdge Digital",
+  "/services/digital-marketing": "Digital Marketing | ElevateEdge Digital",
+  "/services/social-media": "Social Media | ElevateEdge Digital",
+  "/services/app-development": "App Development | ElevateEdge Digital",
+  "/services/saas-solutions": "SaaS Solutions | ElevateEdge Digital",
+  "/services/virtual-assistant": "Virtual Assistant | ElevateEdge Digital",
   "/portfolio": "Testimonials | ElevateEdge Digital",
   "/about": "About Us | ElevateEdge Digital",
   "/contact": "Order Now | ElevateEdge Digital",
@@ -71,6 +78,30 @@ export default function Home() {
         return <HomePage onNavigate={navigate} />;
       case "/services":
         return <ServicesPage onNavigate={navigate} />;
+      case "/services/web-development":
+        return (
+          <ServiceDetailPage slug="web-development" onNavigate={navigate} />
+        );
+      case "/services/digital-marketing":
+        return (
+          <ServiceDetailPage slug="digital-marketing" onNavigate={navigate} />
+        );
+      case "/services/social-media":
+        return (
+          <ServiceDetailPage slug="social-media" onNavigate={navigate} />
+        );
+      case "/services/app-development":
+        return (
+          <ServiceDetailPage slug="app-development" onNavigate={navigate} />
+        );
+      case "/services/saas-solutions":
+        return (
+          <ServiceDetailPage slug="saas-solutions" onNavigate={navigate} />
+        );
+      case "/services/virtual-assistant":
+        return (
+          <ServiceDetailPage slug="virtual-assistant" onNavigate={navigate} />
+        );
       case "/portfolio":
         return <PortfolioPage onNavigate={navigate} />;
       case "/about":

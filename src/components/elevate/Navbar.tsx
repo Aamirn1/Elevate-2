@@ -12,8 +12,8 @@ const navLinks = [
   { href: "/services", label: "Services", page: "services" },
   { href: "/portfolio", label: "Testimonials", page: "portfolio" },
   { href: "/pricing", label: "Pricing", page: "pricing" },
-  { href: "/about", label: "About Us", page: "about" },
   { href: "/career", label: "Careers", page: "career" },
+  { href: "/about", label: "About Us", page: "about" },
 ];
 
 export function Navbar({ currentPath, onNavigate }: NavbarProps) {

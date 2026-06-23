@@ -57,11 +57,11 @@ export function Footer({ onNavigate }: FooterProps) {
               <a href="#/pricing" onClick={(e) => handleNav(e, "/pricing")}>
                 Pricing
               </a>
-              <a href="#/about" onClick={(e) => handleNav(e, "/about")}>
-                About Us
-              </a>
               <a href="#/career" onClick={(e) => handleNav(e, "/career")}>
                 Careers
+              </a>
+              <a href="#/about" onClick={(e) => handleNav(e, "/about")}>
+                About Us
               </a>
             </div>
             <div className="footer-col">
@@ -76,7 +76,7 @@ export function Footer({ onNavigate }: FooterProps) {
                 Social Media
               </a>
               <a href="#/services" onClick={(e) => handleNav(e, "/services")}>
-                Chat Support
+                Virtual Assistant
               </a>
             </div>
             <div className="footer-col">

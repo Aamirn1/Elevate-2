@@ -1,15 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useScrollReveal } from "../useScrollReveal";
-
-interface Partner {
-  id: number;
-  contactInfo: string;
-  inviteCode: string;
-  createdAt: string;
-  referralCount?: number;
-}
 
 interface CareerPageProps {
   onNavigate: (path: string) => void;
@@ -17,116 +8,47 @@ interface CareerPageProps {
 
 export function CareerPage({ onNavigate }: CareerPageProps) {
   useScrollReveal();
-  const [isSignupMode, setIsSignupMode] = useState(true);
-  const [contactInput, setContactInput] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [partner, setPartner] = useState<Partner | null>(null);
-  const [error, setError] = useState("");
-  const [updateContact, setUpdateContact] = useState("");
-  const [updating, setUpdating] = useState(false);
 
-  // Auto-login from localStorage
-  useEffect(() => {
-    const savedContact = localStorage.getItem("partner_contact");
-    if (savedContact) {
-      autoLogin(savedContact);
-    }
-  }, []);
+  const responsibilities = [
+    "Respond to customer inquiries via WhatsApp, email, and chat in a timely and professional manner",
+    "Provide accurate information about our services, packages, and pricing to potential clients",
+    "Resolve customer complaints and escalations with empathy and effective problem-solving",
+    "Maintain detailed records of customer interactions and follow up to ensure satisfaction",
+  ];
 
-  const autoLogin = async (contact: string) => {
-    try {
-      const res = await fetch(
-        `/api/partners/${encodeURIComponent(contact)}?by=contact`
-      );
-      if (res.ok) {
-        const data = await res.json();
-        showDashboard(data);
-      }
-    } catch (e) {
-      console.error("Auto-login failed", e);
-    }
-  };
+  const requirements = [
+    "Excellent written and verbal communication skills in English and Urdu",
+    "Prior experience in customer service, support, or a related role is preferred",
+    "Strong problem-solving skills with a customer-first mindset",
+    "Reliable internet connection and ability to work flexible hours from a remote setup",
+  ];
 
-  const showDashboard = (p: Partner) => {
-    setPartner(p);
-    setUpdateContact(p.contactInfo);
-    localStorage.setItem("partner_contact", p.contactInfo);
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("partner_contact");
-    setPartner(null);
-    setContactInput("");
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    const contact = contactInput.trim();
-    if (!contact) return;
-
-    // Super Admin Backdoor
-    if (contact === "16609123456789") {
-      localStorage.setItem("admin_logged_in", "true");
-      onNavigate("/admin");
-      return;
-    }
-
-    setSubmitting(true);
-    setError("");
-
-    try {
-      const res = await fetch("/api/partners", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          contact_info: contact,
-          mode: isSignupMode ? "signup" : "signin",
-        }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || "An error occurred.");
-        setSubmitting(false);
-        return;
-      }
-
-      showDashboard(data);
-    } catch (err) {
-      console.error("Portal Error:", err);
-      setError("An error occurred. Check your connection.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleUpdateContact = async () => {
-    if (!partner || !updateContact.trim()) return;
-    setUpdating(true);
-    try {
-      const res = await fetch(`/api/partners/${partner.id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contact_info: updateContact.trim() }),
-      });
-      if (!res.ok) {
-        alert("Failed to update. Contact info might be taken.");
-        return;
-      }
-      const updated = await res.json();
-      alert("Contact info updated successfully for Profit Sharing!");
-      localStorage.setItem("partner_contact", updated.contactInfo);
-      setPartner({ ...partner, contactInfo: updated.contactInfo });
-    } catch (err) {
-      alert("Failed to update. Contact info might be taken.");
-    } finally {
-      setUpdating(false);
-    }
-  };
+  const perks = [
+    {
+      icon: "fa-sack-dollar",
+      title: "Competitive Compensation",
+      desc: "We offer industry-aligned salaries with performance-based bonuses and incentives that reward your hard work.",
+    },
+    {
+      icon: "fa-chart-line",
+      title: "Growth Opportunities",
+      desc: "Clear career progression paths, mentorship, and the chance to take on leadership roles as we scale.",
+    },
+    {
+      icon: "fa-laptop-house",
+      title: "Flexible Work Environment",
+      desc: "Work remotely from anywhere with flexible hours that help you balance your personal and professional life.",
+    },
+    {
+      icon: "fa-graduation-cap",
+      title: "Skill Development",
+      desc: "Access to training programs, courses, and hands-on experience with the latest tools and technologies.",
+    },
+  ];
 
   return (
     <>
+      {/* Hero */}
       <section
         className="hero"
         style={{ minHeight: "50vh", padding: "160px 0 60px" }}
@@ -139,7 +61,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
         <div className="container">
           <div className="hero-content">
             <div className="hero-badge">
-              <i className="fas fa-briefcase"></i> Join Our Mission
+              <i className="fas fa-users"></i> Join Our Team
             </div>
             <h1>
               <span className="gradient-text">Build Your Career</span>
@@ -147,578 +69,385 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
               With ElevateEdge
             </h1>
             <p className="hero-sub">
-              Become a strategic partner and earn by connecting businesses with
-              premium digital solutions. No technical skills required — just
-              your passion for growth.
+              We&apos;re looking for passionate, driven individuals who want to
+              grow with a fast-moving digital agency. Explore our open roles and
+              take the next step in your journey.
             </p>
           </div>
         </div>
       </section>
 
-      {!partner && (
-        <section
-          className="career-model-section career-section contact-section"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(168, 85, 247,0.04) 0%, var(--bg) 100%)",
-            borderTop: "1px solid rgba(168, 85, 247,0.15)",
-            borderBottom: "1px solid rgba(168, 85, 247,0.15)",
-          }}
-        >
-          <div className="container">
-            <div
-              className="section-header reveal"
-              style={{ marginBottom: "40px" }}
-            >
-              <h2>
-                Partner <span className="gradient-text">Portal</span>
-              </h2>
-              <p>
-                Generate your unique Invitation Code or login to view your
-                referrals and step-by-step guidance.
-              </p>
-            </div>
-
-            <div className="contact-grid">
-              <div className="contact-form reveal-left">
-                <h3
-                  id="portal-form-title"
-                  style={{ marginBottom: "24px", fontSize: "1.3rem" }}
-                >
-                  <i
-                    className="fas fa-user-plus"
-                    style={{ color: "var(--primary)", marginRight: "10px" }}
-                  ></i>
-                  {isSignupMode ? "Partner Signup" : "Partner Sign In"}
-                </h3>
-                <form onSubmit={handleSubmit}>
-                  <div className="form-group">
-                    <label id="contact-label" htmlFor="p-contact">
-                      {isSignupMode
-                        ? "WhatsApp or LinkedIn (For Signup)"
-                        : "Enter Registered WhatsApp or LinkedIn"}
-                    </label>
-                    <input
-                      type="text"
-                      id="p-contact"
-                      placeholder="e.g. +923001234567 or linkedin.com/in/johndoe"
-                      value={contactInput}
-                      onChange={(e) => setContactInput(e.target.value)}
-                      required
-                    />
-                  </div>
-                  {error && (
-                    <p
-                      style={{
-                        color: "#e74c3c",
-                        fontSize: "0.85rem",
-                        marginBottom: "12px",
-                      }}
-                    >
-                      {error}
-                    </p>
-                  )}
-                  <div
-                    className="form-group"
-                    style={{
-                      background: "rgba(168, 85, 247, 0.05)",
-                      padding: "15px",
-                      borderRadius: "var(--radius-md)",
-                      border: "1px dashed rgba(168, 85, 247, 0.3)",
-                    }}
-                  >
-                    <p
-                      id="portal-info-text"
-                      style={{
-                        fontSize: "0.85rem",
-                        color: "#a0a0a0",
-                        margin: 0,
-                        lineHeight: 1.5,
-                      }}
-                    >
-                      <i
-                        className={`fas ${
-                          isSignupMode ? "fa-info-circle" : "fa-key"
-                        }`}
-                        style={{ color: "var(--primary)", marginRight: "6px" }}
-                      ></i>
-                      {isSignupMode
-                        ? " We will generate a unique Invitation Code for you. Our team will only contact you for payment on "
-                        : " Use your registered contact info to access your Invitation Code and track referrals."}
-                      {isSignupMode && (
-                        <strong style={{ color: "#fff" }}>completed</strong>
-                      )}
-                      {isSignupMode && " orders."}
-                    </p>
-                  </div>
-                  <button
-                    type="submit"
-                    id="portal-submit-btn"
-                    className="btn btn-primary btn-pulse form-submit"
-                    style={{ width: "100%" }}
-                    disabled={submitting}
-                  >
-                    {submitting ? (
-                      <>
-                        <i className="fas fa-spinner fa-spin"></i> Processing...
-                      </>
-                    ) : isSignupMode ? (
-                      <>
-                        <i className="fas fa-rocket"></i> Access Portal
-                      </>
-                    ) : (
-                      <>
-                        <i className="fas fa-sign-in-alt"></i> Sign In to Portal
-                      </>
-                    )}
-                  </button>
-
-                  <div style={{ marginTop: "20px", textAlign: "center" }}>
-                    <p
-                      style={{
-                        fontSize: "0.9rem",
-                        color: "var(--text-muted)",
-                      }}
-                    >
-                      <span id="portal-toggle-msg">
-                        {isSignupMode
-                          ? "Already have an account?"
-                          : "Don't have an account?"}
-                      </span>
-                      <a
-                        href="javascript:void(0)"
-                        id="portal-toggle-btn"
-                        style={{
-                          color: "var(--primary)",
-                          fontWeight: 600,
-                          textDecoration: "none",
-                          marginLeft: "5px",
-                          cursor: "pointer",
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          setIsSignupMode(!isSignupMode);
-                          setError("");
-                        }}
-                      >
-                        {isSignupMode ? "Sign In" : "Sign Up"}
-                      </a>
-                    </p>
-                  </div>
-                </form>
-              </div>
-
-              <div className="contact-info reveal-right">
-                <div className="contact-card">
-                  <div className="icon-box">
-                    <i className="fas fa-rocket"></i>
-                  </div>
-                  <div>
-                    <h4>Zero Upfront Cost</h4>
-                    <p>
-                      No investment needed. Just share our portfolio and start
-                      earning commissions immediately.
-                    </p>
-                  </div>
-                </div>
-                <div className="contact-card">
-                  <div className="icon-box">
-                    <i className="fas fa-wallet"></i>
-                  </div>
-                  <div>
-                    <h4>Unlimited Earnings</h4>
-                    <p>
-                      There is no cap on commissions. The more clients you
-                      bring, the more you earn.
-                    </p>
-                  </div>
-                </div>
-                <div className="contact-card">
-                  <div className="icon-box">
-                    <i className="fas fa-handshake"></i>
-                  </div>
-                  <div>
-                    <h4>Full Agency Support</h4>
-                    <p>
-                      We handle the work — you pitch &amp; close. Our premium
-                      team backs every project you bring.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Portal Dashboard */}
-      {partner && (
-        <section
-          id="portal-dashboard-section"
-          className="career-section"
-          style={{ background: "var(--bg)" }}
-        >
-          <div className="container">
-            <div
-              className="portal-card"
-              style={{
-                maxWidth: "600px",
-                margin: "0 auto",
-                background: "var(--bg-card)",
-                padding: "40px",
-                borderRadius: "var(--radius-lg)",
-                border: "1px solid var(--border)",
-                boxShadow: "var(--shadow-lg)",
-              }}
-            >
-              <div id="portal-dashboard" style={{ textAlign: "center" }}>
-                <h3 style={{ marginBottom: "10px" }}>Your Dashboard</h3>
-                <p
-                  style={{ color: "#a0a0a0", marginBottom: "20px" }}
-                >
-                  Share this code with your clients.
-                </p>
-                <div
-                  style={{
-                    background: "rgba(168, 85, 247, 0.1)",
-                    border: "1px dashed var(--primary)",
-                    padding: "15px",
-                    borderRadius: "var(--radius-md)",
-                    marginBottom: "20px",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: "1.5rem",
-                      fontWeight: 700,
-                      color: "var(--primary)",
-                    }}
-                    id="dashboard-code"
-                  >
-                    {partner.inviteCode}
-                  </span>
-                </div>
-                <div
-                  style={{ display: "flex", justifyContent: "center", gap: "20px" }}
-                >
-                  <div style={{ textAlign: "center" }}>
-                    <div
-                      style={{
-                        fontSize: "2rem",
-                        fontWeight: 700,
-                        color: "#fff",
-                      }}
-                      id="dashboard-referrals"
-                    >
-                      {partner.referralCount || 0}
-                    </div>
-                    <div style={{ fontSize: "0.8rem", color: "#a0a0a0" }}>
-                      Referrals Used
-                    </div>
-                  </div>
-                </div>
-                <button
-                  id="portal-logout"
-                  className="btn btn-outline btn-pulse"
-                  style={{
-                    marginTop: "24px",
-                    padding: "10px 20px",
-                    fontSize: "0.9rem",
-                  }}
-                  onClick={handleLogout}
-                >
-                  <i className="fas fa-sign-out-alt"></i> Log Out
-                </button>
-                <div
-                  style={{
-                    marginTop: "20px",
-                    paddingTop: "20px",
-                    borderTop: "1px solid var(--border)",
-                    textAlign: "left",
-                  }}
-                >
-                  <h4 style={{ marginBottom: "10px", fontSize: "1rem" }}>
-                    <i
-                      className="fas fa-edit"
-                      style={{ color: "var(--primary)", marginRight: "8px" }}
-                    ></i>
-                    Update Contact Info
-                  </h4>
-                  <p
-                    style={{
-                      fontSize: "0.8rem",
-                      color: "#a0a0a0",
-                      marginBottom: "12px",
-                    }}
-                  >
-                    We will use this WhatsApp number or LinkedIn for contact of
-                    profit sharing.
-                  </p>
-                  <div style={{ display: "flex", gap: "10px" }}>
-                    <input
-                      type="text"
-                      id="update-contact-val"
-                      className="form-control"
-                      style={{
-                        flex: 1,
-                        padding: "10px",
-                        background: "rgba(255,255,255,0.03)",
-                        border: "1px solid var(--border)",
-                        color: "#fff",
-                        borderRadius: "var(--radius-sm)",
-                      }}
-                      value={updateContact}
-                      onChange={(e) => setUpdateContact(e.target.value)}
-                    />
-                    <button
-                      id="update-contact-btn"
-                      className="btn btn-primary btn-pulse"
-                      style={{ padding: "10px 20px" }}
-                      onClick={handleUpdateContact}
-                      disabled={updating}
-                    >
-                      {updating ? (
-                        <i className="fas fa-spinner fa-spin"></i>
-                      ) : (
-                        <>
-                          <i className="fas fa-save"></i> Save
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </div>
-                {/* Steps Guidance */}
-                <div
-                  style={{
-                    marginTop: "30px",
-                    paddingTop: "24px",
-                    borderTop: "1px solid var(--border)",
-                    textAlign: "left",
-                  }}
-                >
-                  <h3 style={{ marginBottom: "6px" }}>
-                    <i
-                      className="fas fa-route"
-                      style={{ color: "var(--primary)", marginRight: "8px" }}
-                    ></i>
-                    How It Works
-                  </h3>
-                  <p
-                    style={{
-                      fontSize: "0.82rem",
-                      color: "#a0a0a0",
-                      marginBottom: "24px",
-                    }}
-                  >
-                    Follow these steps to earn with ElevateEdge.
-                  </p>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      gap: 0,
-                    }}
-                  >
-                    {[
-                      {
-                        num: "01",
-                        title: "Identify Opportunities",
-                        desc: "Explore Google Maps or visit local businesses in your area. Look for brands that need a professional edge or a digital boost.",
-                      },
-                      {
-                        num: "02",
-                        title: "Showcase Our Agency",
-                        desc: "Show them the ElevateEdge portfolio. Demonstrate how our premium designs and strategies can double their growth.",
-                      },
-                      {
-                        num: "03",
-                        title: "Close the Deal",
-                        desc: "Negotiate your own pricing. Provide your unique Invitation Code to your client so they enter it on the Order Now page.",
-                      },
-                      {
-                        num: "04",
-                        title: "Submit & Profit",
-                        desc: "Our system attributes the project to you. We'll contact you for your payout once the order is fully completed and paid!",
-                      },
-                    ].map((step, i) => (
-                      <div key={i}>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "flex-start",
-                            gap: "16px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              minWidth: "40px",
-                              height: "40px",
-                              borderRadius: "50%",
-                              background: "var(--primary)",
-                              color: "#fff",
-                              display: "flex",
-                              alignItems: "center",
-                              justifyContent: "center",
-                              fontWeight: 700,
-                              fontSize: "0.9rem",
-                            }}
-                          >
-                            {step.num}
-                          </div>
-                          <div>
-                            <h4 style={{ margin: "0 0 4px" }}>{step.title}</h4>
-                            <p
-                              style={{
-                                fontSize: "0.85rem",
-                                color: "#a0a0a0",
-                                margin: 0,
-                              }}
-                            >
-                              {step.desc}
-                            </p>
-                          </div>
-                        </div>
-                        {i < 3 && (
-                          <div
-                            style={{
-                              width: "2px",
-                              height: "24px",
-                              background:
-                                "linear-gradient(180deg,var(--primary),transparent)",
-                              marginLeft: "19px",
-                            }}
-                          ></div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      <section
-        className="career-benefits career-section"
-        style={{ background: "var(--bg-surface)" }}
-      >
+      {/* Job Posting */}
+      <section className="services-section">
         <div className="container">
           <div
-            className="about-grid"
+            className="value-card reveal"
             style={{
-              gap: "clamp(60px, 10vw, 120px)",
-              alignItems: "flex-start",
+              maxWidth: "860px",
+              margin: "0 auto",
+              padding: "36px",
+              background: "var(--bg-card)",
+              border: "1px solid var(--border)",
+              borderRadius: "20px",
+              boxShadow: "0 20px 50px rgba(0, 0, 0, 0.25)",
             }}
           >
-            <div className="about-text reveal-left">
-              <h2>
-                Why Partner With{" "}
-                <span className="gradient-text">ElevateEdge?</span>
-              </h2>
-              <p style={{ marginBottom: "40px" }}>
-                We provide the technical expertise, you provide the connection.
-                It&apos;s a win-win partnership built on quality and trust.
-              </p>
-
-              <div className="about-values" style={{ gap: "24px" }}>
-                {[
-                  {
-                    icon: "fa-wallet",
-                    title: "Unlimited Earnings",
-                    desc: "The more businesses you help, the more you earn. There is no cap on your potential.",
-                  },
-                  {
-                    icon: "fa-user-shield",
-                    title: "Premium Quality",
-                    desc: "You can pitch with confidence knowing our team delivers world-class results every time.",
-                  },
-                  {
-                    icon: "fa-clock",
-                    title: "Work Your Way",
-                    desc: "Choose your own hours and your own clients. Be your own boss while supported by an agency.",
-                  },
-                  {
-                    icon: "fa-chart-line",
-                    title: "Skill Growth",
-                    desc: "Develop valuable skills in sales, marketing, and relationship management.",
-                  },
-                ].map((v, i) => (
-                  <div className="value-card" key={i}>
-                    <i className={`fas ${v.icon}`}></i>
-                    <h4>{v.title}</h4>
-                    <p>{v.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="about-visual reveal-right">
+            {/* Header */}
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                textAlign: "center",
+                marginBottom: "28px",
+              }}
+            >
               <div
-                className="contact-card"
                 style={{
-                  background: "var(--bg-card)",
-                  padding: "clamp(30px, 5vw, 60px)",
-                  border: "1px solid var(--border)",
-                  borderRadius: "var(--radius-lg)",
+                  width: "64px",
+                  height: "64px",
+                  borderRadius: "16px",
+                  background:
+                    "linear-gradient(135deg, rgba(168, 85, 247, 0.18), rgba(236, 72, 153, 0.18))",
+                  border: "1px solid rgba(168, 85, 247, 0.3)",
                   display: "flex",
-                  flexDirection: "column",
                   alignItems: "center",
-                  textAlign: "center",
+                  justifyContent: "center",
+                  marginBottom: "20px",
                 }}
               >
-                <h3 style={{ marginBottom: "20px", fontSize: "1.5rem" }}>
-                  Ready to Onboard?
-                </h3>
-                <p
+                <i
+                  className="fas fa-headset"
                   style={{
-                    marginBottom: "32px",
-                    lineHeight: 1.8,
-                    width: "100%",
+                    fontSize: "1.6rem",
+                    color: "var(--primary)",
+                  }}
+                ></i>
+              </div>
+              <h3
+                style={{
+                  fontSize: "1.5rem",
+                  marginBottom: "20px",
+                  color: "var(--text)",
+                }}
+              >
+                Customer Service Representative (CSR)
+              </h3>
+              <div
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                  gap: "10px",
+                  marginTop: "8px",
+                }}
+              >
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "5px 14px",
+                    borderRadius: "999px",
+                    background: "rgba(168, 85, 247, 0.1)",
+                    border: "1px solid rgba(168, 85, 247, 0.25)",
+                    color: "var(--primary-light)",
+                    fontSize: "0.78rem",
+                    fontWeight: 500,
                   }}
                 >
-                  Message us to get our official rate card and start your
-                  journey as an ElevateEdge Associate. Our team is ready to
-                  support your first deal.
-                </p>
+                  <i className="fas fa-briefcase"></i> Full-time
+                </span>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "5px 14px",
+                    borderRadius: "999px",
+                    background: "rgba(168, 85, 247, 0.1)",
+                    border: "1px solid rgba(168, 85, 247, 0.25)",
+                    color: "var(--primary-light)",
+                    fontSize: "0.78rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  <i className="fas fa-location-dot"></i> Remote
+                </span>
+                <span
+                  style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "8px",
+                    padding: "5px 14px",
+                    borderRadius: "999px",
+                    background: "rgba(168, 85, 247, 0.1)",
+                    border: "1px solid rgba(168, 85, 247, 0.25)",
+                    color: "var(--primary-light)",
+                    fontSize: "0.78rem",
+                    fontWeight: 500,
+                  }}
+                >
+                  <i className="fas fa-clock"></i> Flexible Hours
+                </span>
+              </div>
+            </div>
+
+            {/* Description */}
+            <p
+              style={{
+                color: "var(--text-muted)",
+                lineHeight: 1.7,
+                marginBottom: "28px",
+              }}
+            >
+              We are looking for a friendly and dedicated Customer Service
+              Representative to join our growing team. In this role, you will be
+              the first point of contact for our clients, helping them navigate
+              our digital services, answering their questions, and ensuring a
+              seamless experience from inquiry to delivery. If you love helping
+              people and thrive in a fast-paced, remote-first environment,
+              we&apos;d love to hear from you.
+            </p>
+
+            {/* Responsibilities */}
+            <div style={{ marginBottom: "28px" }}>
+              <h4
+                style={{
+                  fontSize: "1.15rem",
+                  marginBottom: "14px",
+                  color: "var(--text)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <i
+                  className="fas fa-list-check"
+                  style={{ color: "var(--primary)" }}
+                ></i>
+                Key Responsibilities
+              </h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {responsibilities.map((item, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
+                      marginBottom: "12px",
+                      color: "var(--text-muted)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    <i
+                      className="fas fa-circle-check"
+                      style={{
+                        color: "var(--primary)",
+                        marginTop: "4px",
+                        flexShrink: 0,
+                      }}
+                    ></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Requirements */}
+            <div style={{ marginBottom: "28px" }}>
+              <h4
+                style={{
+                  fontSize: "1.15rem",
+                  marginBottom: "14px",
+                  color: "var(--text)",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                }}
+              >
+                <i
+                  className="fas fa-clipboard-check"
+                  style={{ color: "var(--primary)" }}
+                ></i>
+                Requirements
+              </h4>
+              <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+                {requirements.map((item, i) => (
+                  <li
+                    key={i}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
+                      marginBottom: "12px",
+                      color: "var(--text-muted)",
+                      lineHeight: 1.6,
+                    }}
+                  >
+                    <i
+                      className="fas fa-circle-dot"
+                      style={{
+                        color: "var(--primary)",
+                        marginTop: "4px",
+                        flexShrink: 0,
+                      }}
+                    ></i>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Hiring Manager Contact */}
+            <div
+              style={{
+                border: "2px dashed rgba(168, 85, 247, 0.4)",
+                background: "rgba(168, 85, 247, 0.05)",
+                borderRadius: "14px",
+                padding: "18px 20px",
+                marginBottom: "24px",
+                display: "flex",
+                alignItems: "center",
+                gap: "14px",
+                flexWrap: "wrap",
+              }}
+            >
+              <i
+                className="fas fa-user-tie"
+                style={{
+                  color: "var(--primary)",
+                  fontSize: "1.3rem",
+                }}
+              ></i>
+              <div>
+                <div
+                  style={{
+                    fontSize: "0.78rem",
+                    color: "var(--text-muted)",
+                    textTransform: "uppercase",
+                    letterSpacing: "0.05em",
+                    marginBottom: "2px",
+                  }}
+                >
+                  Hiring Manager
+                </div>
                 <a
-                  href="https://wa.me/923205719979"
+                  href="https://wa.me/923110523073"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn btn-primary btn-pulse"
                   style={{
-                    background: "#25D366",
-                    width: "100%",
-                    maxWidth: "280px",
-                    justifyContent: "center",
-                    padding: "18px",
-                    marginTop: "auto",
+                    color: "var(--text)",
+                    fontWeight: 600,
+                    fontSize: "1.05rem",
                   }}
                 >
-                  <i className="fab fa-whatsapp"></i> Chat With Onboarding
+                  +92 311 0523073
                 </a>
               </div>
             </div>
+
+            {/* Apply via WhatsApp */}
+            <a
+              href="https://wa.me/923110523073"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-pulse"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "12px",
+                width: "100%",
+                background: "#25D366",
+                color: "#fff",
+                padding: "16px 32px",
+                fontSize: "1.05rem",
+                borderRadius: "12px",
+                fontWeight: 600,
+              }}
+            >
+              <i
+                className="fab fa-whatsapp"
+                style={{ fontSize: "1.6rem", color: "#fff" }}
+              ></i>
+              Apply via WhatsApp
+            </a>
           </div>
         </div>
       </section>
 
+      {/* Why Work With Us */}
+      <section className="why-us-section">
+        <div className="container">
+          <div className="section-header reveal">
+            <h2>
+              Why Work <span className="gradient-text">With Us?</span>
+            </h2>
+            <p>
+              At ElevateEdge, we invest in our people. Here&apos;s what you can
+              expect when you join our team.
+            </p>
+          </div>
+          <div className="why-us-grid">
+            {perks.map((p, i) => (
+              <div
+                className="why-us-card reveal"
+                key={i}
+                style={{ transitionDelay: `${i * 60}ms` }}
+              >
+                <div className="why-us-icon">
+                  <i className={`fas ${p.icon}`}></i>
+                </div>
+                <h3>{p.title}</h3>
+                <p>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
       <section className="cta-section">
         <div className="container reveal">
-          <h2>Already Have a Client?</h2>
+          <h2>Ready to Apply or Have Questions?</h2>
           <p>
-            If you&apos;ve already closed a deal, head over to the project
-            submission page to get started.
+            Reach out to our hiring manager on WhatsApp or place an order to
+            experience our services first-hand.
           </p>
-          <a
-            href="#/contact"
-            className="btn btn-primary btn-pulse"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigate("/contact");
+          <div
+            style={{
+              display: "flex",
+              gap: "16px",
+              justifyContent: "center",
+              flexWrap: "wrap",
+              marginTop: "8px",
             }}
           >
-            <i className="fas fa-bolt"></i> Order Now
-          </a>
+            <a
+              href="https://wa.me/923110523073"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-pulse"
+              style={{
+                background: "#25D366",
+                color: "#fff",
+              }}
+            >
+              <i className="fab fa-whatsapp"></i> Chat on WhatsApp
+            </a>
+            <a
+              href="#/contact"
+              className="btn btn-primary btn-pulse"
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate("/contact");
+              }}
+            >
+              <i className="fas fa-bolt"></i> Order Now
+            </a>
+          </div>
         </div>
       </section>
     </>

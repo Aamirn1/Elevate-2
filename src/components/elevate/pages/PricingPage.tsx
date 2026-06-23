@@ -26,6 +26,7 @@ type Package = {
   ctaLabel: string;
   ctaHref: string;
   ctaIsAnchor?: boolean;
+  whatsappLink?: string;
 };
 
 const packages: Package[] = [
@@ -36,7 +37,7 @@ const packages: Package[] = [
     tagline:
       "Perfect for small businesses and startups looking to establish their online presence with a clean, professional website.",
     currency: "PKR",
-    amount: "25k - 30k",
+    amount: "25k",
     period: "One-time project fee",
     features: [
       { label: "Professional website design", included: true },
@@ -51,6 +52,9 @@ const packages: Package[] = [
     ],
     ctaLabel: "Get Started",
     ctaHref: "/contact",
+    whatsappLink: `https://wa.me/923110523073?text=${encodeURIComponent(
+      "New Order - ElevateEdge Digital\n\nPackage: Standard Package\nPrice: PKR 25k\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
+    )}`,
   },
   {
     id: "professional",
@@ -59,7 +63,7 @@ const packages: Package[] = [
     tagline:
       "Our most popular package for growing businesses that need a full-featured, database-driven platform with admin controls.",
     currency: "PKR",
-    amount: "40k - 50k",
+    amount: "40k",
     period: "One-time project fee",
     featured: true,
     badge: "Most Popular",
@@ -76,6 +80,9 @@ const packages: Package[] = [
     ],
     ctaLabel: "Get Started",
     ctaHref: "/contact",
+    whatsappLink: `https://wa.me/923110523073?text=${encodeURIComponent(
+      "New Order - ElevateEdge Digital\n\nPackage: Professional Package\nPrice: PKR 40k\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
+    )}`,
   },
   {
     id: "custom",
@@ -438,6 +445,22 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
                     onClick={scrollToCustomPackage}
                   >
                     <i className="fas fa-arrow-right"></i> {pkg.ctaLabel}
+                  </a>
+                ) : pkg.whatsappLink ? (
+                  <a
+                    href={pkg.whatsappLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`btn pricing-cta ${
+                      pkg.featured ? "btn-primary btn-pulse" : "btn-outline"
+                    }`}
+                    style={
+                      pkg.featured
+                        ? { background: "#25D366", color: "#fff" }
+                        : undefined
+                    }
+                  >
+                    <i className="fab fa-whatsapp"></i> {pkg.ctaLabel}
                   </a>
                 ) : (
                   <a
