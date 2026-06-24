@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useScrollReveal } from "../useScrollReveal";
+import { fallbackProjects } from "../fallbackData";
 
 interface Project {
   id: number;
@@ -32,7 +33,7 @@ function formatDesc5Words(desc: string) {
 
 export function HomePage({ onNavigate }: HomePageProps) {
   useScrollReveal();
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<Project[]>(fallbackProjects as Project[]);
   const [currentSlide, setCurrentSlide] = useState(0);
   const trackRef = useRef<HTMLDivElement>(null);
   const autoSlideRef = useRef<ReturnType<typeof setInterval> | null>(null);

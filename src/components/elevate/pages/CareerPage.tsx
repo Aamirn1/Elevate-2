@@ -119,7 +119,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                 <i
                   className="fas fa-headset"
                   style={{
-                    fontSize: "1.6rem",
+                    fontSize: "2.2rem",
                     color: "var(--primary)",
                   }}
                 ></i>
@@ -350,23 +350,24 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
               href="https://wa.me/923110523073"
               target="_blank"
               rel="noopener noreferrer"
-              className="btn btn-pulse"
               style={{
-                display: "inline-flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "10px",
+                display: "block",
+                width: "100%",
+                boxSizing: "border-box",
+                textAlign: "center",
                 background: "#25D366",
                 color: "#fff",
-                padding: "12px 28px",
+                padding: "14px 20px",
                 fontSize: "0.95rem",
-                borderRadius: "12px",
+                borderRadius: "14px",
                 fontWeight: 600,
+                textDecoration: "none",
+                lineHeight: "1.5",
               }}
             >
               <i
                 className="fab fa-whatsapp"
-                style={{ fontSize: "1.4rem", color: "#fff" }}
+                style={{ fontSize: "1.4rem", color: "#fff", marginRight: "8px", verticalAlign: "middle" }}
               ></i>
               WhatsApp
             </a>
