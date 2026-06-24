@@ -15,8 +15,10 @@ const outfit = Outfit({
   weight: ["400", "500", "600", "700", "800", "900"],
 });
 
+const SITE_URL = "https://elevateedgedigitalagency.vercel.app";
+
 export const metadata: Metadata = {
-  metadataBase: new URL("https://elevate-edge-digital-agency.vercel.app"),
+  metadataBase: new URL(SITE_URL),
   title: "ElevateEdge Digital Agency – Strategic Growth & Premium Web Solutions",
   description:
     "Amplify your business with elite digital strategies. Custom high-conversion websites, targeted marketing, and social media management designed to scale your ROI.",
@@ -43,16 +45,16 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/agency-preview-thumbnail.jpg",
-        width: 1280,
-        height: 620,
+        width: 1920,
+        height: 1080,
         alt: "ElevateEdge Digital Agency - Premium Web Solutions",
       },
     ],
     videos: [
       {
         url: "/agency-preview.mp4",
-        width: 1280,
-        height: 620,
+        width: 1920,
+        height: 1080,
         type: "video/mp4",
       },
     ],
@@ -82,21 +84,21 @@ export default function RootLayout({
         {/* Open Graph Video Meta Tags for social media link previews */}
         {/* These ensure video auto-plays when link is shared on WhatsApp, Facebook, Instagram, Messenger */}
         <meta property="og:type" content="video.other" />
-        <meta property="og:video" content="https://elevate-edge-digital-agency.vercel.app/agency-preview.mp4" />
-        <meta property="og:video:url" content="https://elevate-edge-digital-agency.vercel.app/agency-preview.mp4" />
-        <meta property="og:video:secure_url" content="https://elevate-edge-digital-agency.vercel.app/agency-preview.mp4" />
+        <meta property="og:video" content={`${SITE_URL}/agency-preview.mp4`} />
+        <meta property="og:video:url" content={`${SITE_URL}/agency-preview.mp4`} />
+        <meta property="og:video:secure_url" content={`${SITE_URL}/agency-preview.mp4`} />
         <meta property="og:video:type" content="video/mp4" />
-        <meta property="og:video:width" content="1280" />
-        <meta property="og:video:height" content="620" />
-        <meta property="og:image" content="https://elevate-edge-digital-agency.vercel.app/agency-preview-thumbnail.jpg" />
-        <meta property="og:image:width" content="1280" />
-        <meta property="og:image:height" content="620" />
+        <meta property="og:video:width" content="1920" />
+        <meta property="og:video:height" content="1080" />
+        <meta property="og:image" content={`${SITE_URL}/agency-preview-thumbnail.jpg`} />
+        <meta property="og:image:width" content="1920" />
+        <meta property="og:image:height" content="1080" />
         <meta property="og:image:type" content="image/jpeg" />
         <meta name="twitter:card" content="player" />
-        <meta name="twitter:player" content="https://elevate-edge-digital-agency.vercel.app/agency-preview.mp4" />
-        <meta name="twitter:player:width" content="1280" />
-        <meta name="twitter:player:height" content="620" />
-        <meta name="twitter:image" content="https://elevate-edge-digital-agency.vercel.app/agency-preview-thumbnail.jpg" />
+        <meta name="twitter:player" content={`${SITE_URL}/agency-preview.mp4`} />
+        <meta name="twitter:player:width" content="1920" />
+        <meta name="twitter:player:height" content="1080" />
+        <meta name="twitter:image" content={`${SITE_URL}/agency-preview-thumbnail.jpg`} />
       </head>
       <body
         className={`${inter.variable} ${outfit.variable} antialiased`}
