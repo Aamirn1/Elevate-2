@@ -156,7 +156,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  <i className="fas fa-briefcase"></i> Full-time
+                  <i className="fas fa-briefcase" style={{ lineHeight: 1 }}></i> Full-time
                 </span>
                 <span
                   style={{
@@ -172,7 +172,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  <i className="fas fa-location-dot"></i> Remote
+                  <i className="fas fa-location-dot" style={{ lineHeight: 1 }}></i> Remote
                 </span>
                 <span
                   style={{
@@ -188,7 +188,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                     fontWeight: 500,
                   }}
                 >
-                  <i className="fas fa-clock"></i> Flexible Hours
+                  <i className="fas fa-clock" style={{ lineHeight: 1 }}></i> Flexible Hours
                 </span>
               </div>
             </div>
@@ -352,24 +352,23 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
               rel="noopener noreferrer"
               className="btn btn-pulse"
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
                 justifyContent: "center",
-                gap: "12px",
-                width: "100%",
+                gap: "10px",
                 background: "#25D366",
                 color: "#fff",
-                padding: "16px 32px",
-                fontSize: "1.05rem",
+                padding: "12px 28px",
+                fontSize: "0.95rem",
                 borderRadius: "12px",
                 fontWeight: 600,
               }}
             >
               <i
                 className="fab fa-whatsapp"
-                style={{ fontSize: "1.6rem", color: "#fff" }}
+                style={{ fontSize: "1.4rem", color: "#fff" }}
               ></i>
-              Apply via WhatsApp
+              WhatsApp
             </a>
           </div>
         </div>

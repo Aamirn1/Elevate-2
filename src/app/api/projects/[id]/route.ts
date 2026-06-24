@@ -18,7 +18,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { title, description, tags, image, url, sortOrder } = body;
+    const { title, description, tags, image, url, sortOrder, category } = body;
 
     const project = await db.project.update({
       where: { id: parseInt(id, 10) },
@@ -33,6 +33,7 @@ export async function PUT(
         ...(sortOrder !== undefined && {
           sortOrder: sortOrder ? parseInt(sortOrder, 10) : null,
         }),
+        ...(category !== undefined && { category: category || null }),
       },
     });
 

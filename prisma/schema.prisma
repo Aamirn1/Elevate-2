@@ -18,9 +18,20 @@ model Project {
   image       String
   url         String
   sortOrder   Int?     @map("sort_order")
+  category    String?  // Category name (e.g. "Fast Food", "E-commerce")
   createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("projects")
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  icon      String   @default("fa-folder") // Font Awesome icon class
+  sortOrder Int?     @map("sort_order")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("categories")
 }
 
 model Order {
