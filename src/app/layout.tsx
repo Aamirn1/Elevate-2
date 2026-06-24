@@ -45,16 +45,16 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/agency-preview-thumbnail.jpg",
-        width: 1920,
-        height: 1080,
+        width: 848,
+        height: 478,
         alt: "ElevateEdge Digital Agency - Premium Web Solutions",
       },
     ],
     videos: [
       {
         url: "/agency-preview.mp4",
-        width: 1920,
-        height: 1080,
+        width: 848,
+        height: 478,
         type: "video/mp4",
       },
     ],
@@ -88,16 +88,16 @@ export default function RootLayout({
         <meta property="og:video:url" content={`${SITE_URL}/agency-preview.mp4`} />
         <meta property="og:video:secure_url" content={`${SITE_URL}/agency-preview.mp4`} />
         <meta property="og:video:type" content="video/mp4" />
-        <meta property="og:video:width" content="1920" />
-        <meta property="og:video:height" content="1080" />
+        <meta property="og:video:width" content="848" />
+        <meta property="og:video:height" content="478" />
         <meta property="og:image" content={`${SITE_URL}/agency-preview-thumbnail.jpg`} />
-        <meta property="og:image:width" content="1920" />
-        <meta property="og:image:height" content="1080" />
+        <meta property="og:image:width" content="848" />
+        <meta property="og:image:height" content="478" />
         <meta property="og:image:type" content="image/jpeg" />
         <meta name="twitter:card" content="player" />
         <meta name="twitter:player" content={`${SITE_URL}/agency-preview.mp4`} />
-        <meta name="twitter:player:width" content="1920" />
-        <meta name="twitter:player:height" content="1080" />
+        <meta name="twitter:player:width" content="848" />
+        <meta name="twitter:player:height" content="478" />
         <meta name="twitter:image" content={`${SITE_URL}/agency-preview-thumbnail.jpg`} />
       </head>
       <body
