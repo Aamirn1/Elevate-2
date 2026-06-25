@@ -130,6 +130,16 @@ export const fallbackProjects: FallbackProject[] = [
     sortOrder: 12,
     category: "Dairy Business",
   },
+  {
+    id: 13,
+    title: "Ice Cream Shop",
+    description: "A delightful e-commerce ice cream shop with online ordering, flavor showcase, and a sweet, modern design.",
+    tags: ["E-commerce", "Ice Cream", "Online Ordering"],
+    image: "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=800&q=80",
+    url: "https://ice-cream-shop-woad.vercel.app/",
+    sortOrder: 13,
+    category: "Custom E-commerce Stores",
+  },
 ];
 
 export const fallbackCategories = [
