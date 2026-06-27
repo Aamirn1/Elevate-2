@@ -140,6 +140,16 @@ export const fallbackProjects: FallbackProject[] = [
     sortOrder: 13,
     category: "Custom E-commerce Stores",
   },
+  {
+    id: 14,
+    title: "Islamabad Optical",
+    description: "A professional optical business website showcasing eyewear collections, eye care services, and online appointment booking.",
+    tags: ["Health Care", "Optical", "Eyewear"],
+    image: "https://images.unsplash.com/photo-1577803645773-f96470509666?w=800&q=80",
+    url: "https://islamabadoptical.vercel.app/",
+    sortOrder: 14,
+    category: "Health Care",
+  },
 ];
 
 export const fallbackCategories = [
@@ -156,4 +166,5 @@ export const fallbackCategories = [
   { id: 11, name: "Event Management", icon: "fa-calendar-check", sortOrder: 11, createdAt: "" },
   { id: 12, name: "Trade Platform", icon: "fa-exchange-alt", sortOrder: 12, createdAt: "" },
   { id: 13, name: "Dairy Business", icon: "fa-cow", sortOrder: 13, createdAt: "" },
+  { id: 14, name: "Health Care", icon: "fa-eye", sortOrder: 14, createdAt: "" },
 ];
