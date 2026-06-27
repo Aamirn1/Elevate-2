@@ -98,6 +98,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
 
       <section className="testimonials-section">
         <div className="container">
+          <div className="categories-grid">
           {categoriesWithProjects.map((cat) => (
             <div className="category-section reveal" key={cat.id}>
               <div className="category-section-header">
@@ -211,6 +212,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
               No projects found.
             </div>
           )}
+          </div>
         </div>
       </section>
 

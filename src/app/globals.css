@@ -3414,3 +3414,50 @@ body.menu-open .whatsapp-fab {
     font-size: 1.1rem;
   }
 }
+
+/* Categories grid - 3 categories per row on desktop, 1 on mobile */
+.categories-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 40px;
+}
+
+@media (min-width: 1024px) {
+  .categories-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+  }
+
+  .category-section {
+    margin-bottom: 0;
+  }
+
+  .category-projects-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .testimonial-card {
+    max-width: 100%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 32px;
+  }
+
+  .category-section {
+    margin-bottom: 0;
+  }
+
+  .category-projects-grid {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .testimonial-card {
+    max-width: 100%;
+  }
+}
