@@ -38,7 +38,7 @@ export const fallbackProjects: FallbackProject[] = [
     image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=800&q=80",
     url: "https://flashbuy.vercel.app/",
     sortOrder: 3,
-    category: "Custom E-commerce Stores",
+    category: "FlashBuy",
   },
   {
     id: 4,
@@ -68,7 +68,7 @@ export const fallbackProjects: FallbackProject[] = [
     image: "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?w=800&q=80",
     url: "https://chohan-s-style-dsaa.vercel.app/",
     sortOrder: 6,
-    category: "Hairstyle Businesses",
+    category: "Hairstyle",
   },
   {
     id: 7,
@@ -138,7 +138,7 @@ export const fallbackProjects: FallbackProject[] = [
     image: "https://images.unsplash.com/photo-1567206563064-6f60f40a2b57?w=800&q=80",
     url: "https://ice-cream-shop-woad.vercel.app/",
     sortOrder: 13,
-    category: "Custom E-commerce Stores",
+    category: "Ice Cream",
   },
   {
     id: 14,
@@ -154,7 +154,7 @@ export const fallbackProjects: FallbackProject[] = [
 
 export const fallbackCategories = [
   { id: 1, name: "Fast Food", icon: "fa-utensils", sortOrder: 1, createdAt: "" },
-  { id: 2, name: "Hairstyle Businesses", icon: "fa-cut", sortOrder: 2, createdAt: "" },
+  { id: 2, name: "Hairstyle", icon: "fa-cut", sortOrder: 2, createdAt: "" },
   { id: 3, name: "Electronic Products", icon: "fa-laptop", sortOrder: 3, createdAt: "" },
   { id: 4, name: "Custom E-commerce Stores", icon: "fa-shopping-cart", sortOrder: 4, createdAt: "" },
   { id: 5, name: "Professional Services", icon: "fa-briefcase", sortOrder: 5, createdAt: "" },
@@ -167,4 +167,6 @@ export const fallbackCategories = [
   { id: 12, name: "Trade Platform", icon: "fa-exchange-alt", sortOrder: 12, createdAt: "" },
   { id: 13, name: "Dairy Business", icon: "fa-cow", sortOrder: 13, createdAt: "" },
   { id: 14, name: "Health Care", icon: "fa-eye", sortOrder: 14, createdAt: "" },
+  { id: 15, name: "FlashBuy", icon: "fa-bolt", sortOrder: 15, createdAt: "" },
+  { id: 16, name: "Ice Cream", icon: "fa-ice-cream", sortOrder: 16, createdAt: "" },
 ];
