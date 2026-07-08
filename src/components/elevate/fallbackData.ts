@@ -150,6 +150,16 @@ export const fallbackProjects: FallbackProject[] = [
     sortOrder: 14,
     category: "Health Care",
   },
+  {
+    id: 15,
+    title: "Opus Solutions",
+    description: "A professional real estate lead generation website helping agencies capture and convert high-quality property leads.",
+    tags: ["Real Estate", "Lead Generation", "Property"],
+    image: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&q=80",
+    url: "https://opussolutions.vercel.app/",
+    sortOrder: 15,
+    category: "Real Estate",
+  },
 ];
 
 export const fallbackCategories = [
