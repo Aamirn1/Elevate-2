@@ -115,6 +115,18 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
+          <video
+            className="hero-video-bg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            poster="/agency-preview-thumbnail.jpg"
+          >
+            <source src="/hero-bg.mp4" type="video/mp4" />
+          </video>
+          <div className="hero-video-overlay"></div>
           <div className="hero-shape hero-shape-1"></div>
           <div className="hero-shape hero-shape-2"></div>
           <div className="hero-shape hero-shape-3"></div>
