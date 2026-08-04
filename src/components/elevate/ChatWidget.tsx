@@ -6,7 +6,7 @@ const responses: Record<string, string> = {
   greeting:
     "Hello! 👋 Welcome to ElevateEdge Digital. How can we help your business today?",
   services:
-    "We offer:\n• Custom Website Development\n• Digital Marketing & Ads\n• Social Media Management\n• 24/7 Smart Chat Support\n\nWhich service interests you?",
+    "We offer:\n• Custom Website Development\n• Digital Marketing & Ads\n• Social Media Management\n• Virtual Assistant Service\n\nWhich service interests you?",
   website:
     "We build stunning, responsive websites tailored to your industry — retail, food, professional services, and more! Our packages start at very affordable rates. Ready to Boost your presence?",
   marketing:
@@ -16,9 +16,9 @@ const responses: Record<string, string> = {
   pricing:
     "Our packages are designed to be budget-friendly! We believe every business deserves a great online presence. Contact us for a custom project proposal tailored to your needs.",
   contact:
-    "You can reach us via:\n• WhatsApp: +92 320 571 9979\n• Email: elevateedgedigitalagency@gmail.com\n• Or fill out our Order Now form!\n\nWe'd love to hear from you! 💬",
+    "You can reach us via:\n• WhatsApp: +92 311 0523073\n• Email: elevateedgedigitalagency@gmail.com\n• Or fill out our Order Now form!\n\nWe'd love to hear from you! 💬",
   quote:
-    "Great choice! 🎉 Please visit our Order Now page or message us on WhatsApp at +92 320 571 9979 to get your custom project roadmap started.",
+    "Great choice! 🎉 Please visit our Order Now page or message us on WhatsApp at +92 311 0523073 to get your custom project roadmap started.",
   default:
     "Thanks for your message! I'd love to help. You can ask about our services, careers, or how to get started. For detailed inquiries, connect with our team on WhatsApp! 😊",
 };
@@ -88,10 +88,10 @@ export function ChatWidget() {
       <button
         className={`chat-toggle ${open ? "open" : ""}`}
         id="chat-toggle"
-        aria-label="Open chat"
+        aria-label="Open AI Support Assistant"
         onClick={() => setOpen(!open)}
       >
-        <i className={`fas ${open ? "fa-times" : "fa-comment-dots"}`}></i>
+        <i className={`fas ${open ? "fa-times" : "fa-headset"}`}></i>
       </button>
       <div className={`chat-box ${open ? "open" : ""}`} id="chat-box">
         <div className="chat-header">
@@ -99,7 +99,7 @@ export function ChatWidget() {
             <i className="fas fa-headset"></i>
           </div>
           <div className="info">
-            <h4>ElevateEdge Support</h4>
+            <h4>Elevate Edge Support</h4>
             <span>
               <i
                 className="fas fa-circle"

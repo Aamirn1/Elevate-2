@@ -949,6 +949,39 @@ body.menu-open .whatsapp-fab {
   margin: 0 auto;
 }
 
+/* Desktop: left-aligned hero content with stylish font */
+@media (min-width: 1024px) {
+  .hero-content.hero-content-left {
+    text-align: left;
+    margin: 0;
+    margin-left: 0;
+    max-width: 640px;
+    padding-left: 20px;
+  }
+
+  .hero-content.hero-content-left .hero-badge {
+    margin-left: 0;
+  }
+
+  .hero-content.hero-content-left .hero-btns {
+    justify-content: flex-start;
+  }
+
+  .hero-content.hero-content-left .hero-stats {
+    justify-content: flex-start;
+  }
+
+  .hero-content.hero-content-left h1 {
+    font-family: var(--font-outfit), var(--font-geist-sans), sans-serif;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+  }
+
+  .hero-content.hero-content-left .hero-sub {
+    margin-left: 0;
+  }
+}
+
 .hero-badge {
   display: inline-flex;
   align-items: center;
@@ -1674,6 +1707,26 @@ body.menu-open .whatsapp-fab {
   gap: 8px 0;
 }
 
+/* Desktop: 2-column grid for trust bar items */
+@media (min-width: 1024px) {
+  .trust-bar-inner {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px 40px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .trust-bar-inner .trust-item {
+    justify-self: center;
+    padding: 10px 20px;
+  }
+
+  .trust-divider {
+    display: none;
+  }
+}
+
 .trust-item {
   display: flex;
   align-items: center;
@@ -1866,23 +1919,25 @@ body.menu-open .whatsapp-fab {
   flex: 1;
   height: 2px;
   background: rgba(255, 255, 255, 0.05);
-  min-width: 32px;
-  max-width: 80px;
-  margin-top: 31px;
-  /* Align with center of 64px step numbers */
+  min-width: 40px;
+  max-width: 100px;
+  margin-top: 32px;
+  /* Align with center of 64px step numbers (64/2 = 32px) */
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .process-connector::after {
   content: '';
   position: absolute;
-  top: 0;
+  top: 50%;
   left: 0;
-  height: 100%;
+  transform: translateY(-50%);
+  height: 4px;
   width: 0;
-  background-image: radial-gradient(circle, var(--primary) 1.5px, transparent 1.5px);
-  background-size: 8px 100%;
+  background-image: radial-gradient(circle, var(--primary) 2px, transparent 2px);
+  background-size: 10px 100%;
+  background-repeat: repeat-x;
 }
 
 @keyframes draw-dotted {
@@ -2727,6 +2782,25 @@ body.menu-open .whatsapp-fab {
 
   .whatsapp-fab i {
     font-size: 1.5rem;
+  }
+
+  .chat-toggle {
+    width: 50px;
+    height: 50px;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1001;
+  }
+
+  .chat-toggle i {
+    font-size: 1.3rem;
+  }
+
+  .chat-box {
+    bottom: 80px;
+    right: 20px;
+    width: calc(100vw - 40px);
+    max-height: 70vh;
   }
 
   .hero {

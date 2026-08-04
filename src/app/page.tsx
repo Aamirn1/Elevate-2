@@ -3,7 +3,7 @@
 import { useEffect, useSyncExternalStore } from "react";
 import { Navbar } from "@/components/elevate/Navbar";
 import { Footer } from "@/components/elevate/Footer";
-import { WhatsAppFab } from "@/components/elevate/WhatsAppFab";
+import { ChatWidget } from "@/components/elevate/ChatWidget";
 import { ScrollTop } from "@/components/elevate/ScrollTop";
 import { HomePage } from "@/components/elevate/pages/HomePage";
 import { ServicesPage } from "@/components/elevate/pages/ServicesPage";
@@ -138,7 +138,7 @@ export default function Home() {
         {renderPage()}
       </main>
       <Footer onNavigate={navigate} />
-      <WhatsAppFab />
+      <ChatWidget />
       <ScrollTop currentPath={currentPath} />
     </div>
   );

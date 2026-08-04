@@ -127,13 +127,9 @@ export function HomePage({ onNavigate }: HomePageProps) {
             <source src="/hero-bg.mp4" type="video/mp4" />
           </video>
           <div className="hero-video-overlay"></div>
-          <div className="hero-shape hero-shape-1"></div>
-          <div className="hero-shape hero-shape-2"></div>
-          <div className="hero-shape hero-shape-3"></div>
-          <div className="hero-grid"></div>
         </div>
         <div className="container">
-          <div className="hero-content">
+          <div className="hero-content hero-content-left">
             <div className="hero-badge">
               <i className="fas fa-rocket"></i>
               <span>Amplify Your Business Growth Online</span>
