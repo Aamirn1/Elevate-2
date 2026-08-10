@@ -36,8 +36,8 @@ const packages: Package[] = [
     name: "Standard Package",
     tagline:
       "Perfect for small businesses and startups looking to establish their online presence with a clean, professional website.",
-    currency: "PKR",
-    amount: "25k",
+    currency: "£",
+    amount: "199",
     period: "One-time project fee",
     features: [
       { label: "Professional website design", included: true },
@@ -53,7 +53,7 @@ const packages: Package[] = [
     ctaLabel: "Get Started",
     ctaHref: "/contact",
     whatsappLink: `https://wa.me/923110523073?text=${encodeURIComponent(
-      "New Order - ElevateEdge Digital\n\nPackage: Standard Package\nPrice: PKR 25k\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
+      "New Order - ElevateEdge Digital\n\nPackage: Standard Package\nPrice: £199\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
     )}`,
   },
   {
@@ -62,8 +62,8 @@ const packages: Package[] = [
     name: "Professional Package",
     tagline:
       "Our most popular package for growing businesses that need a full-featured, database-driven platform with admin controls.",
-    currency: "PKR",
-    amount: "40k",
+    currency: "£",
+    amount: "299",
     period: "One-time project fee",
     featured: true,
     badge: "Most Popular",
@@ -81,7 +81,7 @@ const packages: Package[] = [
     ctaLabel: "Get Started",
     ctaHref: "/contact",
     whatsappLink: `https://wa.me/923110523073?text=${encodeURIComponent(
-      "New Order - ElevateEdge Digital\n\nPackage: Professional Package\nPrice: PKR 40k\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
+      "New Order - ElevateEdge Digital\n\nPackage: Professional Package\nPrice: £299\nPeriod: One-time project fee\n\nI'm interested in this package. Please share more details."
     )}`,
   },
   {
