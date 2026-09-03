@@ -115,17 +115,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
       {/* Hero Section */}
       <section className="hero">
         <div className="hero-bg">
-          <video
-            className="hero-video-bg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="auto"
-            poster="/agency-preview-thumbnail.jpg"
-          >
-            <source src="/hero-bg.mp4" type="video/mp4" />
-          </video>
+          <img
+            className="hero-image-bg"
+            src="/hero-bg-image.png"
+            alt="ElevateEdge Digital Agency background"
+          />
           <div className="hero-video-overlay"></div>
         </div>
         <div className="container">

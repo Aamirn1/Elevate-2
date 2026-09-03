@@ -866,6 +866,15 @@ body.menu-open .whatsapp-fab {
   z-index: 0;
 }
 
+.hero-image-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+}
+
 .hero-video-overlay {
   position: absolute;
   inset: 0;
