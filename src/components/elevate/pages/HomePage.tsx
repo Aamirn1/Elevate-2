@@ -116,8 +116,13 @@ export function HomePage({ onNavigate }: HomePageProps) {
       <section className="hero">
         <div className="hero-bg">
           <img
-            className="hero-image-bg"
+            className="hero-image-bg hero-image-desktop"
             src="/hero-bg-image.png"
+            alt="ElevateEdge Digital Agency background"
+          />
+          <img
+            className="hero-image-bg hero-image-mobile"
+            src="/hero-bg-mobile.png"
             alt="ElevateEdge Digital Agency background"
           />
           <div className="hero-video-overlay"></div>

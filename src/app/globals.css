@@ -875,6 +875,26 @@ body.menu-open .whatsapp-fab {
   z-index: 0;
 }
 
+/* Desktop: show landscape image, hide mobile image */
+.hero-image-desktop {
+  display: block;
+}
+
+.hero-image-mobile {
+  display: none;
+}
+
+/* Mobile: show portrait image, hide desktop image */
+@media (max-width: 768px) {
+  .hero-image-desktop {
+    display: none;
+  }
+
+  .hero-image-mobile {
+    display: block;
+  }
+}
+
 .hero-video-overlay {
   position: absolute;
   inset: 0;
