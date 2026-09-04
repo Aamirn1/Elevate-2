@@ -3648,6 +3648,20 @@ body.menu-open .chat-toggle {
   color: #0a0a14 !important;
 }
 
+[data-theme="light"] .navbar.scrolled .brand-text-glass .elevate {
+  background: none;
+  -webkit-text-fill-color: #0a0a14;
+  color: #0a0a14;
+  animation: none;
+}
+
+[data-theme="light"] .navbar.scrolled .brand-text-glass .edge {
+  background: none;
+  -webkit-text-fill-color: var(--primary);
+  color: var(--primary);
+  animation: none;
+}
+
 [data-theme="light"] .hero h1 {
   color: #ffffff;
 }
