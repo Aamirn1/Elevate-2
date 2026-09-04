@@ -44,6 +44,15 @@ export function Navbar({ currentPath, onNavigate }: NavbarProps) {
     };
   }, [menuOpen]);
 
+  // Add body class for inner pages (non-home)
+  useEffect(() => {
+    if (currentPath !== "/") {
+      document.body.classList.add("inner-page");
+    } else {
+      document.body.classList.remove("inner-page");
+    }
+  }, [currentPath]);
+
   const handleNav = (e: React.MouseEvent, path: string) => {
     e.preventDefault();
     onNavigate(path);
@@ -52,7 +61,7 @@ export function Navbar({ currentPath, onNavigate }: NavbarProps) {
 
   return (
     <nav>
-      <div className={`navbar ${scrolled ? "scrolled" : ""}`}>
+      <div className={`navbar ${scrolled ? "scrolled" : ""} ${currentPath !== "/" ? "inner-page" : ""}`}>
         <div className="container">
           <a
             href="#/"
@@ -139,18 +148,23 @@ export function Navbar({ currentPath, onNavigate }: NavbarProps) {
                 data-page={link.page}
                 className={currentPath === link.href ? "active" : ""}
                 onClick={(e) => handleNav(e, link.href)}
+                style={{ whiteSpace: "nowrap" }}
               >
                 {link.label}
               </a>
             ))}
+            <div className="nav-theme-toggle-desktop">
+              <ThemeToggle />
+            </div>
             <a
               href="#/contact"
               className="nav-cta btn-pulse"
               onClick={(e) => handleNav(e, "/contact")}
+              style={{ whiteSpace: "nowrap" }}
             >
               Order Now
             </a>
-            <div style={{ marginTop: "20px", width: "100%" }}>
+            <div className="nav-theme-toggle-mobile">
               <ThemeToggle />
             </div>
           </div>

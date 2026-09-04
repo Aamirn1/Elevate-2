@@ -4018,3 +4018,106 @@ body.menu-open .chat-toggle {
 [data-theme="light"] .admin-list-card {
   background: var(--bg-surface);
 }
+
+/* ============================================================
+   Navbar Theme Toggle + Desktop Fixes
+   ============================================================ */
+
+/* Desktop: show toggle before Order Now, hide mobile toggle */
+.nav-theme-toggle-desktop {
+  display: flex;
+  align-items: center;
+}
+
+.nav-theme-toggle-mobile {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .nav-theme-toggle-desktop {
+    display: none;
+  }
+
+  .nav-theme-toggle-mobile {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-top: 20px;
+  }
+}
+
+/* Desktop: navbar wider, no wrapping */
+@media (min-width: 769px) {
+  .nav-links {
+    gap: 20px;
+    flex-wrap: nowrap;
+  }
+
+  .nav-links a {
+    white-space: nowrap;
+    font-size: 0.9rem;
+  }
+
+  .navbar .container {
+    max-width: 1400px;
+  }
+}
+
+/* Light mode: remove white navbar background on non-home pages (not scrolled) */
+[data-theme="light"] .navbar:not(.scrolled) {
+  background: transparent;
+}
+
+/* Light mode: non-home pages - Elevate uses muted color by default (not white) */
+[data-theme="light"]:not(:has(.hero-content.hero-content-left)) .navbar:not(.scrolled) .brand-text-glass .elevate,
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .brand-text-glass .elevate {
+  background:
+    linear-gradient(110deg,
+      rgba(106, 106, 128, 0) 45%,
+      rgba(140, 140, 160, 0.6) 50%,
+      rgba(106, 106, 128, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #6a6a80 0%, #6a6a80 45%, #8a8aa0 45%, #7a7a90 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    logo-shine-sweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite,
+    logo-glow-pulse 3s ease-in-out infinite;
+  animation-delay: 0s;
+}
+
+/* Light mode: non-home pages - burger icon uses muted color */
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .hamburger span {
+  background: #6a6a80;
+}
+
+/* Light mode: non-home pages - nav links use dark color (not white) */
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a:hover,
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a.active {
+  color: var(--primary);
+}
+
+/* Light mode: non-home hero text black (desktop only) */
+@media (min-width: 769px) {
+  [data-theme="light"] body.inner-page .hero h1 {
+    color: var(--text-heading);
+  }
+
+  [data-theme="light"] body.inner-page .hero .hero-sub {
+    color: var(--text-muted);
+  }
+
+  [data-theme="light"] body.inner-page .hero .hero-badge {
+    background: rgba(168, 85, 247, 0.08);
+    color: var(--primary);
+  }
+
+  [data-theme="light"] body.inner-page .hero .btn-outline,
+  [data-theme="light"] body.inner-page .hero .btn-outline i {
+    color: var(--primary);
+  }
+}
