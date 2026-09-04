@@ -8,10 +8,9 @@ export function ThemeToggle() {
     return localStorage.getItem("theme") !== "light";
   });
 
-  const toggleTheme = () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    if (newTheme) {
+  const setTheme = (dark: boolean) => {
+    setIsDark(dark);
+    if (dark) {
       document.documentElement.setAttribute("data-theme", "dark");
       localStorage.setItem("theme", "dark");
     } else {
@@ -21,30 +20,54 @@ export function ThemeToggle() {
   };
 
   return (
-    <button
-      onClick={toggleTheme}
+    <div
       style={{
         display: "flex",
-        alignItems: "center",
-        gap: "10px",
-        padding: "10px 20px",
-        background: "transparent",
-        border: "1px solid var(--border)",
-        borderRadius: "var(--radius-pill)",
-        color: "var(--text)",
-        fontSize: "0.95rem",
-        fontWeight: 500,
-        cursor: "pointer",
-        transition: "all 0.3s var(--ease)",
-        width: "100%",
+        gap: "12px",
         justifyContent: "center",
+        width: "100%",
       }}
     >
-      <i
-        className={`fas ${isDark ? "fa-sun" : "fa-moon"}`}
-        style={{ fontSize: "1rem", color: "var(--primary)" }}
-      ></i>
-      <span>{isDark ? "Light Mode" : "Dark Mode"}</span>
-    </button>
+      <button
+        onClick={() => setTheme(true)}
+        aria-label="Dark Mode"
+        style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          fontSize: "1.1rem",
+          background: isDark ? "var(--gradient-primary)" : "transparent",
+          color: isDark ? "#fff" : "var(--text-muted)",
+          border: isDark ? "none" : "1px solid var(--border)",
+          transition: "all 0.3s var(--ease)",
+        }}
+      >
+        <i className="fas fa-moon"></i>
+      </button>
+      <button
+        onClick={() => setTheme(false)}
+        aria-label="Light Mode"
+        style={{
+          width: "44px",
+          height: "44px",
+          borderRadius: "50%",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          cursor: "pointer",
+          fontSize: "1.1rem",
+          background: !isDark ? "var(--gradient-primary)" : "transparent",
+          color: !isDark ? "#fff" : "var(--text-muted)",
+          border: !isDark ? "none" : "1px solid var(--border)",
+          transition: "all 0.3s var(--ease)",
+        }}
+      >
+        <i className="fas fa-sun"></i>
+      </button>
+    </div>
   );
 }
