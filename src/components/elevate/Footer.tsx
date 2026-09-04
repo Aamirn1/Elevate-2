@@ -18,9 +18,78 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="container">
           <div className="footer-grid">
             <div className="footer-col">
-              <div className="navbar-brand" style={{ marginBottom: "16px" }}>
-                <span>Elevate</span>
-                <span className="highlight">Edge</span>
+              <div className="navbar-brand footer-brand" style={{ marginBottom: "16px" }}>
+                <div className="brand-metallic-wrap">
+                  <div className="brand-logo-glass">
+                    <svg
+                      className="brand-logo-svg"
+                      viewBox="0 0 100 85"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <defs>
+                        <linearGradient
+                          id="footer_logo_grad"
+                          x1="0"
+                          y1="0"
+                          x2="100"
+                          y2="85"
+                          gradientUnits="userSpaceOnUse"
+                        >
+                          <stop stopColor="#a855f7" />
+                          <stop offset="1" stopColor="#ec4899" />
+                        </linearGradient>
+                        <linearGradient
+                          id="footer_shine_grad"
+                          x1="-100%"
+                          y1="0%"
+                          x2="0%"
+                          y2="0%"
+                        >
+                          <stop offset="0%" stopColor="white" stopOpacity="0" />
+                          <stop offset="50%" stopColor="white" stopOpacity="0.9" />
+                          <stop offset="100%" stopColor="white" stopOpacity="0" />
+                          <animate
+                            attributeName="x1"
+                            from="-100%"
+                            to="200%"
+                            dur="2.5s"
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="x2"
+                            from="0%"
+                            to="300%"
+                            dur="2.5s"
+                            repeatCount="indefinite"
+                          />
+                        </linearGradient>
+                        <mask id="footer_shine_mask">
+                          <rect x="0" y="0" width="100" height="85" fill="black" />
+                          <rect x="0" y="55" width="16" height="30" rx="3" fill="white" />
+                          <rect x="22" y="35" width="16" height="50" rx="3" fill="white" />
+                          <rect x="44" y="15" width="16" height="70" rx="3" fill="white" />
+                          <rect x="66" y="0" width="16" height="85" rx="3" fill="white" />
+                        </mask>
+                      </defs>
+                      <rect x="0" y="55" width="16" height="30" rx="3" fill="url(#footer_logo_grad)" opacity="0.4" />
+                      <rect x="22" y="35" width="16" height="50" rx="3" fill="url(#footer_logo_grad)" opacity="0.6" />
+                      <rect x="44" y="15" width="16" height="70" rx="3" fill="url(#footer_logo_grad)" opacity="0.8" />
+                      <rect x="66" y="0" width="16" height="85" rx="3" fill="url(#footer_logo_grad)" />
+                      <rect
+                        width="100"
+                        height="85"
+                        fill="url(#footer_shine_grad)"
+                        mask="url(#footer_shine_mask)"
+                        style={{ mixBlendMode: "screen" }}
+                      />
+                    </svg>
+                  </div>
+                  <div className="brand-text-glass" data-text="Elevate Edge">
+                    <span className="elevate">Elevate</span>{" "}
+                    <span className="edge highlight">Edge</span>
+                  </div>
+                </div>
               </div>
               <p>
                 Amplify your business growth with our budget-friendly digital

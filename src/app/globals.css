@@ -3648,19 +3648,24 @@ body.menu-open .chat-toggle {
   color: #0a0a14 !important;
 }
 
+/* Light mode scrolled: Elevate uses black gradient with shimmer (not solid black) */
 [data-theme="light"] .navbar.scrolled .brand-text-glass .elevate {
-  background: none;
-  -webkit-text-fill-color: #0a0a14;
-  color: #0a0a14;
-  animation: none;
+  background:
+    linear-gradient(110deg,
+      rgba(10, 10, 20, 0) 45%,
+      rgba(60, 60, 80, 0.5) 50%,
+      rgba(10, 10, 20, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #0a0a14 0%, #0a0a14 45%, #2a2a3e 45%, #1a1a2e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation:
+    logo-shine-sweep 3s cubic-bezier(0.4, 0, 0.2, 1) infinite,
+    logo-glow-pulse 3s ease-in-out infinite;
+  animation-delay: 0s;
 }
 
-[data-theme="light"] .navbar.scrolled .brand-text-glass .edge {
-  background: none;
-  -webkit-text-fill-color: var(--primary);
-  color: var(--primary);
-  animation: none;
-}
+/* Edge: keep original styling, do not change */
 
 [data-theme="light"] .hero h1 {
   color: #ffffff;
@@ -3894,6 +3899,29 @@ body.menu-open .chat-toggle {
 [data-theme="light"] .scroll-top {
   border-color: var(--primary);
   color: var(--primary);
+}
+
+/* Light mode: btn-outline text and icon visible (black) */
+[data-theme="light"] .btn-outline {
+  color: #0a0a14;
+  border-color: var(--primary);
+}
+
+[data-theme="light"] .btn-outline i {
+  color: #0a0a14;
+}
+
+/* Light mode: footer brand uses black gradient shimmer (same as navbar scrolled) */
+[data-theme="light"] .footer-brand .brand-text-glass .elevate {
+  background:
+    linear-gradient(110deg,
+      rgba(10, 10, 20, 0) 45%,
+      rgba(60, 60, 80, 0.5) 50%,
+      rgba(10, 10, 20, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #0a0a14 0%, #0a0a14 45%, #2a2a3e 45%, #1a1a2e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 [data-theme="light"] .portfolio-section {
