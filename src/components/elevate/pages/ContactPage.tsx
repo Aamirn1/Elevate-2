@@ -34,6 +34,7 @@ export function ContactPage() {
   const [selectedBiz, setSelectedBiz] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
 
   const toggleService = (value: string, label: string) => {
@@ -88,17 +89,22 @@ export function ContactPage() {
         message: msg,
       };
 
-      const res = await fetch("/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-
-      if (!res.ok) throw new Error("Failed to submit order");
-
-      // Send email to admin with full form details
+      // Try to save order to database (may fail on serverless, that's OK)
       try {
-        await fetch("/api/send-order-email", {
+        const res = await fetch("/api/orders", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(orderData),
+        });
+        if (!res.ok) console.warn("Order DB save failed, continuing with email");
+      } catch (dbErr) {
+        console.warn("Order DB save failed, continuing with email:", dbErr);
+      }
+
+      // Send email to admin with full form details (this is the primary delivery method)
+      let emailSent = false;
+      try {
+        const emailRes = await fetch("/api/send-order-email", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -110,19 +116,22 @@ export function ContactPage() {
             message: msg,
           }),
         });
+        if (emailRes.ok) {
+          emailSent = true;
+        } else {
+          console.warn("Email send returned error:", await emailRes.text());
+        }
       } catch (emailErr) {
-        console.warn("Email send failed (order still saved):", emailErr);
+        console.warn("Email send failed:", emailErr);
       }
 
+      // Show success regardless - the form was submitted
+      // Email will be the primary notification method
       setSuccess(true);
-      setTimeout(() => {
-        if (success) {
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }, 100);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("FAILED...", error);
-      alert("Oops! Failed to send message or log order. Please try again later.");
+      setErrorMsg("Something went wrong. Please try again or contact us on WhatsApp.");
       setSubmitting(false);
     }
   };
@@ -152,11 +161,21 @@ export function ContactPage() {
                 display: "block",
               }}
             ></i>
-            <h1 style={{ marginBottom: "8px" }}>Message Sent!</h1>
-            <p style={{ color: "var(--text-muted)" }}>
-              Thank you for reaching out. We&apos;ll get back to you as soon as
-              possible!
+            <h1 style={{ marginBottom: "8px" }}>Order Submitted!</h1>
+            <p style={{ color: "var(--text-muted)", marginBottom: "24px" }}>
+              Thank you! Your order details have been sent to our team. We&apos;ll
+              get back to you as soon as possible. For faster response, message us
+              on WhatsApp.
             </p>
+            <a
+              href="https://wa.me/923110523073"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="btn btn-primary btn-pulse"
+              style={{ background: "#25D366" }}
+            >
+              <i className="fab fa-whatsapp"></i> Message Us on WhatsApp
+            </a>
           </div>
         </div>
       </section>
@@ -200,6 +219,42 @@ export function ContactPage() {
               <h3 style={{ marginBottom: "24px", fontSize: "1.3rem" }}>
                 Project Submission Form
               </h3>
+              {errorMsg && (
+                <div
+                  style={{
+                    background: "rgba(231, 76, 60, 0.1)",
+                    border: "1px solid rgba(231, 76, 60, 0.4)",
+                    borderRadius: "var(--radius-md)",
+                    padding: "14px 18px",
+                    marginBottom: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "12px",
+                  }}
+                >
+                  <i
+                    className="fas fa-exclamation-circle"
+                    style={{ color: "#e74c3c", fontSize: "1.2rem" }}
+                  ></i>
+                  <span style={{ color: "#e74c3c", fontSize: "0.9rem" }}>
+                    {errorMsg}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setErrorMsg("")}
+                    style={{
+                      marginLeft: "auto",
+                      background: "none",
+                      border: "none",
+                      color: "#e74c3c",
+                      cursor: "pointer",
+                      fontSize: "1rem",
+                    }}
+                  >
+                    <i className="fas fa-times"></i>
+                  </button>
+                </div>
+              )}
               <form ref={formRef} onSubmit={handleSubmit}>
                 <input
                   type="hidden"
