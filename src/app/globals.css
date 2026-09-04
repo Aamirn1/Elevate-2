@@ -3641,15 +3641,19 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .navbar-brand {
-  color: var(--text-heading) !important;
+  color: #ffffff !important;
+}
+
+[data-theme="light"] .navbar.scrolled .navbar-brand {
+  color: #0a0a14 !important;
 }
 
 [data-theme="light"] .hero h1 {
-  color: var(--text-heading);
+  color: #ffffff;
 }
 
 [data-theme="light"] .hero-sub {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 [data-theme="light"] .hero-badge {
@@ -3860,7 +3864,11 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .hamburger span {
-  background: var(--text-heading);
+  background: #ffffff;
+}
+
+[data-theme="light"] .navbar.scrolled .hamburger span {
+  background: #0a0a14;
 }
 
 [data-theme="light"] .hamburger.active span {
