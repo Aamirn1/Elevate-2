@@ -16,7 +16,7 @@ const responses: Record<string, string> = {
   pricing:
     "Our packages are designed to be budget-friendly! We believe every business deserves a great online presence. Contact us for a custom project proposal tailored to your needs.",
   contact:
-    "You can reach us via:\n• WhatsApp: +92 311 0523073\n• Email: elevateedgedigitalagency@gmail.com\n• Or fill out our Order Now form!\n\nWe'd love to hear from you! 💬",
+    "You can reach us via:\n• WhatsApp: +92 311 0523073\n• Or fill out our Order Now form!\n\nWe'd love to hear from you! 💬",
   quote:
     "Great choice! 🎉 Please visit our Order Now page or message us on WhatsApp at +92 311 0523073 to get your custom project roadmap started.",
   default:

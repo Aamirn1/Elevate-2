@@ -82,15 +82,11 @@ export function Footer({ onNavigate }: FooterProps) {
             <div className="footer-col">
               <h4>Get in Touch</h4>
               <a
-                href="https://wa.me/923205719979"
+                href="https://wa.me/923110523073"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <i className="fab fa-whatsapp"></i> +92 320 571 9979
-              </a>
-              <a href="mailto:elevateedgedigitalagency@gmail.com">
-                <i className="fas fa-envelope"></i>{" "}
-                elevateedgedigitalagency@gmail.com
+                <i className="fab fa-whatsapp"></i> +92 311 0523073
               </a>
               <a href="#/contact" onClick={(e) => handleNav(e, "/contact")}>
                 <i className="fas fa-map-marker-alt"></i> Available Worldwide
