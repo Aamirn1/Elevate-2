@@ -12,6 +12,7 @@ import { AboutPage } from "@/components/elevate/pages/AboutPage";
 import { ContactPage } from "@/components/elevate/pages/ContactPage";
 import { CareerPage } from "@/components/elevate/pages/CareerPage";
 import { PricingPage } from "@/components/elevate/pages/PricingPage";
+import { BlogPage } from "@/components/elevate/pages/BlogPage";
 import { ServiceDetailPage } from "@/components/elevate/pages/ServiceDetailPage";
 import { AdminPage } from "@/components/elevate/pages/AdminPage";
 
@@ -29,6 +30,7 @@ const routeTitles: Record<string, string> = {
   "/contact": "Order Now | ElevateEdge Digital",
   "/career": "Careers | ElevateEdge Digital",
   "/pricing": "Pricing | ElevateEdge Digital",
+  "/blog": "Blog | ElevateEdge Digital",
   "/admin": "Admin Dashboard | ElevateEdge Digital",
 };
 
@@ -112,6 +114,8 @@ export default function Home() {
         return <CareerPage onNavigate={navigate} />;
       case "/pricing":
         return <PricingPage onNavigate={navigate} />;
+      case "/blog":
+        return <BlogPage onNavigate={navigate} />;
       case "/admin":
         return <AdminPage onNavigate={navigate} />;
       default:

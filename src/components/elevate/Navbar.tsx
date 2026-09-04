@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ThemeToggle } from "./ThemeToggle";
 
 interface NavbarProps {
   currentPath: string;
@@ -12,6 +13,7 @@ const navLinks = [
   { href: "/services", label: "Services", page: "services" },
   { href: "/portfolio", label: "Testimonials", page: "portfolio" },
   { href: "/pricing", label: "Pricing", page: "pricing" },
+  { href: "/blog", label: "Blog", page: "blog" },
   { href: "/career", label: "Careers", page: "career" },
   { href: "/about", label: "About Us", page: "about" },
 ];
@@ -148,6 +150,9 @@ export function Navbar({ currentPath, onNavigate }: NavbarProps) {
             >
               Order Now
             </a>
+            <div style={{ marginTop: "20px", width: "100%" }}>
+              <ThemeToggle />
+            </div>
           </div>
           <button
             className={`hamburger ${menuOpen ? "active" : ""}`}

@@ -3585,3 +3585,372 @@ body.menu-open .whatsapp-fab {
     max-width: 100%;
   }
 }
+
+/* ============================================================
+   Light Mode Theme
+   ============================================================ */
+[data-theme="light"] {
+  --bg: #f5f5fa;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f0f0f5;
+  --bg-surface: #eeeef5;
+  --text: #1a1a2e;
+  --text-muted: #6a6a80;
+  --text-heading: #0a0a14;
+  --border: rgba(0, 0, 0, 0.08);
+
+  --gradient-hero: radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.08) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(236, 72, 153, 0.06) 0%, transparent 50%), linear-gradient(160deg, #f5f5fa 0%, #f0f0f8 40%, #eeeef5 100%);
+  --gradient-card: linear-gradient(145deg, rgba(168, 85, 247, 0.03), rgba(236, 72, 153, 0.03));
+
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
+  --shadow-glow: 0 0 30px rgba(168, 85, 247, 0.1);
+}
+
+[data-theme="light"] body {
+  background: var(--bg);
+  color: var(--text);
+}
+
+[data-theme="light"] .navbar.scrolled {
+  background: rgba(245, 245, 250, 0.85);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .nav-links a {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .nav-links a:hover {
+  color: var(--primary);
+}
+
+[data-theme="light"] .nav-links a.active {
+  color: var(--primary);
+}
+
+[data-theme="light"] .navbar-brand {
+  color: var(--text-heading) !important;
+}
+
+[data-theme="light"] .hero h1 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .hero-sub {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .hero-badge {
+  background: rgba(168, 85, 247, 0.08);
+  color: var(--primary);
+}
+
+[data-theme="light"] .hero-stat {
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid var(--border);
+}
+
+[data-theme="light"] .trust-bar {
+  background: linear-gradient(90deg, rgba(168, 85, 247, 0.02) 0%, rgba(236, 72, 153, 0.02) 50%, rgba(168, 85, 247, 0.02) 100%);
+}
+
+[data-theme="light"] .trust-item {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .service-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .service-card:hover {
+  background: var(--bg-card-hover);
+}
+
+[data-theme="light"] .service-card h3 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .service-card p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .why-us-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .why-us-card h3 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .why-us-card p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .step-content h3 {
+  color: var(--text);
+}
+
+[data-theme="light"] .step-content p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .footer {
+  background: var(--bg-surface);
+}
+
+[data-theme="light"] .footer p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .footer-col h4 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .footer-col a {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .footer-col a:hover {
+  color: var(--primary);
+}
+
+[data-theme="light"] .cta-section::before {
+  opacity: 0.04;
+}
+
+[data-theme="light"] .cta-section h2 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .cta-section p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .section-header h2 {
+  color: var(--primary);
+}
+
+[data-theme="light"] .section-header p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .contact-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .contact-card h4 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .contact-card p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .contact-form {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .contact-form input,
+[data-theme="light"] .contact-form textarea,
+[data-theme="light"] .contact-form select {
+  background: var(--bg-surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .contact-form input::placeholder,
+[data-theme="light"] .contact-form textarea::placeholder {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .contact-form label {
+  color: var(--text);
+}
+
+[data-theme="light"] .pricing-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .pricing-card h3 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .pricing-tagline {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .pricing-features li {
+  color: var(--text);
+}
+
+[data-theme="light"] .pricing-features li.disabled {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .testimonial-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .testimonial-card-body h4 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .testimonial-card-body p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .category-section-title h3 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .value-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .value-card h4 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .value-card p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .chat-box {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .chat-header {
+  background: var(--gradient-primary);
+}
+
+[data-theme="light"] .chat-header h4 {
+  color: #fff;
+}
+
+[data-theme="light"] .chat-msg.bot {
+  background: var(--bg-surface);
+  color: var(--text);
+}
+
+[data-theme="light"] .chat-msg.user {
+  background: var(--gradient-primary);
+  color: #fff;
+}
+
+[data-theme="light"] .chat-input-area input {
+  background: var(--bg-surface);
+  color: var(--text);
+}
+
+[data-theme="light"] .nav-links.open {
+  background: rgba(245, 245, 250, 0.98);
+}
+
+[data-theme="light"] .hamburger span {
+  background: var(--text-heading);
+}
+
+[data-theme="light"] .hamburger.active span {
+  background: var(--primary);
+}
+
+[data-theme="light"] .hero-video-overlay {
+  background: linear-gradient(180deg, rgba(245, 245, 250, 0.6) 0%, rgba(245, 245, 250, 0.5) 50%, rgba(245, 245, 250, 0.7) 100%);
+}
+
+[data-theme="light"] .scroll-top {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="light"] .portfolio-section {
+  background: var(--bg-surface);
+}
+
+[data-theme="light"] .services-detail-section {
+  background: var(--bg);
+}
+
+[data-theme="light"] .why-us-section {
+  background: var(--bg-surface);
+}
+
+[data-theme="light"] .process-section {
+  background: var(--bg);
+}
+
+[data-theme="light"] .testimonials-section {
+  background: var(--bg-surface);
+}
+
+[data-theme="light"] .career-section {
+  background: var(--bg);
+}
+
+[data-theme="light"] .service-detail-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .service-detail-card h3 {
+  color: var(--text-heading);
+}
+
+[data-theme="light"] .service-detail-card p {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .custom-package-card {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .feature-chip {
+  background: rgba(0, 0, 0, 0.03);
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .feature-chip.selected {
+  background: rgba(168, 85, 247, 0.1);
+  color: var(--primary);
+}
+
+[data-theme="light"] .custom-package-card input,
+[data-theme="light"] .custom-package-card textarea,
+[data-theme="light"] .custom-package-card select {
+  background: var(--bg-surface);
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .custom-package-card label {
+  color: var(--text);
+}
+
+[data-theme="light"] .select-trigger {
+  background: var(--bg-surface);
+  color: var(--text);
+}
+
+[data-theme="light"] .options-container {
+  background: var(--bg-card);
+}
+
+[data-theme="light"] .option:hover {
+  background: rgba(168, 85, 247, 0.05);
+  color: var(--text);
+}
+
+[data-theme="light"] .option.selected {
+  background: rgba(168, 85, 247, 0.1);
+  color: var(--primary);
+}
+
+[data-theme="light"] .admin-section {
+  background: var(--bg);
+}
+
+[data-theme="light"] .admin-list-card {
+  background: var(--bg-surface);
+}

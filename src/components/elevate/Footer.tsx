@@ -57,6 +57,9 @@ export function Footer({ onNavigate }: FooterProps) {
               <a href="#/pricing" onClick={(e) => handleNav(e, "/pricing")}>
                 Pricing
               </a>
+              <a href="#/blog" onClick={(e) => handleNav(e, "/blog")}>
+                Blog
+              </a>
               <a href="#/career" onClick={(e) => handleNav(e, "/career")}>
                 Careers
               </a>
