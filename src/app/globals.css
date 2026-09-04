@@ -3648,14 +3648,14 @@ body.menu-open .chat-toggle {
   color: #0a0a14 !important;
 }
 
-/* Light mode scrolled: Elevate uses black gradient with shimmer (not solid black) */
+/* Light mode scrolled: Elevate uses muted gradient with shimmer (matches CTA text color) */
 [data-theme="light"] .navbar.scrolled .brand-text-glass .elevate {
   background:
     linear-gradient(110deg,
-      rgba(10, 10, 20, 0) 45%,
-      rgba(60, 60, 80, 0.5) 50%,
-      rgba(10, 10, 20, 0) 55%) -200% 0 / 200% 100% no-repeat,
-    linear-gradient(180deg, #0a0a14 0%, #0a0a14 45%, #2a2a3e 45%, #1a1a2e 100%);
+      rgba(106, 106, 128, 0) 45%,
+      rgba(140, 140, 160, 0.6) 50%,
+      rgba(106, 106, 128, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #6a6a80 0%, #6a6a80 45%, #8a8aa0 45%, #7a7a90 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -3901,7 +3901,7 @@ body.menu-open .chat-toggle {
   color: var(--primary);
 }
 
-/* Light mode: btn-outline text and icon visible (black) */
+/* Light mode: btn-outline text and icon visible (black) — except in hero (dark overlay) */
 [data-theme="light"] .btn-outline {
   color: #0a0a14;
   border-color: var(--primary);
@@ -3911,14 +3911,20 @@ body.menu-open .chat-toggle {
   color: #0a0a14;
 }
 
-/* Light mode: footer brand uses black gradient shimmer (same as navbar scrolled) */
+/* Hero buttons keep white text in light mode (hero has dark overlay) */
+[data-theme="light"] .hero .btn-outline,
+[data-theme="light"] .hero .btn-outline i {
+  color: #ffffff;
+}
+
+/* Light mode: footer brand uses muted gradient shimmer (same as navbar scrolled) */
 [data-theme="light"] .footer-brand .brand-text-glass .elevate {
   background:
     linear-gradient(110deg,
-      rgba(10, 10, 20, 0) 45%,
-      rgba(60, 60, 80, 0.5) 50%,
-      rgba(10, 10, 20, 0) 55%) -200% 0 / 200% 100% no-repeat,
-    linear-gradient(180deg, #0a0a14 0%, #0a0a14 45%, #2a2a3e 45%, #1a1a2e 100%);
+      rgba(106, 106, 128, 0) 45%,
+      rgba(140, 140, 160, 0.6) 50%,
+      rgba(106, 106, 128, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #6a6a80 0%, #6a6a80 45%, #8a8aa0 45%, #7a7a90 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
