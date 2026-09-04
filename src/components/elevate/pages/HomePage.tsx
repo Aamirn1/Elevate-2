@@ -125,7 +125,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
             src="/hero-bg-mobile.png"
             alt="ElevateEdge Digital Agency background"
           />
-          <div className="hero-video-overlay"></div>
         </div>
         <div className="container">
           <div className="hero-content hero-content-left">
@@ -192,42 +191,6 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </div>
                 <div className="label">Happy Clients</div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div className="hero-scroll-indicator" aria-hidden="true">
-          <div className="mouse"></div>
-          <span>Scroll</span>
-        </div>
-      </section>
-
-      {/* Agency Trust Bar */}
-      <section className="trust-bar">
-        <div className="container">
-          <div className="trust-bar-inner">
-            <div className="trust-item">
-              <i className="fas fa-globe"></i>
-              <span>{"Web Design\u00A0& Development"}</span>
-            </div>
-            <div className="trust-divider"></div>
-            <div className="trust-item">
-              <i className="fas fa-mobile-alt"></i>
-              <span>Mobile App Development</span>
-            </div>
-            <div className="trust-divider"></div>
-            <div className="trust-item">
-              <i className="fas fa-cogs"></i>
-              <span>SaaS Solutions</span>
-            </div>
-            <div className="trust-divider"></div>
-            <div className="trust-item">
-              <i className="fas fa-hashtag"></i>
-              <span>Social Media Management</span>
-            </div>
-            <div className="trust-divider"></div>
-            <div className="trust-item">
-              <i className="fas fa-bullhorn"></i>
-              <span>Digital Marketing &amp; Ads</span>
             </div>
           </div>
         </div>
