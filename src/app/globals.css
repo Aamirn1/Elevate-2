@@ -3144,12 +3144,13 @@ body.menu-open .chat-toggle {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 8px 40px;
+  padding: 10px 40px;
   transform: rotate(45deg);
   text-align: center;
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 1;
 }
 
 .pricing-icon {
