@@ -426,7 +426,12 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
                   marginTop: pkg.featured ? "0px" : undefined,
                 }}
               >
-                {pkg.badge && <div className="pricing-badge">{pkg.badge}</div>}
+                {pkg.badge && (
+                  <div className="pricing-badge">
+                    <i className="fas fa-star" style={{ fontSize: "0.65rem" }}></i>
+                    {pkg.badge}
+                  </div>
+                )}
                 <div className="pricing-icon">
                   <i className={`fas ${pkg.icon}`}></i>
                 </div>
