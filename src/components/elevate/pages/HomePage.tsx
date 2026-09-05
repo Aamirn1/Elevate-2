@@ -136,7 +136,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <span
                 style={{
                   display: "inline-block",
-                  background: "linear-gradient(180deg, #e9d5ff 0%, #e9d5ff 45%, #a855f7 45%, #6b21a8 100%)",
+                  background: "var(--gradient-primary)",
                   WebkitBackgroundClip: "text",
                   backgroundClip: "text",
                   WebkitTextFillColor: "transparent",
@@ -407,7 +407,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 desc: "We monitor performance, run optimizations, and keep your digital presence ahead of the competition.",
               },
             ].map((step, i) => (
-              <div key={i}>
+              <div key={i} style={{ display: "flex", alignItems: "flex-start" }}>
                 <div className="process-step reveal">
                   <div className="step-number">{step.num}</div>
                   <div className="step-content">
