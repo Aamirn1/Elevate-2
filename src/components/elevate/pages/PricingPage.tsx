@@ -280,16 +280,30 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
         body: JSON.stringify(orderData),
       });
 
-      if (!res.ok) throw new Error("Failed to submit order");
+      if (!res.ok) console.warn("Order DB save failed, continuing with email");
+
+      // Send email to admin with custom package details
+      try {
+        await fetch("/api/send-order-email", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name,
+            email,
+            businessType: "Custom Package",
+            services: selectedFeatures.join(", "),
+            budget: budget || "",
+            message: composedMessage,
+          }),
+        });
+      } catch (emailErr) {
+        console.warn("Email send failed:", emailErr);
+      }
+
       setSuccess(true);
-      setTimeout(() => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }, 100);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     } catch (error) {
       console.error("FAILED...", error);
-      alert(
-        "Oops! Failed to submit your custom package request. Please try again later or reach us on WhatsApp."
-      );
       setSubmitting(false);
     }
   };
@@ -446,22 +460,6 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
                   >
                     <i className="fas fa-arrow-right"></i> {pkg.ctaLabel}
                   </a>
-                ) : pkg.whatsappLink ? (
-                  <a
-                    href={pkg.whatsappLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`btn pricing-cta ${
-                      pkg.featured ? "btn-primary btn-pulse" : "btn-outline"
-                    }`}
-                    style={
-                      pkg.featured
-                        ? { background: "#25D366", color: "#fff" }
-                        : undefined
-                    }
-                  >
-                    <i className="fab fa-whatsapp"></i> {pkg.ctaLabel}
-                  </a>
                 ) : (
                   <a
                     href={`#${pkg.ctaHref}`}
@@ -471,6 +469,16 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
                     onClick={(e) => {
                       e.preventDefault();
                       onNavigate(pkg.ctaHref);
+                      // Store selected package info for auto-fill in the form
+                      sessionStorage.setItem(
+                        "selectedPackage",
+                        JSON.stringify({
+                          name: pkg.name,
+                          price: `${pkg.currency}${pkg.amount}`,
+                          services: pkg.id === "standard" ? "web-design" : "web-design,app-dev",
+                          budget: `${pkg.currency}${pkg.amount}`,
+                        })
+                      );
                     }}
                   >
                     <i className="fas fa-arrow-right"></i> {pkg.ctaLabel}
@@ -626,16 +634,13 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
               >
                 <div className="form-group">
                   <label htmlFor="cp-budget">
-                    Estimated Budget{" "}
-                    <span style={{ color: "var(--text-muted)" }}>
-                      (optional)
-                    </span>
+                    Estimated Budget
                   </label>
                   <input
                     type="text"
                     id="cp-budget"
                     name="budget"
-                    placeholder="e.g. 60k - 80k PKR"
+                    placeholder="e.g. £199 - £500"
                   />
                 </div>
                 <div className="form-group">

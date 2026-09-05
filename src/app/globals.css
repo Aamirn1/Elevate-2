@@ -3144,8 +3144,15 @@ body.menu-open .chat-toggle {
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  padding: 5px 40px;
+  padding: 6px 40px;
   transform: rotate(45deg);
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 130px;
+  left: 50%;
+  margin-left: -65px;
 }
 
 .pricing-icon {

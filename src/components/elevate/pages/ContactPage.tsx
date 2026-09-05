@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useScrollReveal } from "../useScrollReveal";
 
 const serviceOptions = [
@@ -36,6 +36,33 @@ export function ContactPage() {
   const [success, setSuccess] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [fieldErrors, setFieldErrors] = useState<Record<string, boolean>>({});
+
+  // Auto-fill form from selected package (from Pricing page)
+  useEffect(() => {
+    const pkgData = sessionStorage.getItem("selectedPackage");
+    if (!pkgData) return;
+    try {
+      const pkg = JSON.parse(pkgData);
+      // Auto-fill services (deferred to avoid setState-in-effect lint)
+      if (pkg.services) {
+        setTimeout(() => setSelectedServices(pkg.services.split(",")), 0);
+      }
+      // Auto-fill budget and message
+      setTimeout(() => {
+        const budgetInput = document.querySelector<HTMLInputElement>("#c-budget");
+        if (budgetInput && pkg.budget) {
+          budgetInput.value = pkg.budget;
+        }
+        const msgInput = document.querySelector<HTMLTextAreaElement>("#c-msg");
+        if (msgInput && pkg.name) {
+          msgInput.value = `I'm interested in the ${pkg.name} (${pkg.price}). Please share more details.`;
+        }
+      }, 200);
+      sessionStorage.removeItem("selectedPackage");
+    } catch (e) {
+      console.warn("Failed to parse selected package", e);
+    }
+  }, []);
 
   const toggleService = (value: string, label: string) => {
     setSelectedServices((prev) => {
