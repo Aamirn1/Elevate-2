@@ -3150,9 +3150,6 @@ body.menu-open .chat-toggle {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 130px;
-  left: 50%;
-  margin-left: -65px;
 }
 
 .pricing-icon {
