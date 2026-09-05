@@ -136,8 +136,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
               <span
                 style={{
                   display: "inline-block",
-                  color: "var(--primary)",
-                  textShadow: "0 0 30px rgba(168, 85, 247, 0.5)",
+                  background: "linear-gradient(180deg, #e9d5ff 0%, #e9d5ff 45%, #a855f7 45%, #6b21a8 100%)",
+                  WebkitBackgroundClip: "text",
+                  backgroundClip: "text",
+                  WebkitTextFillColor: "transparent",
+                  filter: "drop-shadow(0 0 20px rgba(168, 85, 247, 0.4))",
                 }}
               >
                 Double Your

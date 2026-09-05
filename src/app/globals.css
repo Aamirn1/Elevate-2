@@ -1939,8 +1939,8 @@ body.menu-open .chat-toggle {
   background: rgba(255, 255, 255, 0.05);
   min-width: 40px;
   max-width: 100px;
-  margin-top: 32px;
-  /* Align with center of 64px step numbers (64/2 = 32px) */
+  margin-top: 31px;
+  /* Align with center of 64px step numbers (64/2 = 32px, minus 1px for connector height) */
   position: relative;
   overflow: visible;
 }
@@ -3098,7 +3098,7 @@ body.menu-open .chat-toggle {
   display: flex;
   flex-direction: column;
   transition: all 0.4s var(--ease);
-  overflow: hidden;
+  overflow: visible;
 }
 
 .pricing-card::before {
@@ -3568,6 +3568,10 @@ body.menu-open .chat-toggle {
 
   .category-section-header {
     margin-bottom: 16px;
+  }
+
+  .testimonial-card {
+    max-width: 100%;
   }
 
   .category-projects-grid {
