@@ -124,10 +124,31 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 {values.map((v, i) => (
                   <div className="value-card" key={i}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-                      <i className={`fas ${v.icon}`} style={{ flexShrink: "0", marginBottom: "0", display: "inline-block", lineHeight: "1", position: "relative", top: "5px" }}></i>
+                      <span
+                        style={{
+                          width: "28px",
+                          height: "28px",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "flex-start",
+                          flexShrink: "0",
+                        }}
+                      >
+                        <i
+                          className={`fas ${v.icon}`}
+                          style={{
+                            fontSize: "1.4rem",
+                            color: "var(--primary)",
+                            lineHeight: "1",
+                            display: "inline-block",
+                            position: "relative",
+                            top: "2px",
+                          }}
+                        ></i>
+                      </span>
                       <h4 style={{ margin: "0" }}>{v.title}</h4>
                     </div>
-                    <p>{v.desc}</p>
+                    <p style={{ margin: "0" }}>{v.desc}</p>
                   </div>
                 ))}
               </div>
