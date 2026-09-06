@@ -525,11 +525,11 @@ button {
 .footer-col h4 {
   font-size: 1.05rem;
   margin-bottom: 20px;
-  color: #fff;
+  color: #fff !important;
 }
 
 .footer-col p {
-  color: var(--text-muted);
+  color: #ffffff !important;
   font-size: 0.92rem;
 }
 
@@ -537,7 +537,7 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--text-muted);
+  color: #ffffff !important;
   font-size: 0.92rem;
   padding: 6px 0;
   transition: all 0.3s var(--ease);
@@ -576,8 +576,8 @@ button {
 .footer-bottom {
   text-align: center;
   padding-top: 24px;
-  border-top: 1px solid var(--border);
-  color: var(--text-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff !important;
   font-size: 0.85rem;
 }
 
@@ -1815,7 +1815,7 @@ body.menu-open .chat-toggle {
 }
 
 .why-us-section .section-header p {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 
 .why-us-section .section-header::after {
@@ -3796,19 +3796,19 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .footer p {
-  color: var(--text-muted);
+  color: #ffffff;
 }
 
 [data-theme="light"] .footer-col h4 {
-  color: var(--text-heading);
+  color: #ffffff;
 }
 
 [data-theme="light"] .footer-col a {
-  color: var(--text-muted);
+  color: #ffffff;
 }
 
 [data-theme="light"] .footer-col a:hover {
-  color: var(--primary);
+  color: var(--primary-light);
 }
 
 [data-theme="light"] .cta-section::before {
@@ -3982,17 +3982,9 @@ body.menu-open .chat-toggle {
   color: #ffffff;
 }
 
-/* Light mode: footer brand uses muted gradient shimmer (same as navbar scrolled) */
+/* Footer brand: use same white gradient shimmer as navbar (both modes) */
 [data-theme="light"] .footer-brand .brand-text-glass .elevate {
-  background:
-    linear-gradient(110deg,
-      rgba(106, 106, 128, 0) 45%,
-      rgba(140, 140, 160, 0.6) 50%,
-      rgba(106, 106, 128, 0) 55%) -200% 0 / 200% 100% no-repeat,
-    linear-gradient(180deg, #6a6a80 0%, #6a6a80 45%, #8a8aa0 45%, #7a7a90 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  /* Uses default white gradient from .brand-text-glass .elevate */
 }
 
 [data-theme="light"] .portfolio-section {
