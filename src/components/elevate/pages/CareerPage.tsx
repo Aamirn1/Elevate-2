@@ -385,7 +385,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
             >
               <i
                 className="fab fa-whatsapp"
-                style={{ fontSize: "1.3rem", color: "#fff" }}
+                style={{ fontSize: "1.3rem", color: "#fff", position: "relative", top: "4px" }}
               ></i>
               WhatsApp
             </a>

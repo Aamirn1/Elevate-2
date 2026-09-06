@@ -108,18 +108,29 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
               <div
                 className="service-card reveal"
                 key={post.id}
-                style={{ cursor: "pointer", textAlign: "center" }}
+                style={{ cursor: "pointer" }}
               >
                 <div
                   style={{
                     display: "flex",
-                    justifyContent: "center",
-                    width: "100%",
+                    alignItems: "center",
+                    gap: "14px",
+                    marginBottom: "14px",
                   }}
                 >
-                  <div className="service-icon">
+                  <div className="service-icon" style={{ marginBottom: 0 }}>
                     <i className={`fas ${post.icon}`}></i>
                   </div>
+                  <h3
+                    style={{
+                      fontSize: "1.15rem",
+                      marginBottom: 0,
+                      flex: 1,
+                      lineHeight: 1.3,
+                    }}
+                  >
+                    {post.title}
+                  </h3>
                 </div>
                 <div
                   style={{
@@ -153,9 +164,6 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
                     <i className="far fa-clock"></i> {post.readTime}
                   </span>
                 </div>
-                <h3 style={{ fontSize: "1.15rem", marginBottom: "10px" }}>
-                  {post.title}
-                </h3>
                 <p style={{ fontSize: "0.88rem" }}>{post.excerpt}</p>
                 <div
                   style={{

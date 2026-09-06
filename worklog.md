@@ -361,3 +361,35 @@ Stage Summary:
 - Navbar logo "Elevate Edge": now uses the SAME white gradient + shimmer animation on ALL pages in ALL modes (no more dark gray in light mode)
 - Nav links + hamburger: white on dark hero backgrounds for visibility
 - Lint passes with 0 errors
+
+---
+Task ID: 10
+Agent: WhatsApp Icon + Blog Card Layout Agent
+Task: 1. Fix WhatsApp icon alignment in Career CSR card button. 2. Move blog card title to same row as icon (like services page).
+
+Work Log:
+- Task 1 (WhatsApp icon alignment):
+  - Measured exact pixel positions: icon center was 6px ABOVE text center (diff: -6)
+  - Root cause: Font Awesome fa-whatsapp glyph has its visual center higher than the text baseline
+  - Added position:relative + top offset to the icon <i> element
+  - Tested top:2px (diff=-4), then top:4px (diff=-2) — settled on top:4px for near-perfect alignment
+  - VLM verified: "WhatsApp icon and text are perfectly aligned (vertically centered) on the same horizontal line"
+  - Did NOT touch the WhatsApp text — only moved the icon down
+
+- Task 2 (Blog card icon + title same row):
+  - Previous state: blog cards had icon centered at top (in a flex justifyContent:center wrapper), title below as separate <h3> — stacked vertically
+  - Restructured to match ServicesPage pattern: flex row with icon on left + title on right
+  - Used display:flex, alignItems:center (vertically centers icon against multi-line title), gap:14px
+  - Title uses flex:1 + lineHeight:1.3 so it can wrap to 2-3 lines naturally
+  - Removed the duplicate <h3> that was below the category/readTime div
+  - Removed textAlign:center from the card (no longer needed)
+  - VLM verified desktop: "icon and title are on the SAME ROW (side by side)... icon vertically centered relative to title text... even when title wraps to 2 lines"
+  - VLM verified mobile: "icon and title on the same row... icon vertically centered even when title wraps to 3 lines"
+
+- Ran `bun run lint` → 0 errors, 0 warnings
+
+Stage Summary:
+- CareerPage.tsx: Added position:relative + top:4px to WhatsApp icon to align it with the text (icon moved down, text untouched)
+- BlogPage.tsx: Restructured blog cards from vertical stack (icon above title) to horizontal row (icon left, title right) with alignItems:center for vertical centering — matches ServicesPage card pattern
+- Both fixes verified via pixel measurement + VLM on desktop and mobile
+- Lint passes with 0 errors
