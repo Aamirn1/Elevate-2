@@ -366,10 +366,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
               },
             ].map((w, i) => (
               <div className="why-us-card reveal" key={i}>
-                <div className="why-us-icon">
-                  <i className={`fas ${w.icon}`}></i>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "10px" }}>
+                  <div className="why-us-icon" style={{ marginBottom: "0" }}>
+                    <i className={`fas ${w.icon}`}></i>
+                  </div>
+                  <h3 style={{ margin: "0" }}>{w.title}</h3>
                 </div>
-                <h3>{w.title}</h3>
                 <p>{w.desc}</p>
               </div>
             ))}

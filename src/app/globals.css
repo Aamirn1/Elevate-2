@@ -489,10 +489,30 @@ button {
 
 /* ---------- Footer ---------- */
 .footer {
-  background: var(--gradient-primary);
+  background: url('/hero-bg-image.png') center center / cover no-repeat, var(--bg);
   border-top: 1px solid var(--border);
   padding: 60px 0 24px;
   margin-top: 0;
+  position: relative;
+}
+
+.footer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 20, 0.92);
+  z-index: 0;
+}
+
+.footer > .container {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    background: url('/hero-bg-mobile.png') center center / cover no-repeat, var(--bg);
+  }
 }
 
 .footer-grid {
@@ -1256,6 +1276,7 @@ body.menu-open .chat-toggle {
 .service-icon {
   width: 64px;
   height: 64px;
+  min-width: 64px;
   border-radius: 16px;
   background: rgba(168, 85, 247, 0.1);
   display: flex;
@@ -1265,6 +1286,7 @@ body.menu-open .chat-toggle {
   font-size: 1.5rem;
   color: var(--primary);
   transition: all 0.35s var(--ease);
+  flex-shrink: 0;
 }
 
 .service-card:hover .service-icon {
@@ -1784,6 +1806,22 @@ body.menu-open .chat-toggle {
   background: var(--gradient-primary);
 }
 
+.why-us-section .section-header h2 {
+  color: #ffffff !important;
+  background: none !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-clip: border-box !important;
+  -webkit-background-clip: border-box !important;
+}
+
+.why-us-section .section-header p {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.why-us-section .section-header::after {
+  background: rgba(255, 255, 255, 0.5);
+}
+
 .why-us-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1826,6 +1864,7 @@ body.menu-open .chat-toggle {
 .why-us-icon {
   width: 52px;
   height: 52px;
+  min-width: 52px;
   border-radius: 14px;
   background: rgba(168, 85, 247, 0.1);
   border: 1px solid rgba(168, 85, 247, 0.2);
@@ -1835,6 +1874,7 @@ body.menu-open .chat-toggle {
   margin-bottom: 20px;
   font-size: 1.3rem;
   transition: all 0.3s var(--ease);
+  flex-shrink: 0;
 }
 
 .why-us-card:hover .why-us-icon {
@@ -3742,7 +3782,17 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .footer {
-  background: var(--gradient-primary);
+  background: url('/hero-bg-image.png') center center / cover no-repeat, var(--bg);
+}
+
+[data-theme="light"] .footer::before {
+  background: rgba(245, 245, 250, 0.92);
+}
+
+@media (max-width: 768px) {
+  [data-theme="light"] .footer {
+    background: url('/hero-bg-mobile.png') center center / cover no-repeat, var(--bg);
+  }
 }
 
 [data-theme="light"] .footer p {
