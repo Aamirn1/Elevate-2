@@ -321,3 +321,43 @@ Stage Summary:
 - 7 commits pushed covering: icon alignment fixes (Blog, About, Career), About values card consistency, and light mode hero background changes (dark mode hero on non-home pages)
 - If Vercel is connected to this GitHub repo, it will auto-deploy from the latest push
 - Repo URL: https://github.com/Aamirn1/Elevate-2
+
+---
+Task ID: 9
+Agent: Hero Text White + Logo Consistency Agent
+Task: 1. Make non-home hero bold text + description white in both modes. 2. Make navbar logo use same white color + shimmer in all pages/modes.
+
+Work Log:
+- Task 1 (Hero text white):
+  - Previous state: non-home hero "Your Growth" span used var(--text-muted)=#8892a8 (gray) in dark mode, and local override also set #8892a8 in light mode
+  - Changed light mode rule: [data-theme="light"] body.inner-page .hero h1 + h1 span:not(.gradient-text) → color: #ffffff !important + -webkit-text-fill-color: #ffffff !important
+  - Changed light mode hero-sub → color: #ffffff !important
+  - Updated local CSS variables on .hero: --text-muted: #ffffff, --text: #ffffff (was #8892a8/#e8ecf4)
+  - Added dark mode rule: [data-theme="dark"] body.inner-page .hero h1 + h1 span:not(.gradient-text) → color: #ffffff !important + -webkit-text-fill-color: #ffffff !important
+  - Added dark mode hero-sub → color: #ffffff !important
+  - Verified via computed styles on all 6 inner pages (services, portfolio, pricing, blog, career, contact): non-gradient span = rgb(255,255,255), subtitle = rgb(255,255,255) ✓
+  - Dark mode verified: "Your Growth" = rgb(255,255,255), subtitle = rgb(255,255,255) ✓
+
+- Task 2 (Navbar logo consistent):
+  - Previous state: light mode had 3 overrides changing "Elevate" logo to dark gray (#6a6a80) gradient:
+    * [data-theme="light"] .navbar.scrolled .brand-text-glass .elevate → gray gradient
+    * [data-theme="light"]:not(:has(.hero-content.hero-content-left)) .navbar:not(.scrolled) .brand-text-glass .elevate → gray gradient
+    * [data-theme="light"] body.inner-page .navbar:not(.scrolled) .brand-text-glass .elevate → gray gradient
+    * [data-theme="light"] .navbar.scrolled .navbar-brand → color: #0a0a14 (dark)
+  - Changed ALL 4 overrides to use the same white gradient as dark mode:
+    * White shimmer glint: rgba(255,255,255,0.7) at 50%
+    * White base gradient: linear-gradient(180deg, #ffffff 0%, #ffffff 45%, #d1d5db 45%, #f3f4f6 100%)
+    * Same animation: logo-shine-sweep + logo-glow-pulse
+    * navbar-brand color → #ffffff
+  - Also updated nav links + hamburger icon to white (for visibility on dark hero bg)
+  - Verified: logo webkitTextFillColor = rgba(0,0,0,0) (transparent = gradient showing) in both scrolled and unscrolled states, both modes ✓
+  - Home page logo: unchanged (still uses default white gradient) ✓
+
+- Ran `bun run lint` → 0 errors, 0 warnings
+
+Stage Summary:
+- globals.css: 6 CSS rule updates for hero text white (light + dark mode) + 4 logo overrides changed from gray to white gradient
+- All non-home pages: hero bold text (non-gradient span) + description are now WHITE (#ffffff) in both light and dark modes
+- Navbar logo "Elevate Edge": now uses the SAME white gradient + shimmer animation on ALL pages in ALL modes (no more dark gray in light mode)
+- Nav links + hamburger: white on dark hero backgrounds for visibility
+- Lint passes with 0 errors
