@@ -514,10 +514,12 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
                 key={i}
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
-                <div className="service-icon">
-                  <i className={`fas ${s.icon}`}></i>
+                <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "14px" }}>
+                  <div className="service-icon" style={{ marginBottom: "0" }}>
+                    <i className={`fas ${s.icon}`}></i>
+                  </div>
+                  <h3 style={{ margin: "0" }}>{s.title}</h3>
                 </div>
-                <h3>{s.title}</h3>
                 <p>{s.desc}</p>
               </div>
             ))}
@@ -718,9 +720,9 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
               <div
                 className="why-us-card reveal"
                 key={i}
-                style={{ transitionDelay: `${i * 60}ms` }}
+                style={{ transitionDelay: `${i * 60}ms`, textAlign: "center" }}
               >
-                <div className="why-us-icon">
+                <div className="why-us-icon" style={{ margin: "0 auto 20px" }}>
                   <i className={`fas ${faq.icon}`}></i>
                 </div>
                 <h3>{faq.q}</h3>
@@ -746,7 +748,7 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
             className="btn btn-primary btn-pulse"
             style={{ background: "#25D366" }}
           >
-            <i className="fab fa-whatsapp"></i> Message Us on WhatsApp
+            <i className="fab fa-whatsapp" style={{ fontSize: "1.4rem" }}></i> Message Us on WhatsApp
           </a>
         </div>
       </section>

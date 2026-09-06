@@ -506,7 +506,7 @@ export function ContactPage() {
             className="btn btn-primary btn-pulse"
             style={{ background: "#25D366" }}
           >
-            <i className="fab fa-whatsapp"></i> Message Us on WhatsApp
+            <i className="fab fa-whatsapp" style={{ fontSize: "1.4rem" }}></i> Message Us on WhatsApp
           </a>
         </div>
       </section>

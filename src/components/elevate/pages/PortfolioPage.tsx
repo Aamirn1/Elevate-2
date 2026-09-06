@@ -136,7 +136,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn btn-outline testimonial-visit-btn"
+                          className="btn btn-primary testimonial-visit-btn"
                         >
                           <i className="fas fa-external-link-alt"></i> Visit
                           Website
@@ -180,7 +180,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
                           href={p.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="btn btn-outline testimonial-visit-btn"
+                          className="btn btn-primary testimonial-visit-btn"
                         >
                           <i className="fas fa-external-link-alt"></i> Visit
                           Website
