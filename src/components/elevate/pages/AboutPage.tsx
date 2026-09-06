@@ -124,7 +124,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
                 {values.map((v, i) => (
                   <div className="value-card" key={i}>
                     <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: "8px" }}>
-                      <i className={`fas ${v.icon}`} style={{ flexShrink: "0" }}></i>
+                      <i className={`fas ${v.icon}`} style={{ flexShrink: "0", marginBottom: "0", display: "inline-block", lineHeight: "1", position: "relative", top: "3px" }}></i>
                       <h4 style={{ margin: "0" }}>{v.title}</h4>
                     </div>
                     <p>{v.desc}</p>

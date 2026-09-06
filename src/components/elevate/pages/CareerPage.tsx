@@ -309,9 +309,11 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                 padding: "18px 20px",
                 marginBottom: "24px",
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
-                gap: "14px",
-                flexWrap: "wrap",
+                justifyContent: "center",
+                textAlign: "center",
+                gap: "10px",
               }}
             >
               <div
@@ -408,21 +410,18 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
               <div
                 className="why-us-card reveal"
                 key={i}
-                style={{ transitionDelay: `${i * 60}ms` }}
+                style={{
+                  transitionDelay: `${i * 60}ms`,
+                  textAlign: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "14px",
-                    marginBottom: "14px",
-                  }}
-                >
-                  <div className="why-us-icon" style={{ marginBottom: 0 }}>
-                    <i className={`fas ${p.icon}`}></i>
-                  </div>
-                  <h3 style={{ marginBottom: 0 }}>{p.title}</h3>
+                <div className="why-us-icon">
+                  <i className={`fas ${p.icon}`}></i>
                 </div>
+                <h3 style={{ marginBottom: "10px" }}>{p.title}</h3>
                 <p>{p.desc}</p>
               </div>
             ))}

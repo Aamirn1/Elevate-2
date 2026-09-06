@@ -108,10 +108,18 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
               <div
                 className="service-card reveal"
                 key={post.id}
-                style={{ cursor: "pointer" }}
+                style={{ cursor: "pointer", textAlign: "center" }}
               >
-                <div className="service-icon" style={{ marginLeft: "auto", marginRight: "auto" }}>
-                  <i className={`fas ${post.icon}`}></i>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    width: "100%",
+                  }}
+                >
+                  <div className="service-icon">
+                    <i className={`fas ${post.icon}`}></i>
+                  </div>
                 </div>
                 <div
                   style={{
