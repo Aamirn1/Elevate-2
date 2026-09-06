@@ -89,7 +89,7 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
             <h1>
               <span className="gradient-text">The Team Behind</span>
               <br />
-              Your Growth
+              <span style={{ color: "var(--text-muted)" }}>Your Growth</span>
             </h1>
             <p className="hero-sub">
               We&apos;re a passionate team of designers, developers, and

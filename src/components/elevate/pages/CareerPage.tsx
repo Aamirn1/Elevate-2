@@ -66,7 +66,7 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
             <h1>
               <span className="gradient-text">Build Your Career</span>
               <br />
-              With ElevateEdge
+              <span style={{ color: "var(--text-muted)" }}>With ElevateEdge</span>
             </h1>
             <p className="hero-sub">
               We&apos;re looking for passionate, driven individuals who want to
@@ -314,13 +314,27 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                 flexWrap: "wrap",
               }}
             >
-              <i
-                className="fas fa-user-tie"
+              <div
                 style={{
-                  color: "var(--primary)",
-                  fontSize: "1.3rem",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(168, 85, 247, 0.1)",
+                  border: "1px solid rgba(168, 85, 247, 0.2)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexShrink: 0,
                 }}
-              ></i>
+              >
+                <i
+                  className="fas fa-user-tie"
+                  style={{
+                    color: "var(--primary)",
+                    fontSize: "1.3rem",
+                  }}
+                ></i>
+              </div>
               <div>
                 <div
                   style={{
@@ -351,23 +365,25 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                display: "block",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "10px",
                 width: "100%",
                 boxSizing: "border-box",
-                textAlign: "center",
                 background: "#25D366",
                 color: "#fff",
-                padding: "14px 20px",
+                padding: "12px 20px",
                 fontSize: "0.95rem",
-                borderRadius: "14px",
+                borderRadius: "12px",
                 fontWeight: 600,
                 textDecoration: "none",
-                lineHeight: "1.5",
+                lineHeight: 1,
               }}
             >
               <i
                 className="fab fa-whatsapp"
-                style={{ fontSize: "1.4rem", color: "#fff", marginRight: "8px", verticalAlign: "middle" }}
+                style={{ fontSize: "1.3rem", color: "#fff" }}
               ></i>
               WhatsApp
             </a>
@@ -394,10 +410,19 @@ export function CareerPage({ onNavigate }: CareerPageProps) {
                 key={i}
                 style={{ transitionDelay: `${i * 60}ms` }}
               >
-                <div className="why-us-icon">
-                  <i className={`fas ${p.icon}`}></i>
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "14px",
+                    marginBottom: "14px",
+                  }}
+                >
+                  <div className="why-us-icon" style={{ marginBottom: 0 }}>
+                    <i className={`fas ${p.icon}`}></i>
+                  </div>
+                  <h3 style={{ marginBottom: 0 }}>{p.title}</h3>
                 </div>
-                <h3>{p.title}</h3>
                 <p>{p.desc}</p>
               </div>
             ))}

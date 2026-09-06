@@ -394,7 +394,7 @@ export function PricingPage({ onNavigate }: PricingPageProps) {
             <h1>
               <span className="gradient-text">Transparent Pricing</span>
               <br />
-              for Every Business
+              <span style={{ color: "var(--text-muted)" }}>for Every Business</span>
             </h1>
             <p className="hero-sub">
               No hidden fees, no surprises. Pick a package that fits your goals

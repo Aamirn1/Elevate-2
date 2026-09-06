@@ -74,7 +74,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
             <h1>
               <span className="gradient-text">Services That</span>
               <br />
-              Drive Results
+              <span style={{ color: "var(--text-muted)" }}>Drive Results</span>
             </h1>
             <p className="hero-sub">
               Everything you need to establish a powerful online presence and

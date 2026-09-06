@@ -228,7 +228,7 @@ export function ContactPage() {
             <h1>
               <span className="gradient-text">Select Service</span>
               <br />
-              You Want
+              <span style={{ color: "var(--text-muted)" }}>You Want</span>
             </h1>
             <p className="hero-sub">
               Provide the details of service you want and requirements below.

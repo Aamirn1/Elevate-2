@@ -86,7 +86,7 @@ export function PortfolioPage({ onNavigate }: PortfolioPageProps) {
             <h1>
               <span className="gradient-text">Check Out Our</span>
               <br />
-              Recent Projects
+              <span style={{ color: "var(--text-muted)" }}>Recent Projects</span>
             </h1>
             <p className="hero-sub">
               We&apos;ve helped businesses across industries build their online

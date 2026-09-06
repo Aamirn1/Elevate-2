@@ -91,7 +91,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
             <h1>
               <span className="gradient-text">Insights &amp;</span>
               <br />
-              Industry Tips
+              <span style={{ color: "var(--text-muted)" }}>Industry Tips</span>
             </h1>
             <p className="hero-sub">
               Stay ahead of the curve with our latest insights on web design,
@@ -110,7 +110,7 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
                 key={post.id}
                 style={{ cursor: "pointer" }}
               >
-                <div className="service-icon">
+                <div className="service-icon" style={{ marginLeft: "auto", marginRight: "auto" }}>
                   <i className={`fas ${post.icon}`}></i>
                 </div>
                 <div
