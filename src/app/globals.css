@@ -3697,17 +3697,17 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .navbar.scrolled .navbar-brand {
-  color: #ffffff !important;
+  color: #0a0a14 !important;
 }
 
-/* Light mode scrolled: Elevate uses same white gradient + shimmer as dark mode (consistent logo) */
+/* Light mode scrolled: Elevate uses light black gradient with shimmer (visible on light navbar bg) */
 [data-theme="light"] .navbar.scrolled .brand-text-glass .elevate {
   background:
     linear-gradient(110deg,
-      rgba(255, 255, 255, 0) 45%,
-      rgba(255, 255, 255, 0.7) 50%,
-      rgba(255, 255, 255, 0) 55%) -200% 0 / 200% 100% no-repeat,
-    linear-gradient(180deg, #ffffff 0%, #ffffff 45%, #d1d5db 45%, #f3f4f6 100%);
+      rgba(106, 106, 128, 0) 45%,
+      rgba(140, 140, 160, 0.6) 50%,
+      rgba(106, 106, 128, 0) 55%) -200% 0 / 200% 100% no-repeat,
+    linear-gradient(180deg, #6a6a80 0%, #6a6a80 45%, #8a8aa0 45%, #7a7a90 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -4150,19 +4150,29 @@ body.menu-open .chat-toggle {
   animation-delay: 0s;
 }
 
-/* Light mode: non-home pages - burger icon uses white color (dark hero bg) */
-[data-theme="light"] body.inner-page .navbar:not(.scrolled) .hamburger span {
+/* Light mode: non-home pages - burger icon uses white color (dark hero bg), dark when menu open */
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .hamburger:not(.active) span {
   background: #ffffff;
 }
 
-/* Light mode: non-home pages - nav links use white color (dark hero bg) */
-[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a {
+/* Light mode: non-home pages - nav links use white color (dark hero bg), dark when menu open */
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links:not(.open) a {
   color: #ffffff;
 }
 
-[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a:hover,
-[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links a.active {
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links:not(.open) a:hover,
+[data-theme="light"] body.inner-page .navbar:not(.scrolled) .nav-links:not(.open) a.active {
   color: var(--primary-light);
+}
+
+/* Light mode: mobile menu open - nav links use dark color (visible on light menu bg) */
+[data-theme="light"] body.inner-page .nav-links.open a {
+  color: var(--text-muted);
+}
+
+[data-theme="light"] body.inner-page .nav-links.open a:hover,
+[data-theme="light"] body.inner-page .nav-links.open a.active {
+  color: var(--primary);
 }
 
 /* Light mode: non-home hero text white (all viewports) - matches dark mode */

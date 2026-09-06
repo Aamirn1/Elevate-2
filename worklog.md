@@ -393,3 +393,44 @@ Stage Summary:
 - BlogPage.tsx: Restructured blog cards from vertical stack (icon above title) to horizontal row (icon left, title right) with alignItems:center for vertical centering — matches ServicesPage card pattern
 - Both fixes verified via pixel measurement + VLM on desktop and mobile
 - Lint passes with 0 errors
+
+---
+Task ID: 11
+Agent: Navbar Logo + Mobile Menu Color Fix Agent
+Task: 1. Light mode scrolled navbar: make Elevate word light black (was white). 2. Fix mobile menu burger/nav-link colors disturbed by last push.
+
+Work Log:
+- Task 1 (Scrolled navbar logo light black):
+  - Issue: In light mode, when the navbar is scrolled (semi-transparent light background rgba(245,245,250,0.85)), the "Elevate" logo was white (from previous push 2f8c308) — invisible on light bg
+  - User wanted: "Elevate" word = light black (#6a6a80) when navbar appears with transparent/light background
+  - Reverted 2 CSS rules to pre-2f8c308 state:
+    * [data-theme="light"] .navbar.scrolled .navbar-brand → color: #0a0a14 (was #ffffff)
+    * [data-theme="light"] .navbar.scrolled .brand-text-glass .elevate → #6a6a80 light black gradient (was white gradient)
+  - Kept the not-scrolled (transparent) logo as white (visible on dark hero)
+  - Verified: scrolled logo webkitTextFillColor = rgba(0,0,0,0) (gradient showing = #6a6a80), brandColor = rgb(10,10,20)
+  - VLM confirmed: "Elevate word is light black/dark gray, perfectly legible on white navbar background"
+
+- Task 2 (Mobile menu colors fix):
+  - Issue: In light mode, mobile menu has light background (rgba(245,245,250,0.98)), but nav links and burger icon were white (from push 2f8c308) — invisible
+  - Root cause: my white-color rules had higher CSS specificity than the .hamburger.active and mobile menu rules
+  - Fix: Scoped white rules to exclude active/open states:
+    * .hamburger span → .hamburger:not(.active) span (so .active purple state can apply)
+    * .nav-links a → .nav-links:not(.open) a (so open menu can use dark colors)
+  - Added new rules for mobile menu open state:
+    * [data-theme="light"] body.inner-page .nav-links.open a → color: var(--text-muted) (#6a6a80 dark gray)
+    * .nav-links.open a:hover/.active → color: var(--primary) (purple)
+  - Verified via computed styles:
+    * Menu open nav links: rgb(106,106,128) = #6a6a80 (dark, visible) ✓
+    * Menu open burger (.active): rgb(168,85,247) = purple (visible) ✓
+    * Menu closed burger (not active, not scrolled): rgb(255,255,255) = white (visible on dark hero) ✓
+  - VLM confirmed: "Navigation links are dark gray, clearly visible on light background. X icon is purple."
+
+- Ran `bun run lint` → 0 errors, 0 warnings
+
+Stage Summary:
+- globals.css: Reverted scrolled navbar logo to light black (#6a6a80) in light mode; fixed mobile menu by scoping white rules to :not(.active)/:not(.open) and adding dark-color overrides for .nav-links.open
+- Scrolled navbar: Elevate = light black (visible on light bg) ✓
+- Transparent navbar (not scrolled): Elevate = white (visible on dark hero) ✓
+- Mobile menu open: nav links = dark gray, burger = purple (visible on light menu bg) ✓
+- Mobile menu closed: burger = white (visible on dark hero) ✓
+- Lint passes with 0 errors
