@@ -1781,7 +1781,7 @@ body.menu-open .chat-toggle {
 /* ---------- Why Choose Us ---------- */
 .why-us-section {
   padding: var(--section-pad) 0;
-  background: var(--bg-surface);
+  background: var(--gradient-primary);
 }
 
 .why-us-grid {
@@ -3954,7 +3954,7 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .why-us-section {
-  background: var(--bg-surface);
+  background: var(--gradient-primary);
 }
 
 [data-theme="light"] .process-section {

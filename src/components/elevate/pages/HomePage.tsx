@@ -284,10 +284,12 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 style={{ cursor: "pointer" }}
                 onClick={() => onNavigate(`/services/${s.slug}`)}
               >
-                <div className="service-icon">
-                  <i className={`fas ${s.icon}`}></i>
+                <div style={{ display: "flex", alignItems: "center", gap: "14px", marginBottom: "14px" }}>
+                  <div className="service-icon" style={{ marginBottom: "0" }}>
+                    <i className={`fas ${s.icon}`}></i>
+                  </div>
+                  <h3 style={{ margin: "0" }}>{s.title}</h3>
                 </div>
-                <h3>{s.title}</h3>
                 <p>{s.desc}</p>
                 <ul>
                   {s.items.map((item, j) => (
@@ -298,7 +300,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
                 </ul>
                 <a
                   href={`#/services/${s.slug}`}
-                  className="btn btn-outline"
+                  className="btn btn-primary"
                   style={{
                     marginTop: "12px",
                     padding: "8px 18px",
