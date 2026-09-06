@@ -256,3 +256,38 @@ Stage Summary:
 - Dark mode: completely unchanged for all pages
 - All 7+ inner pages (Services, Portfolio, Pricing, Blog, Career, Contact, Service Detail pages) now have a noticeably darker hero background in light mode
 - Lint passes with 0 errors; VLM-verified
+
+---
+Task ID: 7
+Agent: Dark Hero in Light Mode + Deployment Fix Agent
+Task: 1. Revert gray hero bg, use dark mode hero on non-home pages in light mode. 2. Fix GitHub/Vercel deployment issue.
+
+Work Log:
+- Task 1 (Hero background):
+  - Read worklog.md and current CSS state (previous Task 6 added #c8c8d4 gray gradient)
+  - Removed the #c8c8d4 gray gradient rules and hero-shape overrides
+  - Added new rule: [data-theme="light"] body.inner-page .hero with local CSS variable overrides:
+    * --text-heading: #ffffff (white heading text, readable on dark bg)
+    * --text-muted: #8892a8 (light gray subtitle + inline spans)
+    * --text: #e8ecf4
+    * background: dark mode gradient (radial purple/pink glows + linear-gradient #0a0a14 → #14091e) !important
+  - Updated hero-badge: background rgba(168,85,247,0.15), border rgba(168,85,247,0.3), color #e8ecf4 (visible on dark)
+  - Updated btn-outline: color #ffffff (white, matches dark mode)
+  - The existing !important rules for h1 (var(--text-heading)) and hero-sub (var(--text-muted)) automatically pick up the overridden local variable values
+  - Verified via compiled CSS check: #0a0a14 present, #c8c8d4 absent
+  - VLM verified: "hero background is DARK with deep purple/black gradient... text is white/light and highly readable... rest of page is distinctly Light Mode"
+  - Home page hero: UNCHANGED (uses background image, body.inner-page class not applied)
+  - Dark mode: UNCHANGED for all pages
+  - Ran `bun run lint` → 0 errors
+
+- Task 2 (GitHub/Vercel deployment):
+  - Investigated: `git remote -v` → empty (NO remote configured)
+  - Checked: no GH_TOKEN, no GITHUB env vars, no ~/.git-credentials, empty credential helper
+  - Checked: `gh` CLI not installed
+  - Checked: Vercel CLI available via npx but no VERCEL_TOKEN for auth
+  - Root cause: Code is committed locally but NEVER pushed to GitHub. Vercel deploys from GitHub, so without a remote, Vercel has nothing to deploy.
+  - Cannot fix without user providing: GitHub repo URL + Personal Access Token (PAT), OR Vercel deployment token
+
+Stage Summary:
+- Task 1 COMPLETE: Non-home pages in light mode now use dark mode hero background (deep purple/black gradient) with white/light text. Home page unchanged. Dark mode unchanged. Lint passes.
+- Task 2 BLOCKED: No GitHub remote or credentials configured in this environment. User must provide GitHub repository URL + PAT, or a Vercel token, for me to push/deploy.
