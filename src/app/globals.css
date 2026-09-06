@@ -489,7 +489,7 @@ button {
 
 /* ---------- Footer ---------- */
 .footer {
-  background: var(--bg-surface);
+  background: var(--gradient-primary);
   border-top: 1px solid var(--border);
   padding: 60px 0 24px;
   margin-top: 0;
@@ -3742,7 +3742,7 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .footer {
-  background: var(--bg-surface);
+  background: var(--gradient-primary);
 }
 
 [data-theme="light"] .footer p {
