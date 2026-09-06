@@ -4174,24 +4174,20 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] body.inner-page .hero .hero-badge {
-  background: rgba(168, 85, 247, 0.08);
-  color: var(--primary);
+  background: rgba(168, 85, 247, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.3);
+  color: #e8ecf4;
 }
 
 [data-theme="light"] body.inner-page .hero .btn-outline,
 [data-theme="light"] body.inner-page .hero .btn-outline i {
-  color: var(--primary);
+  color: #ffffff;
 }
 
-/* Light mode: non-home pages - slightly darker hero background for visual distinction from home page */
+/* Light mode: non-home pages use dark mode hero background + dark-mode text colors */
 [data-theme="light"] body.inner-page .hero {
-  background: linear-gradient(160deg, #c8c8d4 0%, #b8b8c8 40%, #a8a8bc 100%) !important;
-}
-
-[data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-1 {
-  background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%) !important;
-}
-
-[data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-2 {
-  background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%) !important;
+  --text-heading: #ffffff;
+  --text-muted: #8892a8;
+  --text: #e8ecf4;
+  background: radial-gradient(ellipse at 20% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 100%, rgba(236, 72, 153, 0.12) 0%, transparent 50%), linear-gradient(160deg, #0a0a14 0%, #0f0a1f 40%, #14091e 100%) !important;
 }
