@@ -227,3 +227,32 @@ Stage Summary:
 - All 4 cards now have pixel-identical icon, heading, and description positions
 - No visual redesign — only positioning/alignment fix; same icons, colors, fonts, card design, borders, shadows, backgrounds
 - Lint passes with 0 errors; VLM-verified on both mobile and desktop
+
+---
+Task ID: 6
+Agent: Light Mode Hero Darkening Agent
+Task: Make every non-home page hero section background slightly darker in light mode (home page unchanged)
+
+Work Log:
+- Read worklog.md to understand prior context (full migration, CSS refresh, previous light-mode inner-page overrides for text/navbar colors via body.inner-page class)
+- Confirmed body.inner-page class is already applied to all non-home pages by Navbar.tsx useEffect
+- Verified current light mode hero uses --gradient-hero: linear-gradient(160deg, #f5f5fa 0%, #f0f0f8 40%, #eeeef5 100%) with subtle radial purple/pink glows — too light/white on inner pages
+- Added 3 new CSS rules at end of globals.css (after existing light-mode inner-page overrides):
+  * [data-theme="light"] body.inner-page .hero → background: linear-gradient(160deg, #c8c8d4 0%, #b8b8c8 40%, #a8a8bc 100%) !important (medium cool gray, noticeably darker than white)
+  * [data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-1 → slightly stronger violet radial glow (0.18 opacity) for depth
+  * [data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-2 → slightly stronger pink radial glow (0.15 opacity)
+- Initial attempt used #e8e8f0 (too light, VLM said it was lighter than original). Iterated to #c8c8d4 → #a8a8bc which gives a clear medium gray that's noticeably darker than white but still light mode
+- Hit a turbopack CSS caching issue: compiled CSS kept serving old #e8e8f0 value despite source file being updated. Fixed by killing dev server, clearing .next cache directory, and restarting
+- Verified via getBoundingClientRect on computed styles:
+  * All 6 inner pages (services, portfolio, pricing, blog, career, contact) + service detail pages: linear-gradient(160deg, rgb(200,200,212) 0%, rgb(184,184,200) 40%, rgb(168,168,188)) ✓
+  * Home page: UNCHANGED — still uses original radial-gradient + #f5f5fa base ✓
+  * Dark mode: UNCHANGED — both home and inner pages use original dark gradient ✓
+- VLM verified: About page hero is now "noticeably medium-to-dark gray tone... clearly darker than pure white... still Light Mode, not Dark Mode... excellent clear contrast with the white content cards below"
+- Ran `bun run lint` → 0 errors, 0 warnings
+
+Stage Summary:
+- globals.css: Added 3 new light-mode rules scoped to body.inner-page .hero to apply a darker gray gradient (#c8c8d4 → #a8a8bc) only on non-home pages in light mode
+- Home page hero: completely unchanged in both light and dark mode
+- Dark mode: completely unchanged for all pages
+- All 7+ inner pages (Services, Portfolio, Pricing, Blog, Career, Contact, Service Detail pages) now have a noticeably darker hero background in light mode
+- Lint passes with 0 errors; VLM-verified

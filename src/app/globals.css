@@ -4182,3 +4182,16 @@ body.menu-open .chat-toggle {
 [data-theme="light"] body.inner-page .hero .btn-outline i {
   color: var(--primary);
 }
+
+/* Light mode: non-home pages - slightly darker hero background for visual distinction from home page */
+[data-theme="light"] body.inner-page .hero {
+  background: linear-gradient(160deg, #c8c8d4 0%, #b8b8c8 40%, #a8a8bc 100%) !important;
+}
+
+[data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-1 {
+  background: radial-gradient(circle, rgba(168, 85, 247, 0.18) 0%, transparent 70%) !important;
+}
+
+[data-theme="light"] body.inner-page .hero .hero-bg .hero-shape-2 {
+  background: radial-gradient(circle, rgba(236, 72, 153, 0.15) 0%, transparent 70%) !important;
+}
