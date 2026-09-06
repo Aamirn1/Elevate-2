@@ -500,7 +500,7 @@ button {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(10, 10, 20, 0.92);
+  background: linear-gradient(135deg, rgba(76, 29, 149, 0.85) 0%, rgba(190, 24, 93, 0.82) 100%);
   z-index: 0;
 }
 
@@ -1815,7 +1815,7 @@ body.menu-open .chat-toggle {
 }
 
 .why-us-section .section-header p {
-  color: rgba(255, 255, 255, 0.8);
+  color: #ffffff;
 }
 
 .why-us-section .section-header::after {
@@ -3786,7 +3786,7 @@ body.menu-open .chat-toggle {
 }
 
 [data-theme="light"] .footer::before {
-  background: rgba(245, 245, 250, 0.92);
+  background: linear-gradient(135deg, rgba(76, 29, 149, 0.75) 0%, rgba(190, 24, 93, 0.72) 100%);
 }
 
 @media (max-width: 768px) {
