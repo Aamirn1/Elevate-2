@@ -4164,23 +4164,21 @@ body.menu-open .chat-toggle {
   color: var(--primary);
 }
 
-/* Light mode: non-home hero text black (desktop only) */
-@media (min-width: 769px) {
-  [data-theme="light"] body.inner-page .hero h1 {
-    color: var(--text-heading);
-  }
+/* Light mode: non-home hero text black (all viewports) */
+[data-theme="light"] body.inner-page .hero h1 {
+  color: var(--text-heading) !important;
+}
 
-  [data-theme="light"] body.inner-page .hero .hero-sub {
-    color: var(--text-muted);
-  }
+[data-theme="light"] body.inner-page .hero .hero-sub {
+  color: var(--text-muted) !important;
+}
 
-  [data-theme="light"] body.inner-page .hero .hero-badge {
-    background: rgba(168, 85, 247, 0.08);
-    color: var(--primary);
-  }
+[data-theme="light"] body.inner-page .hero .hero-badge {
+  background: rgba(168, 85, 247, 0.08);
+  color: var(--primary);
+}
 
-  [data-theme="light"] body.inner-page .hero .btn-outline,
-  [data-theme="light"] body.inner-page .hero .btn-outline i {
-    color: var(--primary);
-  }
+[data-theme="light"] body.inner-page .hero .btn-outline,
+[data-theme="light"] body.inner-page .hero .btn-outline i {
+  color: var(--primary);
 }

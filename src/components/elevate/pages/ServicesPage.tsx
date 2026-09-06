@@ -175,7 +175,7 @@ export function ServicesPage({ onNavigate }: ServicesPageProps) {
                   <p>{s.desc}</p>
                   <button
                     type="button"
-                    className="btn btn-outline"
+                    className="btn btn-primary"
                     style={{
                       marginTop: "12px",
                       padding: "8px 18px",
