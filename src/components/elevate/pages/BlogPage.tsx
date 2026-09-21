@@ -187,11 +187,10 @@ export function BlogPage({ onNavigate }: BlogPageProps) {
                     href="https://wa.me/923110523073"
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="btn btn-primary"
                     style={{
-                      fontSize: "0.82rem",
-                      color: "var(--primary)",
-                      fontWeight: 600,
-                      textDecoration: "none",
+                      padding: "8px 18px",
+                      fontSize: "0.85rem",
                     }}
                   >
                     Read More <i className="fas fa-arrow-right"></i>
