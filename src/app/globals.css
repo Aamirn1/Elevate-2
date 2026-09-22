@@ -1212,6 +1212,191 @@ body.menu-open .chat-toggle {
   50% { transform: translateX(-50%) translateY(-8px); }
 }
 
+/* ---------- Blog skeleton shimmer ---------- */
+.blog-skeleton-shimmer {
+  animation: blog-skeleton-shimmer 1.5s ease-in-out infinite;
+}
+
+@keyframes blog-skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---------- Blog article content ---------- */
+.blog-article-content {
+  color: var(--text);
+  font-size: 1.05rem;
+  line-height: 1.85;
+}
+.blog-article-content > *:first-child { margin-top: 0; }
+.blog-article-content > *:last-child { margin-bottom: 0; }
+.blog-article-content h1,
+.blog-article-content h2,
+.blog-article-content h3,
+.blog-article-content h4,
+.blog-article-content h5,
+.blog-article-content h6 {
+  color: var(--text);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.6em 0 0.7em;
+}
+.blog-article-content h1 { font-size: 2rem; }
+.blog-article-content h2 { font-size: 1.6rem; }
+.blog-article-content h3 { font-size: 1.3rem; }
+.blog-article-content h4 { font-size: 1.15rem; }
+.blog-article-content h5 { font-size: 1.05rem; }
+.blog-article-content h6 { font-size: 0.95rem; }
+.blog-article-content p {
+  margin: 0 0 1.1em;
+}
+.blog-article-content a {
+  color: var(--primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.blog-article-content a:hover {
+  color: var(--primary-light, #c084fc);
+}
+.blog-article-content ul,
+.blog-article-content ol {
+  margin: 0 0 1.1em;
+  padding-left: 1.6em;
+}
+.blog-article-content ul { list-style: disc; }
+.blog-article-content ol { list-style: decimal; }
+.blog-article-content li {
+  margin: 0.4em 0;
+}
+.blog-article-content li > ul,
+.blog-article-content li > ol {
+  margin: 0.4em 0;
+}
+.blog-article-content blockquote {
+  margin: 1.4em 0;
+  padding: 14px 20px;
+  border-left: 4px solid var(--primary);
+  background: rgba(168, 85, 247, 0.06);
+  border-radius: 8px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+.blog-article-content blockquote p {
+  margin: 0;
+}
+.blog-article-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin: 1.4em 0;
+  display: block;
+}
+.blog-article-content figure {
+  margin: 1.6em 0;
+  text-align: center;
+}
+.blog-article-content figcaption {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+.blog-article-content pre {
+  margin: 1.4em 0;
+  padding: 16px 18px;
+  background: #0d0d18;
+  color: #e6e6f0;
+  border-radius: 10px;
+  overflow-x: auto;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.88rem;
+  line-height: 1.55;
+}
+.blog-article-content pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  font-size: inherit;
+}
+.blog-article-content code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.88em;
+  background: rgba(168, 85, 247, 0.12);
+  color: var(--primary-light, #c084fc);
+  padding: 2px 6px;
+  border-radius: 5px;
+}
+.blog-article-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.4em 0;
+  font-size: 0.92rem;
+}
+.blog-article-content th,
+.blog-article-content td {
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: left;
+}
+.blog-article-content th {
+  background: rgba(168, 85, 247, 0.1);
+  font-weight: 600;
+  color: var(--text);
+}
+.blog-article-content hr {
+  border: none;
+  border-top: 2px solid var(--border);
+  margin: 2em 0;
+}
+.blog-article-content mark {
+  background: rgba(255, 230, 0, 0.35);
+  color: inherit;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+.blog-article-content iframe {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 0;
+  border-radius: 10px;
+  margin: 1.4em 0;
+  display: block;
+}
+.blog-article-content [data-youtube-video],
+.blog-article-content .youtube-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  margin: 1.4em 0;
+  border-radius: 10px;
+}
+.blog-article-content [data-youtube-video] iframe,
+.blog-article-content .youtube-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  border: 0;
+}
+.blog-article-content ul[data-type="taskList"] {
+  list-style: none;
+  padding-left: 0;
+}
+.blog-article-content ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.blog-article-content ul[data-type="taskList"] li > label {
+  flex-shrink: 0;
+  margin-top: 4px;
+}
+
 /* ---------- Service Cards ---------- */
 .services-section {
   padding: var(--section-pad) 0;

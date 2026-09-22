@@ -57,3 +57,128 @@ model Partner {
 
   @@map("partners")
 }
+
+// ─────────────────────────────────────────────
+// Testimonials (portfolio cards on /portfolio)
+// ─────────────────────────────────────────────
+model Testimonial {
+  id          Int      @id @default(autoincrement())
+  name        String
+  role        String   @default("") // e.g. "CEO at Acme"
+  avatar      String   @default("") // image URL
+  rating      Int      @default(5) // 1-5 stars
+  quote       String
+  company     String   @default("")
+  companyUrl  String   @default("") @map("company_url")
+  sortOrder   Int      @default(0) @map("sort_order")
+  featured     Boolean  @default(false)
+  published    Boolean  @default(true)
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("testimonials")
+}
+
+// ─────────────────────────────────────────────
+// Blog system (WordPress-style article management)
+// ─────────────────────────────────────────────
+model BlogPost {
+  id               Int       @id @default(autoincrement())
+  title            String
+  slug             String    @unique
+  excerpt          String    @default("") // short summary for cards
+  content          String    @default("") // HTML content from TipTap editor
+  coverImage       String    @default("") @map("cover_image")
+  coverAlt         String    @default("") @map("cover_alt")
+  author           String    @default("ElevateEdge Digital")
+  authorBio        String    @default("") @map("author_bio")
+  authorAvatar     String    @default("") @map("author_avatar")
+  categoryId       Int?      @map("category_id")
+  tags             String    @default("[]") // JSON array of tag names
+  status          String    @default("draft") // draft|published|scheduled|archived|trash
+  sortOrder       Int?      @map("sort_order")
+  views           Int       @default(0)
+  readingTime     Int       @default(0) // minutes, auto-calculated
+  seoTitle        String    @default("") @map("seo_title")
+  seoDescription  String    @default("") @map("seo_description")
+  focusKeyword    String    @default("") @map("focus_keyword")
+  canonicalUrl    String    @default("") @map("canonical_url")
+  ogTitle         String    @default("") @map("og_title")
+  ogDescription   String    @default("") @map("og_description")
+  ogImage         String    @default("") @map("og_image")
+  twitterTitle    String    @default("") @map("twitter_title")
+  twitterDescription String @default("") @map("twitter_description")
+  twitterImage    String    @default("") @map("twitter_image")
+  robotsMeta      String    @default("index,follow") @map("robots_meta")
+  publishedAt     DateTime? @map("published_at") // when article goes live
+  scheduledAt     DateTime? @map("scheduled_at") // for scheduled publishing
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  category        BlogCategory? @relation("BlogCategoryPosts", fields: [categoryId], references: [id], onDelete: SetNull)
+  revisions       BlogRevision[]
+
+  @@index([status])
+  @@index([slug])
+  @@map("blog_posts")
+}
+
+model BlogCategory {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String   @default("")
+  image       String   @default("") // category icon or image
+  parentId    Int?     @map("parent_id") // hierarchical categories
+  sortOrder   Int?     @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  posts       BlogPost[] @relation("BlogCategoryPosts")
+
+  parent      BlogCategory?  @relation("BlogCategoryChildren", fields: [parentId], references: [id], onDelete: SetNull)
+  children    BlogCategory[] @relation("BlogCategoryChildren")
+
+  @@map("blog_categories")
+}
+
+model BlogRevision {
+  id          Int      @id @default(autoincrement())
+  postId      Int      @map("post_id")
+  title       String
+  content     String   @default("")
+  excerpt     String   @default("")
+  editorName  String   @default("admin")
+  revisionNote String @default("") @map("revision_note")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  post        BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@index([postId])
+  @@map("blog_revisions")
+}
+
+model BlogMedia {
+  id          Int      @id @default(autoincrement())
+  filename    String
+  url         String
+  mimeType    String   @default("") @map("mime_type")
+  altText     String   @default("") @map("alt_text")
+  title       String   @default("")
+  caption     String   @default("")
+  description String   @default("")
+  width       Int?     // pixel width
+  height      Int?     // pixel height
+  fileSize    Int?     @default(0) @map("file_size") // bytes
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("blog_media")
+}
+
+model BlogTag {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  slug        String   @unique
+  description String   @default("")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@map("blog_tags")
+}

@@ -13,8 +13,9 @@ import { ContactPage } from "@/components/elevate/pages/ContactPage";
 import { CareerPage } from "@/components/elevate/pages/CareerPage";
 import { PricingPage } from "@/components/elevate/pages/PricingPage";
 import { BlogPage } from "@/components/elevate/pages/BlogPage";
+import { BlogArticlePage } from "@/components/elevate/pages/BlogArticlePage";
 import { ServiceDetailPage } from "@/components/elevate/pages/ServiceDetailPage";
-import { AdminPage } from "@/components/elevate/pages/AdminPage";
+import { AdminAuth } from "@/components/elevate/AdminAuth";
 
 const routeTitles: Record<string, string> = {
   "/": "Home | ElevateEdge Digital",
@@ -61,7 +62,11 @@ export default function Home() {
   // Side effects on route change: update title + scroll to top.
   // (No setState here — page remount happens naturally via the `key` prop.)
   useEffect(() => {
-    document.title = routeTitles[currentPath] || "ElevateEdge Digital";
+    let title = routeTitles[currentPath];
+    if (!title && currentPath.startsWith("/blog/")) {
+      title = "Article | ElevateEdge Digital";
+    }
+    document.title = title || "ElevateEdge Digital";
     window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
   }, [currentPath]);
 
@@ -75,6 +80,13 @@ export default function Home() {
   };
 
   const renderPage = () => {
+    // Dynamic blog article route: /blog/<slug>
+    if (currentPath.startsWith("/blog/")) {
+      const slug = currentPath.slice("/blog/".length);
+      if (slug) {
+        return <BlogArticlePage slug={slug} onNavigate={navigate} />;
+      }
+    }
     switch (currentPath) {
       case "/":
         return <HomePage onNavigate={navigate} />;
@@ -117,7 +129,7 @@ export default function Home() {
       case "/blog":
         return <BlogPage onNavigate={navigate} />;
       case "/admin":
-        return <AdminPage onNavigate={navigate} />;
+        return <AdminAuth onNavigate={navigate} />;
       default:
         return <HomePage onNavigate={navigate} />;
     }

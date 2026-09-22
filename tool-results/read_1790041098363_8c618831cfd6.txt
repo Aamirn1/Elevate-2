@@ -1,0 +1,1224 @@
+     1→"use client";
+     2→
+     3→import { useEffect, useState, useCallback } from "react";
+     4→import { useScrollReveal } from "../useScrollReveal";
+     5→import { AdminTestimonials } from "./AdminTestimonials";
+     6→import { AdminBlog } from "./AdminBlog";
+     7→
+     8→interface AdminPageProps {
+     9→  onNavigate: (path: string) => void;
+    10→  onLogout?: () => void;
+    11→}
+    12→
+    13→interface Project {
+    14→  id: number;
+    15→  title: string;
+    16→  description: string;
+    17→  tags: string[];
+    18→  image: string;
+    19→  url: string;
+    20→  sortOrder: number | null;
+    21→  createdAt: string;
+    22→}
+    23→
+    24→interface Order {
+    25→  id: number;
+    26→  clientName: string;
+    27→  clientEmail: string;
+    28→  inviteCode: string | null;
+    29→  status: string;
+    30→  businessType: string | null;
+    31→  services: string | null;
+    32→  budget: string | null;
+    33→  message: string;
+    34→  createdAt: string;
+    35→}
+    36→
+    37→interface Partner {
+    38→  id: number;
+    39→  contactInfo: string;
+    40→  inviteCode: string;
+    41→  createdAt: string;
+    42→}
+    43→
+    44→const statusOptions = ["pending", "contact", "meeting", "order", "complete"];
+    45→
+    46→export function AdminPage({ onNavigate, onLogout }: AdminPageProps) {
+    47→  useScrollReveal();
+    48→  const [activeTab, setActiveTab] = useState<
+    49→    "projects" | "orders" | "partners" | "testimonials" | "blog"
+    50→  >("projects");
+    51→  const [projects, setProjects] = useState<Project[]>([]);
+    52→  const [orders, setOrders] = useState<Order[]>([]);
+    53→  const [partners, setPartners] = useState<Partner[]>([]);
+    54→  const [searchTerm, setSearchTerm] = useState("");
+    55→  const [expandedOrders, setExpandedOrders] = useState<number[]>([]);
+    56→
+    57→  // Form state
+    58→  const [editingId, setEditingId] = useState<number | null>(null);
+    59→  const [formData, setFormData] = useState({
+    60→    title: "",
+    61→    description: "",
+    62→    tags: "",
+    63→    image: "",
+    64→    url: "",
+    65→    sortOrder: "",
+    66→  });
+    67→  const [saving, setSaving] = useState(false);
+    68→
+    69→  // Auth is handled by AdminAuth wrapper; no localStorage check needed here.
+    70→
+    71→  const loadProjects = useCallback(async () => {
+    72→    try {
+    73→      const res = await fetch("/api/projects");
+    74→      const data = await res.json();
+    75→      setProjects(data);
+    76→    } catch (err) {
+    77→      console.error("Failed to load projects:", err);
+    78→    }
+    79→  }, []);
+    80→
+    81→  const loadOrders = useCallback(async () => {
+    82→    try {
+    83→      const res = await fetch(
+    84→        `/api/orders${
+    85→          searchTerm ? `?search=${encodeURIComponent(searchTerm)}` : ""
+    86→        }`
+    87→      );
+    88→      const data = await res.json();
+    89→      setOrders(data);
+    90→    } catch (err) {
+    91→      console.error("Failed to load orders:", err);
+    92→    }
+    93→  }, [searchTerm]);
+    94→
+    95→  const loadPartners = useCallback(async () => {
+    96→    try {
+    97→      const res = await fetch("/api/partners");
+    98→      const data = await res.json();
+    99→      setPartners(data);
+   100→    } catch (err) {
+   101→      console.error("Failed to load partners:", err);
+   102→    }
+   103→  }, []);
+   104→
+   105→  useEffect(() => {
+   106→    loadProjects();
+   107→    loadOrders();
+   108→  }, [loadProjects, loadOrders]);
+   109→
+   110→  // Reload orders when search changes (debounced)
+   111→  useEffect(() => {
+   112→    const t = setTimeout(loadOrders, 300);
+   113→    return () => clearTimeout(t);
+   114→  }, [searchTerm, loadOrders]);
+   115→
+   116→  const handleLogout = () => {
+   117→    if (onLogout) {
+   118→      onLogout();
+   119→    } else {
+   120→      onNavigate("/");
+   121→    }
+   122→  };
+   123→
+   124→  const handleEdit = (project: Project) => {
+   125→    setEditingId(project.id);
+   126→    setFormData({
+   127→      title: project.title,
+   128→      description: project.description,
+   129→      tags: Array.isArray(project.tags) ? project.tags.join(", ") : "",
+   130→      image: project.image,
+   131→      url: project.url,
+   132→      sortOrder: project.sortOrder?.toString() || "",
+   133→    });
+   134→    window.scrollTo({ top: 40, behavior: "smooth" });
+   135→  };
+   136→
+   137→  const handleCancelEdit = () => {
+   138→    setEditingId(null);
+   139→    setFormData({
+   140→      title: "",
+   141→      description: "",
+   142→      tags: "",
+   143→      image: "",
+   144→      url: "",
+   145→      sortOrder: "",
+   146→    });
+   147→  };
+   148→
+   149→  const handleDelete = async (id: number) => {
+   150→    if (!confirm("Are you sure you want to delete this project?")) return;
+   151→    try {
+   152→      await fetch(`/api/projects/${id}`, { method: "DELETE" });
+   153→      loadProjects();
+   154→    } catch (err) {
+   155→      alert("Error deleting project");
+   156→      console.error(err);
+   157→    }
+   158→  };
+   159→
+   160→  const handleSubmit = async (e: React.FormEvent) => {
+   161→    e.preventDefault();
+   162→    setSaving(true);
+   163→    const projectData = {
+   164→      title: formData.title,
+   165→      description: formData.description,
+   166→      tags: formData.tags.split(",").map((s) => s.trim()),
+   167→      image: formData.image,
+   168→      url: formData.url,
+   169→      sortOrder: formData.sortOrder,
+   170→    };
+   171→
+   172→    try {
+   173→      const res = await fetch(
+   174→        editingId ? `/api/projects/${editingId}` : "/api/projects",
+   175→        {
+   176→          method: editingId ? "PUT" : "POST",
+   177→          headers: { "Content-Type": "application/json" },
+   178→          body: JSON.stringify(projectData),
+   179→        }
+   180→      );
+   181→      if (!res.ok) throw new Error("Failed to save");
+   182→      handleCancelEdit();
+   183→      loadProjects();
+   184→    } catch (err) {
+   185→      console.error("Error saving:", err);
+   186→      alert("Error saving project.");
+   187→    } finally {
+   188→      setSaving(false);
+   189→    }
+   190→  };
+   191→
+   192→  const handleStatusChange = async (orderId: number, newStatus: string) => {
+   193→    try {
+   194→      await fetch(`/api/orders/${orderId}`, {
+   195→        method: "PUT",
+   196→        headers: { "Content-Type": "application/json" },
+   197→        body: JSON.stringify({ status: newStatus }),
+   198→      });
+   199→      setOrders((prev) =>
+   200→        prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
+   201→      );
+   202→    } catch (err) {
+   203→      console.error("Failed to update status:", err);
+   204→      alert("Error updating status.");
+   205→    }
+   206→  };
+   207→
+   208→  const toggleOrderExpand = (id: number) => {
+   209→    setExpandedOrders((prev) =>
+   210→      prev.includes(id) ? prev.filter((o) => o !== id) : [...prev, id]
+   211→    );
+   212→  };
+   213→
+   214→  const getPartnerForOrder = (inviteCode: string | null) => {
+   215→    if (!inviteCode) return null;
+   216→    return partners.find((p) => p.inviteCode === inviteCode) || null;
+   217→  };
+   218→
+   219→  return (
+   220→    <section
+   221→      className="admin-section"
+   222→      style={{
+   223→        padding: "160px 0 60px",
+   224→        minHeight: "100vh",
+   225→        background: "var(--bg)",
+   226→      }}
+   227→    >
+   228→      <div className="container">
+   229→        <div
+   230→          className="admin-header"
+   231→          style={{
+   232→            display: "flex",
+   233→            justifyContent: "space-between",
+   234→            alignItems: "center",
+   235→            marginBottom: "40px",
+   236→          }}
+   237→        >
+   238→          <h2>
+   239→            Admin <span className="gradient-text">Dashboard</span>
+   240→          </h2>
+   241→          <a
+   242→            href="#/"
+   243→            className="btn btn-outline"
+   244→            style={{ padding: "8px 16px", cursor: "pointer" }}
+   245→            onClick={(e) => {
+   246→              e.preventDefault();
+   247→              handleLogout();
+   248→            }}
+   249→          >
+   250→            <i className="fas fa-sign-out-alt"></i> Exit Admin
+   251→          </a>
+   252→        </div>
+   253→
+   254→        <div
+   255→          className="admin-grid"
+   256→          style={{
+   257→            display: "grid",
+   258→            gridTemplateColumns: "300px 1fr",
+   259→            gap: "40px",
+   260→            alignItems: "start",
+   261→          }}
+   262→        >
+   263→          {/* Left Sidebar */}
+   264→          <div
+   265→            className="admin-sidebar"
+   266→            style={{ display: "flex", flexDirection: "column", gap: "24px" }}
+   267→          >
+   268→            {/* Tab Navigation */}
+   269→            <div
+   270→              className="admin-tabs"
+   271→              style={{
+   272→                display: "flex",
+   273→                flexDirection: "column",
+   274→                gap: "10px",
+   275→                background: "var(--bg-card)",
+   276→                padding: "20px",
+   277→                borderRadius: "var(--radius-lg)",
+   278→                border: "1px solid var(--border)",
+   279→              }}
+   280→            >
+   281→              {[
+   282→                {
+   283→                  key: "projects" as const,
+   284→                  icon: "fa-project-diagram",
+   285→                  label: "Manage Projects",
+   286→                },
+   287→                {
+   288→                  key: "orders" as const,
+   289→                  icon: "fa-clipboard-list",
+   290→                  label: "Order Tracking",
+   291→                },
+   292→                {
+   293→                  key: "partners" as const,
+   294→                  icon: "fa-users-cog",
+   295→                  label: "Registered Partners",
+   296→                },
+   297→                {
+   298→                  key: "testimonials" as const,
+   299→                  icon: "fa-star",
+   300→                  label: "Testimonials",
+   301→                },
+   302→                {
+   303→                  key: "blog" as const,
+   304→                  icon: "fa-blog",
+   305→                  label: "Blog Management",
+   306→                },
+   307→              ].map((tab) => (
+   308→                <button
+   309→                  key={tab.key}
+   310→                  className={`btn admin-tab-btn ${
+   311→                    activeTab === tab.key ? "btn-primary" : "btn-outline"
+   312→                  }`}
+   313→                  style={{
+   314→                    width: "100%",
+   315→                    justifyContent: "flex-start",
+   316→                    transform: "none",
+   317→                    transition: "all 0.3s ease",
+   318→                    background:
+   319→                      activeTab === tab.key ? "" : "transparent",
+   320→                    border:
+   321→                      activeTab === tab.key
+   322→                        ? ""
+   323→                        : "1px solid transparent",
+   324→                    color:
+   325→                      activeTab === tab.key
+   326→                        ? "#fff"
+   327→                        : "var(--text-muted)",
+   328→                  }}
+   329→                  onClick={() => {
+   330→                    setActiveTab(tab.key);
+   331→                    if (tab.key === "orders") loadOrders();
+   332→                    if (tab.key === "projects") loadProjects();
+   333→                    if (tab.key === "partners") loadPartners();
+   334→                  }}
+   335→                >
+   336→                  <i className={`fas ${tab.icon}`}></i> {tab.label}
+   337→                </button>
+   338→              ))}
+   339→            </div>
+   340→
+   341→            {/* Add/Edit Form Card - only on projects tab */}
+   342→            {activeTab === "projects" && (
+   343→              <div
+   344→                className="admin-form-card"
+   345→                style={{
+   346→                  background: "var(--bg-card)",
+   347→                  padding: "30px",
+   348→                  borderRadius: "var(--radius-lg)",
+   349→                  border: "1px solid var(--border)",
+   350→                }}
+   351→              >
+   352→                <h3 style={{ marginBottom: "20px" }}>
+   353→                  {editingId ? "Edit Project" : "Add New Project"}
+   354→                </h3>
+   355→                <form onSubmit={handleSubmit}>
+   356→                  <div className="form-group">
+   357→                    <label>Project Title</label>
+   358→                    <input
+   359→                      type="text"
+   360→                      placeholder="e.g. Modern UI Kit"
+   361→                      required
+   362→                      value={formData.title}
+   363→                      onChange={(e) =>
+   364→                        setFormData({ ...formData, title: e.target.value })
+   365→                      }
+   366→                      style={{
+   367→                        width: "100%",
+   368→                        padding: "12px",
+   369→                        marginTop: "8px",
+   370→                        marginBottom: "16px",
+   371→                        background: "rgba(255,255,255,0.05)",
+   372→                        border: "1px solid var(--border)",
+   373→                        color: "#fff",
+   374→                        borderRadius: "var(--radius-md)",
+   375→                      }}
+   376→                    />
+   377→                  </div>
+   378→
+   379→                  <div className="form-group">
+   380→                    <label>Premium Sub-line (Description)</label>
+   381→                    <textarea
+   382→                      required
+   383→                      rows={3}
+   384→                      placeholder="Describe the project value..."
+   385→                      value={formData.description}
+   386→                      onChange={(e) =>
+   387→                        setFormData({
+   388→                          ...formData,
+   389→                          description: e.target.value,
+   390→                        })
+   391→                      }
+   392→                      style={{
+   393→                        width: "100%",
+   394→                        padding: "12px",
+   395→                        marginTop: "8px",
+   396→                        marginBottom: "16px",
+   397→                        background: "rgba(255,255,255,0.05)",
+   398→                        border: "1px solid var(--border)",
+   399→                        color: "#fff",
+   400→                        borderRadius: "var(--radius-md)",
+   401→                      }}
+   402→                    />
+   403→                  </div>
+   404→
+   405→                  <div className="form-group">
+   406→                    <label>Tags (Comma separated)</label>
+   407→                    <input
+   408→                      type="text"
+   409→                      placeholder="e.g. E-commerce, Premium, Web Design"
+   410→                      required
+   411→                      value={formData.tags}
+   412→                      onChange={(e) =>
+   413→                        setFormData({ ...formData, tags: e.target.value })
+   414→                      }
+   415→                      style={{
+   416→                        width: "100%",
+   417→                        padding: "12px",
+   418→                        marginTop: "8px",
+   419→                        marginBottom: "16px",
+   420→                        background: "rgba(255,255,255,0.05)",
+   421→                        border: "1px solid var(--border)",
+   422→                        color: "#fff",
+   423→                        borderRadius: "var(--radius-md)",
+   424→                      }}
+   425→                    />
+   426→                  </div>
+   427→
+   428→                  <div className="form-group">
+   429→                    <label>Project Image</label>
+   430→                    <input
+   431→                      type="text"
+   432→                      placeholder="Paste image URL"
+   433→                      required
+   434→                      value={formData.image}
+   435→                      onChange={(e) =>
+   436→                        setFormData({ ...formData, image: e.target.value })
+   437→                      }
+   438→                      style={{
+   439→                        width: "100%",
+   440→                        padding: "12px",
+   441→                        marginTop: "8px",
+   442→                        marginBottom: "16px",
+   443→                        background: "rgba(255,255,255,0.05)",
+   444→                        border: "1px solid var(--border)",
+   445→                        color: "#fff",
+   446→                        borderRadius: "var(--radius-md)",
+   447→                      }}
+   448→                    />
+   449→                  </div>
+   450→
+   451→                  <div className="form-group">
+   452→                    <label>Website URL</label>
+   453→                    <input
+   454→                      type="url"
+   455→                      placeholder="https://..."
+   456→                      required
+   457→                      value={formData.url}
+   458→                      onChange={(e) =>
+   459→                        setFormData({ ...formData, url: e.target.value })
+   460→                      }
+   461→                      style={{
+   462→                        width: "100%",
+   463→                        padding: "12px",
+   464→                        marginTop: "8px",
+   465→                        marginBottom: "16px",
+   466→                        background: "rgba(255,255,255,0.05)",
+   467→                        border: "1px solid var(--border)",
+   468→                        color: "#fff",
+   469→                        borderRadius: "var(--radius-md)",
+   470→                      }}
+   471→                    />
+   472→                  </div>
+   473→
+   474→                  <div className="form-group">
+   475→                    <label>Display Sequence</label>
+   476→                    <input
+   477→                      type="number"
+   478→                      placeholder="e.g. 1, 2, 3..."
+   479→                      min={1}
+   480→                      required
+   481→                      value={formData.sortOrder}
+   482→                      onChange={(e) =>
+   483→                        setFormData({ ...formData, sortOrder: e.target.value })
+   484→                      }
+   485→                      style={{
+   486→                        width: "100%",
+   487→                        padding: "12px",
+   488→                        marginTop: "8px",
+   489→                        marginBottom: "8px",
+   490→                        background: "rgba(255,255,255,0.05)",
+   491→                        border: "1px solid var(--border)",
+   492→                        color: "#fff",
+   493→                        borderRadius: "var(--radius-md)",
+   494→                      }}
+   495→                    />
+   496→                    <p
+   497→                      style={{
+   498→                        fontSize: "0.75rem",
+   499→                        color: "#a0a0a0",
+   500→                        marginBottom: "24px",
+   501→                      }}
+   502→                    >
+   503→                      Lower number = appears first in portfolio slider.
+   504→                    </p>
+   505→                  </div>
+   506→
+   507→                  <button
+   508→                    type="submit"
+   509→                    className="btn btn-primary"
+   510→                    style={{ width: "100%", justifyContent: "center" }}
+   511→                    disabled={saving}
+   512→                  >
+   513→                    {saving ? (
+   514→                      <i className="fas fa-spinner fa-spin"></i>
+   515→                    ) : (
+   516→                      <>
+   517→                        <i className="fas fa-save"></i> Save Project
+   518→                      </>
+   519→                    )}
+   520→                  </button>
+   521→                  {editingId && (
+   522→                    <button
+   523→                      type="button"
+   524→                      className="btn btn-outline"
+   525→                      style={{
+   526→                        width: "100%",
+   527→                        justifyContent: "center",
+   528→                        marginTop: "12px",
+   529→                      }}
+   530→                      onClick={handleCancelEdit}
+   531→                    >
+   532→                      Cancel Edit
+   533→                    </button>
+   534→                  )}
+   535→                </form>
+   536→              </div>
+   537→            )}
+   538→          </div>
+   539→
+   540→          {/* Main Content Area */}
+   541→          <div className="admin-main-content">
+   542→            {/* Projects View */}
+   543→            {activeTab === "projects" && (
+   544→              <div className="admin-tab-content">
+   545→                <div
+   546→                  className="admin-list-card"
+   547→                  style={{
+   548→                    background: "var(--bg-surface)",
+   549→                    padding: "30px",
+   550→                    borderRadius: "var(--radius-lg)",
+   551→                    border: "1px solid var(--border)",
+   552→                  }}
+   553→                >
+   554→                  <h3 style={{ marginBottom: "20px" }}>
+   555→                    Manage Projects ({projects.length})
+   556→                  </h3>
+   557→                  <div
+   558→                    style={{
+   559→                      display: "flex",
+   560→                      flexDirection: "column",
+   561→                      gap: "15px",
+   562→                    }}
+   563→                  >
+   564→                    {projects.length === 0 ? (
+   565→                      <p
+   566→                        style={{
+   567→                          color: "var(--text-muted)",
+   568→                          textAlign: "center",
+   569→                          padding: "20px",
+   570→                        }}
+   571→                      >
+   572→                        No projects found.
+   573→                      </p>
+   574→                    ) : (
+   575→                      projects.map((p) => (
+   576→                        <div
+   577→                          key={p.id}
+   578→                          className="admin-project-item"
+   579→                          style={{
+   580→                            display: "flex",
+   581→                            justifyContent: "space-between",
+   582→                            alignItems: "center",
+   583→                            background: "var(--bg-card)",
+   584→                            padding: "16px",
+   585→                            borderRadius: "var(--radius-md)",
+   586→                            border: "1px solid var(--border)",
+   587→                          }}
+   588→                        >
+   589→                          <div
+   590→                            style={{
+   591→                              display: "flex",
+   592→                              alignItems: "center",
+   593→                              gap: "16px",
+   594→                            }}
+   595→                          >
+   596→                            <div
+   597→                              style={{
+   598→                                minWidth: "32px",
+   599→                                height: "32px",
+   600→                                borderRadius: "50%",
+   601→                                background: "var(--primary)",
+   602→                                color: "#fff",
+   603→                                display: "flex",
+   604→                                alignItems: "center",
+   605→                                justifyContent: "center",
+   606→                                fontWeight: 700,
+   607→                                fontSize: "0.85rem",
+   608→                              }}
+   609→                            >
+   610→                              {p.sortOrder || "-"}
+   611→                            </div>
+   612→                            <img
+   613→                              src={p.image}
+   614→                              alt={p.title}
+   615→                              style={{
+   616→                                width: "50px",
+   617→                                height: "50px",
+   618→                                objectFit: "cover",
+   619→                                borderRadius: "6px",
+   620→                              }}
+   621→                            />
+   622→                            <div>
+   623→                              <h4
+   624→                                style={{
+   625→                                  margin: "0 0 4px 0",
+   626→                                  fontSize: "1.1rem",
+   627→                                }}
+   628→                              >
+   629→                                {p.title}
+   630→                              </h4>
+   631→                              <p
+   632→                                style={{
+   633→                                  margin: 0,
+   634→                                  fontSize: "0.8rem",
+   635→                                  color: "var(--text-muted)",
+   636→                                }}
+   637→                              >
+   638→                                {p.url}
+   639→                              </p>
+   640→                            </div>
+   641→                          </div>
+   642→                          <div style={{ display: "flex", gap: "10px" }}>
+   643→                            <button
+   644→                              className="btn btn-outline"
+   645→                              style={{ padding: "6px 12px", fontSize: "0.8rem" }}
+   646→                              onClick={() => handleEdit(p)}
+   647→                            >
+   648→                              <i className="fas fa-edit"></i> Edit
+   649→                            </button>
+   650→                            <button
+   651→                              className="btn btn-outline"
+   652→                              style={{
+   653→                                padding: "6px 12px",
+   654→                                fontSize: "0.8rem",
+   655→                                color: "#ff7675",
+   656→                                borderColor: "rgba(255, 118, 117, 0.3)",
+   657→                              }}
+   658→                              onClick={() => handleDelete(p.id)}
+   659→                            >
+   660→                              <i className="fas fa-trash"></i> Delete
+   661→                            </button>
+   662→                          </div>
+   663→                        </div>
+   664→                      ))
+   665→                    )}
+   666→                  </div>
+   667→                </div>
+   668→              </div>
+   669→            )}
+   670→
+   671→            {/* Orders View */}
+   672→            {activeTab === "orders" && (
+   673→              <div className="admin-tab-content">
+   674→                <div
+   675→                  className="admin-list-card"
+   676→                  style={{
+   677→                    background: "var(--bg-surface)",
+   678→                    padding: "30px",
+   679→                    borderRadius: "var(--radius-lg)",
+   680→                    border: "1px solid var(--border)",
+   681→                  }}
+   682→                >
+   683→                  <div
+   684→                    style={{
+   685→                      display: "flex",
+   686→                      justifyContent: "space-between",
+   687→                      alignItems: "center",
+   688→                      marginBottom: "20px",
+   689→                      gap: "16px",
+   690→                      flexWrap: "wrap",
+   691→                    }}
+   692→                  >
+   693→                    <h3 style={{ margin: 0 }}>
+   694→                      Order Tracking ({orders.length})
+   695→                    </h3>
+   696→                    <div
+   697→                      style={{ position: "relative", width: "250px", maxWidth: "100%" }}
+   698→                    >
+   699→                      <i
+   700→                        className="fas fa-search"
+   701→                        style={{
+   702→                          position: "absolute",
+   703→                          left: "12px",
+   704→                          top: "50%",
+   705→                          transform: "translateY(-50%)",
+   706→                          color: "var(--text-muted)",
+   707→                          fontSize: "0.9rem",
+   708→                        }}
+   709→                      />
+   710→                      <input
+   711→                        type="text"
+   712→                        placeholder="Search client email..."
+   713→                        value={searchTerm}
+   714→                        onChange={(e) => setSearchTerm(e.target.value)}
+   715→                        style={{
+   716→                          width: "100%",
+   717→                          padding: "8px 12px 8px 35px",
+   718→                          background: "rgba(255,255,255,0.05)",
+   719→                          border: "1px solid var(--border)",
+   720→                          borderRadius: "var(--radius-md)",
+   721→                          color: "#fff",
+   722→                          fontSize: "0.85rem",
+   723→                        }}
+   724→                      />
+   725→                    </div>
+   726→                  </div>
+   727→                  <div
+   728→                    style={{
+   729→                      display: "flex",
+   730→                      flexDirection: "column",
+   731→                      gap: "15px",
+   732→                    }}
+   733→                  >
+   734→                    {orders.length === 0 ? (
+   735→                      <p
+   736→                        style={{
+   737→                          color: "var(--text-muted)",
+   738→                          textAlign: "center",
+   739→                          padding: "20px",
+   740→                        }}
+   741→                      >
+   742→                        No orders matched your search.
+   743→                      </p>
+   744→                    ) : (
+   745→                      orders.map((o) => {
+   746→                        const partner = getPartnerForOrder(o.inviteCode);
+   747→                        const isExpanded = expandedOrders.includes(o.id);
+   748→                        const date = new Date(o.createdAt).toLocaleString();
+   749→                        return (
+   750→                          <div
+   751→                            key={o.id}
+   752→                            className="admin-order-item"
+   753→                            style={{
+   754→                              background: "var(--bg-card)",
+   755→                              borderRadius: "var(--radius-md)",
+   756→                              border: `1px solid ${
+   757→                                isExpanded ? "var(--primary)" : "var(--border)"
+   758→                              }`,
+   759→                              overflow: "hidden",
+   760→                              transition: "all 0.3s ease",
+   761→                            }}
+   762→                          >
+   763→                            <div
+   764→                              className="order-header"
+   765→                              style={{
+   766→                                padding: "20px",
+   767→                                display: "grid",
+   768→                                gridTemplateColumns:
+   769→                                  "1.5fr 1fr 1.5fr 150px 30px",
+   770→                                gap: "15px",
+   771→                                alignItems: "center",
+   772→                                cursor: "pointer",
+   773→                                userSelect: "none",
+   774→                              }}
+   775→                              onClick={() => toggleOrderExpand(o.id)}
+   776→                            >
+   777→                              <div>
+   778→                                <h4
+   779→                                  style={{
+   780→                                    margin: "0 0 5px",
+   781→                                    fontSize: "1rem",
+   782→                                    color: "#fff",
+   783→                                  }}
+   784→                                >
+   785→                                  {o.clientName || "N/A"}
+   786→                                </h4>
+   787→                                <p
+   788→                                  style={{
+   789→                                    margin: 0,
+   790→                                    fontSize: "0.82rem",
+   791→                                    color: "var(--primary)",
+   792→                                  }}
+   793→                                >
+   794→                                  {o.clientEmail}
+   795→                                </p>
+   796→                                <span
+   797→                                  style={{
+   798→                                    fontSize: "0.7rem",
+   799→                                    color: "var(--text-muted)",
+   800→                                  }}
+   801→                                >
+   802→                                  {date}
+   803→                                </span>
+   804→                              </div>
+   805→                              <div>
+   806→                                <span
+   807→                                  style={{
+   808→                                    display: "block",
+   809→                                    fontSize: "0.7rem",
+   810→                                    color: "var(--text-muted)",
+   811→                                    marginBottom: "4px",
+   812→                                  }}
+   813→                                >
+   814→                                  Invitation Code
+   815→                                </span>
+   816→                                <code
+   817→                                  style={{
+   818→                                    background: "rgba(255,255,255,0.05)",
+   819→                                    padding: "3px 6px",
+   820→                                    borderRadius: "4px",
+   821→                                    fontSize: "0.8rem",
+   822→                                    color: "var(--primary)",
+   823→                                  }}
+   824→                                >
+   825→                                  {o.inviteCode || "Direct"}
+   826→                                </code>
+   827→                              </div>
+   828→                              <div>
+   829→                                <span
+   830→                                  style={{
+   831→                                    display: "block",
+   832→                                    fontSize: "0.7rem",
+   833→                                    color: "var(--text-muted)",
+   834→                                    marginBottom: "4px",
+   835→                                  }}
+   836→                                >
+   837→                                  Partner Contact
+   838→                                </span>
+   839→                                {partner ? (
+   840→                                  <div
+   841→                                    style={{
+   842→                                      display: "flex",
+   843→                                      alignItems: "center",
+   844→                                      gap: "8px",
+   845→                                    }}
+   846→                                  >
+   847→                                    <i
+   848→                                      className={`fab fa-${
+   849→                                        partner.contactInfo.includes(
+   850→                                          "linkedin.com"
+   851→                                        )
+   852→                                          ? "linkedin"
+   853→                                          : "whatsapp"
+   854→                                      }`}
+   855→                                      style={{
+   856→                                        color: "var(--primary)",
+   857→                                        fontSize: "0.85rem",
+   858→                                      }}
+   859→                                    ></i>
+   860→                                    <span
+   861→                                      style={{
+   862→                                        fontSize: "0.8rem",
+   863→                                        color: "#fff",
+   864→                                      }}
+   865→                                    >
+   866→                                      {partner.contactInfo}
+   867→                                    </span>
+   868→                                  </div>
+   869→                                ) : (
+   870→                                  <span
+   871→                                    style={{
+   872→                                      fontSize: "0.8rem",
+   873→                                      color: "var(--text-muted)",
+   874→                                    }}
+   875→                                  >
+   876→                                    No partner match
+   877→                                  </span>
+   878→                                )}
+   879→                              </div>
+   880→                              <div style={{ textAlign: "right" }}>
+   881→                                <select
+   882→                                  className="status-selector"
+   883→                                  value={o.status}
+   884→                                  onClick={(e) => e.stopPropagation()}
+   885→                                  onChange={(e) =>
+   886→                                    handleStatusChange(
+   887→                                      o.id,
+   888→                                      e.target.value
+   889→                                    )
+   890→                                  }
+   891→                                  style={{
+   892→                                    background: "rgba(255,255,255,0.05)",
+   893→                                    color: "#fff",
+   894→                                    border: "1px solid var(--border)",
+   895→                                    padding: "5px 8px",
+   896→                                    borderRadius: "var(--radius-md)",
+   897→                                    fontSize: "0.75rem",
+   898→                                    cursor: "pointer",
+   899→                                    width: "100%",
+   900→                                  }}
+   901→                                >
+   902→                                  {statusOptions.map((s) => (
+   903→                                    <option key={s} value={s}>
+   904→                                      {s.charAt(0).toUpperCase() + s.slice(1)}
+   905→                                    </option>
+   906→                                  ))}
+   907→                                </select>
+   908→                              </div>
+   909→                              <div style={{ textAlign: "center" }}>
+   910→                                <i
+   911→                                  className="fas fa-chevron-down toggle-icon"
+   912→                                  style={{
+   913→                                    color: "var(--text-muted)",
+   914→                                    transition: "transform 0.3s ease",
+   915→                                    transform: isExpanded
+   916→                                      ? "rotate(180deg)"
+   917→                                      : "rotate(0deg)",
+   918→                                  }}
+   919→                                ></i>
+   920→                              </div>
+   921→                            </div>
+   922→
+   923→                            {isExpanded && (
+   924→                              <div
+   925→                                className="order-details-body"
+   926→                                style={{
+   927→                                  padding: "0 20px 20px",
+   928→                                  borderTop: "1px solid var(--border)",
+   929→                                  background: "rgba(255,255,255,0.01)",
+   930→                                }}
+   931→                              >
+   932→                                <div
+   933→                                  className="order-details-grid"
+   934→                                  style={{
+   935→                                    display: "grid",
+   936→                                    gridTemplateColumns:
+   937→                                      "repeat(auto-fit, minmax(180px, 1fr))",
+   938→                                    gap: "15px",
+   939→                                    paddingTop: "15px",
+   940→                                  }}
+   941→                                >
+   942→                                  <div>
+   943→                                    <span
+   944→                                      style={{
+   945→                                        display: "block",
+   946→                                        fontSize: "0.75rem",
+   947→                                        color: "var(--text-muted)",
+   948→                                        marginBottom: "4px",
+   949→                                      }}
+   950→                                    >
+   951→                                      Business Type
+   952→                                    </span>
+   953→                                    <span
+   954→                                      style={{
+   955→                                        fontSize: "0.85rem",
+   956→                                        color: "#fff",
+   957→                                      }}
+   958→                                    >
+   959→                                      {o.businessType || "Not specified"}
+   960→                                    </span>
+   961→                                  </div>
+   962→                                  <div>
+   963→                                    <span
+   964→                                      style={{
+   965→                                        display: "block",
+   966→                                        fontSize: "0.75rem",
+   967→                                        color: "var(--text-muted)",
+   968→                                        marginBottom: "4px",
+   969→                                      }}
+   970→                                    >
+   971→                                      Budget (USD)
+   972→                                    </span>
+   973→                                    <span
+   974→                                      style={{
+   975→                                        fontSize: "0.85rem",
+   976→                                        color: "var(--primary)",
+   977→                                        fontWeight: 600,
+   978→                                      }}
+   979→                                    >
+   980→                                      {o.budget || "Not specified"}
+   981→                                    </span>
+   982→                                  </div>
+   983→                                  <div>
+   984→                                    <span
+   985→                                      style={{
+   986→                                        display: "block",
+   987→                                        fontSize: "0.75rem",
+   988→                                        color: "var(--text-muted)",
+   989→                                        marginBottom: "4px",
+   990→                                      }}
+   991→                                    >
+   992→                                      Services Requested
+   993→                                    </span>
+   994→                                    <span
+   995→                                      style={{
+   996→                                        fontSize: "0.85rem",
+   997→                                        color: "#fff",
+   998→                                      }}
+   999→                                    >
+  1000→                                      {o.services
+  1001→                                        ? o.services
+  1002→                                            .split(",")
+  1003→                                            .join(", ")
+  1004→                                        : "Not specified"}
+  1005→                                    </span>
+  1006→                                  </div>
+  1007→                                </div>
+  1008→                                <div
+  1009→                                  style={{
+  1010→                                    marginTop: "20px",
+  1011→                                    background: "rgba(255,255,255,0.02)",
+  1012→                                    padding: "12px",
+  1013→                                    borderRadius: "var(--radius-md)",
+  1014→                                    border: "1px solid var(--border)",
+  1015→                                  }}
+  1016→                                >
+  1017→                                  <span
+  1018→                                    style={{
+  1019→                                      display: "block",
+  1020→                                      fontSize: "0.75rem",
+  1021→                                      color: "var(--text-muted)",
+  1022→                                      marginBottom: "6px",
+  1023→                                    }}
+  1024→                                  >
+  1025→                                    Full Requirements &amp; Message
+  1026→                                  </span>
+  1027→                                  <p
+  1028→                                    style={{
+  1029→                                      margin: 0,
+  1030→                                      fontSize: "0.85rem",
+  1031→                                      color: "#fff",
+  1032→                                      lineHeight: 1.6,
+  1033→                                      whiteSpace: "pre-wrap",
+  1034→                                    }}
+  1035→                                  >
+  1036→                                    {o.message || "No message provided"}
+  1037→                                  </p>
+  1038→                                </div>
+  1039→                              </div>
+  1040→                            )}
+  1041→                          </div>
+  1042→                        );
+  1043→                      })
+  1044→                    )}
+  1045→                  </div>
+  1046→                </div>
+  1047→              </div>
+  1048→            )}
+  1049→
+  1050→            {/* Partners View */}
+  1051→            {activeTab === "partners" && (
+  1052→              <div className="admin-tab-content">
+  1053→                <div
+  1054→                  className="admin-list-card"
+  1055→                  style={{
+  1056→                    background: "var(--bg-surface)",
+  1057→                    padding: "30px",
+  1058→                    borderRadius: "var(--radius-lg)",
+  1059→                    border: "1px solid var(--border)",
+  1060→                  }}
+  1061→                >
+  1062→                  <div
+  1063→                    style={{
+  1064→                      display: "flex",
+  1065→                      justifyContent: "space-between",
+  1066→                      alignItems: "center",
+  1067→                      marginBottom: "20px",
+  1068→                    }}
+  1069→                  >
+  1070→                    <h3 style={{ margin: 0 }}>
+  1071→                      Registered Partners ({partners.length})
+  1072→                    </h3>
+  1073→                    <button
+  1074→                      className="btn btn-outline"
+  1075→                      style={{ padding: "6px 12px", fontSize: "0.8rem" }}
+  1076→                      onClick={loadPartners}
+  1077→                    >
+  1078→                      <i className="fas fa-sync"></i> Refresh
+  1079→                    </button>
+  1080→                  </div>
+  1081→                  <div
+  1082→                    style={{
+  1083→                      display: "flex",
+  1084→                      flexDirection: "column",
+  1085→                      gap: "15px",
+  1086→                    }}
+  1087→                  >
+  1088→                    {partners.length === 0 ? (
+  1089→                      <p
+  1090→                        style={{
+  1091→                          color: "var(--text-muted)",
+  1092→                          textAlign: "center",
+  1093→                          padding: "20px",
+  1094→                        }}
+  1095→                      >
+  1096→                        No partners registered yet.
+  1097→                      </p>
+  1098→                    ) : (
+  1099→                      partners.map((p) => {
+  1100→                        const date = new Date(p.createdAt).toLocaleDateString();
+  1101→                        return (
+  1102→                          <div
+  1103→                            key={p.id}
+  1104→                            className="admin-partner-item"
+  1105→                            style={{
+  1106→                              background: "var(--bg-card)",
+  1107→                              borderRadius: "var(--radius-md)",
+  1108→                              border: "1px solid var(--border)",
+  1109→                              padding: "20px",
+  1110→                              display: "grid",
+  1111→                              gridTemplateColumns: "1fr 1fr 1.5fr",
+  1112→                              gap: "15px",
+  1113→                              alignItems: "center",
+  1114→                            }}
+  1115→                          >
+  1116→                            <div>
+  1117→                              <span
+  1118→                                style={{
+  1119→                                  display: "block",
+  1120→                                  fontSize: "0.7rem",
+  1121→                                  color: "var(--text-muted)",
+  1122→                                  marginBottom: "4px",
+  1123→                                }}
+  1124→                              >
+  1125→                                Registered Date
+  1126→                              </span>
+  1127→                              <span
+  1128→                                style={{ fontSize: "0.85rem", color: "#fff" }}
+  1129→                              >
+  1130→                                {date}
+  1131→                              </span>
+  1132→                            </div>
+  1133→                            <div>
+  1134→                              <span
+  1135→                                style={{
+  1136→                                  display: "block",
+  1137→                                  fontSize: "0.7rem",
+  1138→                                  color: "var(--text-muted)",
+  1139→                                  marginBottom: "4px",
+  1140→                                }}
+  1141→                              >
+  1142→                                Invitation Code
+  1143→                              </span>
+  1144→                              <code
+  1145→                                style={{
+  1146→                                  background: "rgba(255,255,255,0.05)",
+  1147→                                  padding: "3px 6px",
+  1148→                                  borderRadius: "4px",
+  1149→                                  fontSize: "0.9rem",
+  1150→                                  color: "var(--primary)",
+  1151→                                  fontWeight: "bold",
+  1152→                                }}
+  1153→                              >
+  1154→                                {p.inviteCode}
+  1155→                              </code>
+  1156→                            </div>
+  1157→                            <div>
+  1158→                              <span
+  1159→                                style={{
+  1160→                                  display: "block",
+  1161→                                  fontSize: "0.7rem",
+  1162→                                  color: "var(--text-muted)",
+  1163→                                  marginBottom: "4px",
+  1164→                                }}
+  1165→                              >
+  1166→                                Contact Information
+  1167→                              </span>
+  1168→                              <div
+  1169→                                style={{
+  1170→                                  display: "flex",
+  1171→                                  alignItems: "center",
+  1172→                                  gap: "8px",
+  1173→                                }}
+  1174→                              >
+  1175→                                <i
+  1176→                                  className={`fab fa-${
+  1177→                                    p.contactInfo.includes("linkedin.com")
+  1178→                                      ? "linkedin"
+  1179→                                      : "whatsapp"
+  1180→                                  }`}
+  1181→                                  style={{
+  1182→                                    color: "var(--primary)",
+  1183→                                    fontSize: "1rem",
+  1184→                                  }}
+  1185→                                ></i>
+  1186→                                <span
+  1187→                                  style={{
+  1188→                                    fontSize: "0.9rem",
+  1189→                                    color: "#fff",
+  1190→                                  }}
+  1191→                                >
+  1192→                                  {p.contactInfo}
+  1193→                                </span>
+  1194→                              </div>
+  1195→                            </div>
+  1196→                          </div>
+  1197→                        );
+  1198→                      })
+  1199→                    )}
+  1200→                  </div>
+  1201→                </div>
+  1202→              </div>
+  1203→            )}
+  1204→
+  1205→            {/* Testimonials View */}
+  1206→            {activeTab === "testimonials" && (
+  1207→              <div className="admin-tab-content">
+  1208→                <AdminTestimonials />
+  1209→              </div>
+  1210→            )}
+  1211→
+  1212→            {/* Blog Management View */}
+  1213→            {activeTab === "blog" && (
+  1214→              <div className="admin-tab-content">
+  1215→                <AdminBlog onNavigate={onNavigate} />
+  1216→              </div>
+  1217→            )}
+  1218→          </div>
+  1219→        </div>
+  1220→      </div>
+  1221→    </section>
+  1222→  );
+  1223→}
+  1224→

@@ -2,9 +2,12 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useScrollReveal } from "../useScrollReveal";
+import { AdminTestimonials } from "./AdminTestimonials";
+import { AdminBlog } from "./AdminBlog";
 
 interface AdminPageProps {
   onNavigate: (path: string) => void;
+  onLogout?: () => void;
 }
 
 interface Project {
@@ -40,11 +43,11 @@ interface Partner {
 
 const statusOptions = ["pending", "contact", "meeting", "order", "complete"];
 
-export function AdminPage({ onNavigate }: AdminPageProps) {
+export function AdminPage({ onNavigate, onLogout }: AdminPageProps) {
   useScrollReveal();
-  const [activeTab, setActiveTab] = useState<"projects" | "orders" | "partners">(
-    "projects"
-  );
+  const [activeTab, setActiveTab] = useState<
+    "projects" | "orders" | "partners" | "testimonials" | "blog"
+  >("projects");
   const [projects, setProjects] = useState<Project[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
   const [partners, setPartners] = useState<Partner[]>([]);
@@ -63,12 +66,7 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
   });
   const [saving, setSaving] = useState(false);
 
-  // Session check
-  useEffect(() => {
-    if (localStorage.getItem("admin_logged_in") !== "true") {
-      onNavigate("/");
-    }
-  }, [onNavigate]);
+  // Auth is handled by AdminAuth wrapper; no localStorage check needed here.
 
   const loadProjects = useCallback(async () => {
     try {
@@ -116,8 +114,11 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
   }, [searchTerm, loadOrders]);
 
   const handleLogout = () => {
-    localStorage.removeItem("admin_logged_in");
-    onNavigate("/");
+    if (onLogout) {
+      onLogout();
+    } else {
+      onNavigate("/");
+    }
   };
 
   const handleEdit = (project: Project) => {
@@ -292,6 +293,16 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                   key: "partners" as const,
                   icon: "fa-users-cog",
                   label: "Registered Partners",
+                },
+                {
+                  key: "testimonials" as const,
+                  icon: "fa-star",
+                  label: "Testimonials",
+                },
+                {
+                  key: "blog" as const,
+                  icon: "fa-blog",
+                  label: "Blog Management",
                 },
               ].map((tab) => (
                 <button
@@ -1188,6 +1199,20 @@ export function AdminPage({ onNavigate }: AdminPageProps) {
                     )}
                   </div>
                 </div>
+              </div>
+            )}
+
+            {/* Testimonials View */}
+            {activeTab === "testimonials" && (
+              <div className="admin-tab-content">
+                <AdminTestimonials />
+              </div>
+            )}
+
+            {/* Blog Management View */}
+            {activeTab === "blog" && (
+              <div className="admin-tab-content">
+                <AdminBlog onNavigate={onNavigate} />
               </div>
             )}
           </div>
