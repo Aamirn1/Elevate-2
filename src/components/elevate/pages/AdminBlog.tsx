@@ -12,8 +12,23 @@
  */
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { useScrollReveal } from "../useScrollReveal";
-import { BlogEditor } from "../admin/BlogEditor";
+
+// Dynamically import BlogEditor (TipTap + lowlight) to prevent SSR/hydration crashes.
+// The editor is only loaded when the user opens the article editor view.
+const BlogEditor = dynamic(
+  () => import("../admin/BlogEditor").then((m) => m.BlogEditor),
+  {
+    ssr: false,
+    loading: () => (
+      <div style={{ padding: "40px", textAlign: "center", color: "var(--text-muted)" }}>
+        <i className="fas fa-spinner fa-spin" style={{ fontSize: "1.5rem" }}></i>
+        <div style={{ marginTop: "12px" }}>Loading editor…</div>
+      </div>
+    ),
+  }
+);
 
 /* ------------------------------------------------------------------ */
 /* Types                                                              */
