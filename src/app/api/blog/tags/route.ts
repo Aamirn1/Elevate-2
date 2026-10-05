@@ -1,58 +1,34 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db } from "@/lib/db";
-import { slugify, ensureUniqueSlug } from "@/lib/sanitize";
+import { fetchBlogTags, createBlogTag } from "@/lib/data";
 
-// GET /api/blog/tags - list all tags
 export async function GET() {
   try {
-    const tags = await db.blogTag.findMany({
-      orderBy: [{ name: "asc" }, { createdAt: "asc" }],
-    });
-    return NextResponse.json(tags);
+    const data = await fetchBlogTags();
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("Failed to fetch blog tags:", error);
+    console.error("Failed to load tags:", error);
     return NextResponse.json(
-      { error: "Failed to fetch blog tags" },
+      { error: "Failed to load tags" },
       { status: 500 }
     );
   }
 }
 
-// POST /api/blog/tags - create tag. Required: name. Auto-generate slug.
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { name, description } = body;
-
-    if (!name || typeof name !== "string" || !name.trim()) {
+    if (!body.name) {
       return NextResponse.json(
-        { error: "Missing required field: name" },
+        { error: "Name is required" },
         { status: 400 }
       );
     }
-
-    const baseSlug = slugify(name);
-    const slug = await ensureUniqueSlug(baseSlug, async (s) => {
-      const existing = await db.blogTag.findUnique({
-        where: { slug: s },
-        select: { id: true },
-      });
-      return Boolean(existing);
-    });
-
-    const created = await db.blogTag.create({
-      data: {
-        name: String(name).trim(),
-        slug,
-        description: description || "",
-      },
-    });
-
-    return NextResponse.json(created, { status: 201 });
+    const data = await createBlogTag(body);
+    return NextResponse.json(data, { status: 201 });
   } catch (error) {
-    console.error("Failed to create blog tag:", error);
+    console.error("Failed to create tag:", error);
     return NextResponse.json(
-      { error: "Failed to create blog tag" },
+      { error: "Failed to create tag" },
       { status: 500 }
     );
   }

@@ -744,3 +744,165 @@
    744→- Immediately-render:false for SSR safety in Next.js
    745→- Lint passes (0 errors) and TypeScript compiles cleanly for BlogEditor.tsx — ready to be imported by AdminBlog (sibling agent's task)
    746→
+   747→---
+   748→Task ID: 7
+   749→Agent: AdminBlog Component Agent
+   750→Task: Build WordPress-style blog management admin component (AdminBlog.tsx)
+   751→
+   752→Work Log:
+   753→- Read /home/z/my-project/worklog.md to understand prior context (full Elevate-Edge migration, TipTap v3.31.3 installed Task 2b, blog API routes built Task 4, BlogEditor TipTap component built Task 8 with 19 extensions + sticky toolbar)
+   754→- Inspected existing AdminPage.tsx — confirmed `import { AdminBlog } from "./AdminBlog"` already in place at line 6, and AdminBlog is rendered inside `admin-tab-content` div when activeTab === "blog". Dev server was failing with "Module not found: Can't resolve './AdminBlog'" because file didn't exist yet — creating it unblocks the build.
+   755→- Inspected BlogEditor.tsx — confirmed exported `BlogEditorProps` interface: `value`, `onChange`, `onWordCountChange?`, `onCharCountChange?`, `placeholder?`. Component is named export `export function BlogEditor`.
+   756→- Inspected blog API routes to confirm request/response shapes (GET list with admin=1/status=all/search/category/orderby/order → {items,total}; dashboard returns 9 stat fields; GET [id]?admin=1 returns single post without view increment; POST creates with auto-slug+readingTime; PUT accepts partial fields with x-editor header for revision tracking; DELETE soft→permanent flow)
+   757→- Inspected Prisma BlogPost model to confirm field names (all 24 editable fields beyond id/timestamps)
+   758→- Inspected AdminTestimonials.tsx styling pattern (inline styles with CSS vars, reusable style objects, btn classes, Font Awesome icons)
+   759→- Confirmed eslint config: exhaustive-deps OFF, no-explicit-any OFF, no-img-element OFF, set-state-in-effect is the only enforced rule
+   760→- Created /home/z/my-project/src/components/elevate/pages/AdminBlog.tsx (~2100 lines) implementing the full WordPress-style blog management UI with two views:
+   761→
+   762→  **Dashboard view**:
+   763→  * 8 stat cards (auto-fit responsive grid) using STAT_CARDS config: Total Articles, Published (green), Draft (amber), Scheduled (blue), Archived (gray), Total Views, Categories, Tags
+   764→  * Filters row: search (debounced 300ms), category dropdown, status dropdown (all/published/draft/scheduled/archived/trash), sort dropdown (newest/oldest/views/title), "Add New Article" primary button
+   765→  * Bulk-action bar: "{N} selected" + Bulk Publish / Bulk Draft / Bulk Delete buttons + Clear
+   766→  * Articles table with 10 columns: checkbox, thumbnail (60×40), title (clickable→editor + sub-line /slug), author, category.name, tags (first 3 + overflow), status badge (color pill), published date, views, actions dropdown
+   767→  * Actions dropdown: Edit, Preview (window.open /#/blog/slug), Duplicate, Publish/Unpublish toggle, Move to Draft, Schedule (prompt), Delete (soft→permanent confirm)
+   768→  * Refresh + View Blog buttons in dashboard header
+   769→
+   770→  **Editor view** (full-width, two-column flex — main ~65% + sidebar 320px sticky):
+   771→  * Top toolbar: "← Dashboard" (dirty-confirm), "Edit/New Article" heading + spinner, autosave indicator, Save Draft / Preview / Publish-or-Unpublish / Schedule / Delete (red) buttons
+   772→  * Main column: title input (transparent, 1.8rem bold) + slug sub-row with auto-regenerate; excerpt textarea; featured image URL + preview; BlogEditor (TipTap) with word/char/reading-time footer
+   773→  * Right sidebar (7 panels): Publish (status+publishedAt+publish/save draft+schedule), Category (dropdown+quick add), Tags (csv input+suggestion chips), Featured Image (URL+alt+preview), Author (name+bio+avatar), SEO (collapsible — title/desc/keyword/canonical/robots), Social (collapsible — OG+Twitter)
+   774→
+   775→  **State & lifecycle**:
+   776→  * view/editId/form/slugEdited for editor; posts/stats/categories/tags for dashboard; searchInput+searchQuery+filterCategory+filterStatus+sortBy for filters; selectedIds Set for bulk; openMenu for actions; wordCount/charCount/savingStatus/lastSavedAt/statusMsg/scheduleInput for editor status
+   777→  * formRef+lastSavedRef for autosave comparison (JSON.stringify equality)
+   778→  * Effects: initial load of dashboard/categories/tags; reload posts on filter change; 300ms search debounce; beforeunload warning when dirty; 30s autosave interval that PUTs current form when changed and carefully doesn't clobber mid-flight user input (functional setState equality check)
+   779→
+   780→  **persistPost(nextForm, mode)** — POST if no editId (captures returned id), PUT if existing (sends x-editor:admin header for revision tracking); syncs slug/dates/status with server response after save; refreshes dashboard stats. Variants: saveDraft / publishNow (title-required guard) / unpublish / schedulePost (validates non-empty input) / deleteCurrent (window.confirm + DELETE + backToDashboard)
+   781→
+   782→  **Form helpers**: updateForm(patch) merges via functional setState and recalculates dirty; handleTitleChange auto-generates slug via slugify unless slugEdited=true; handleSlugChange sets slugEdited flag.
+   783→
+   784→  **Helpers**: slugify, formatDate, formatTime, isoToLocalInput (for datetime-local input), statusBadge (color/label per status)
+   785→
+   786→- Removed 4 unused `// eslint-disable-next-line @next/next/no-img-element` comments after first lint pass flagged them as unused (the rule is already disabled in eslint config)
+   787→- Smoke-tested via curl against running dev server:
+   788→  * GET /api/blog?admin=1&orderby=createdAt&order=desc → returned 6 posts with category + parsed tags, total 6
+   789→  * GET /api/blog/dashboard → {totalArticles:6, published:6, totalViews:1, categories:6, tags:15}
+   790→  * GET /api/blog/categories → 6 categories with postCount
+   791→  * GET /api/blog/tags → 15 tags sorted by name
+   792→  * GET / → 200 (home page renders, dev server no longer crashes — was 500 before file creation)
+   793→- Ran `npx eslint src/components/elevate/pages/AdminBlog.tsx` → exit 0 (0 errors, 0 warnings)
+   794→- Ran `npx tsc --noEmit --skipLibCheck` → no errors in AdminBlog.tsx
+   795→- Ran `bun run lint` → exit 1, BUT only due to a pre-existing error in src/components/elevate/AdminAuth.tsx:19 (setState-in-effect — `if (stored === "1") setAuthed(true);` inside useEffect). This error existed BEFORE this task, was explicitly called out in Task 8's work record ("the pre-existing repo-wide lint error in `src/components/elevate/AdminAuth.tsx:19` (setState-in-effect) belongs to a different agent's task and is NOT part of BlogEditor"), and is therefore out of scope for AdminBlog Component Agent. My file (AdminBlog.tsx) introduces ZERO new errors and ZERO warnings.
+   796→- Wrote work record to `/home/z/my-project/agent-ctx/7-AdminBlog-Component-Agent.md`
+   797→
+   798→Stage Summary:
+   799→- /home/z/my-project/src/components/elevate/pages/AdminBlog.tsx created (~2100 lines) — unblocks the previously-broken build (AdminPage.tsx was failing to resolve './AdminBlog' before this file existed; dev server was returning HTTP 500 on /).
+   800→- Full WordPress-style blog admin with two views: dashboard (stats + filters + bulk actions + sortable table with actions dropdown) and editor (TipTap BlogEditor + 7 sidebar panels for publish/category/tags/featured image/author/SEO/social).
+   801→- All API integration per spec: dashboard stats, list (with filters/sort/pagination), single get (admin lookup, no view increment), create, partial update (with x-editor header for revision tracking), delete (soft→permanent), categories list, tags list, quick category creation.
+   802→- Robust editor lifecycle: 30s autosave using formRef+lastSavedRef comparison (no closure-staleness), dirty flag with beforeunload protection, slug auto-generation with manual-edit detection, autosave doesn't clobber mid-flight user input (functional setState equality check), datetime-local input conversion helper for scheduledAt.
+   803→- All actions exposed per spec: per-row Edit/Preview/Duplicate/Publish-Unpublish/Move-to-Draft/Schedule/Delete; bulk Publish/Draft/Delete; quick category creation; status badge color-coding; reading-time footer ("N words • M characters • ~X min read").
+   804→- 100% inline-styled with CSS vars and Font Awesome icons.
+   805→- `useScrollReveal()` imported from `../useScrollReveal`; `BlogEditor` imported from `../admin/BlogEditor` (correct admin subfolder per spec).
+   806→- Lint result: 0 errors, 0 warnings for AdminBlog.tsx specifically (verified via `npx eslint src/components/elevate/pages/AdminBlog.tsx` → exit 0).
+   807→- `bun run lint` exits 1 only due to a pre-existing error in src/components/elevate/AdminAuth.tsx:19 (a different agent's task — Task 8 work record explicitly disclaimed this file). My code introduces no new lint errors.
+   808→- TypeScript: 0 errors in AdminBlog.tsx (verified via `npx tsc --noEmit --skipLibCheck | grep AdminBlog` → empty).
+   809→- Dev server now compiles cleanly ("✓ Compiled in 2.1s" in dev.log) and home page returns HTTP 200.
+   810→- Ready to be wired into AdminPage via the already-existing `import { AdminBlog } from "./AdminBlog"` line and rendered when activeTab === "blog".
+   811→
+   812→---
+   813→Task ID: 9+10
+   814→Agent: Public Blog Pages Agent
+   815→Task: Build redesigned BlogPage listing + BlogArticlePage full article view
+   816→
+   817→Work Log:
+   818→- Read /home/z/my-project/worklog.md to understand prior context (Elevate-Edge migration to Next.js 16 + TS + Prisma, blog API routes built in Task 4 with GET /api/blog?status=published&category=&search=&limit=&offset= returning {items,total}, GET /api/blog/[id-or-slug] auto-detects numeric id vs slug and increments views for public slug lookups, GET /api/blog/categories returns array of {id,name,slug,...,postCount}; TipTap editor + AdminBlog already built and linting cleanly)
+   819→- Inspected existing BlogPage.tsx (hardcoded 6 posts using service-card class), useScrollReveal hook (auto-observes .reveal + re-scans every 1s for dynamically loaded content), ServicesPage hero pattern, globals.css for .service-card (padding 36px/28px, gradient bg, hover translateY -8px) and confirmed .services-section/.services-grid (auto-fit minmax 270px 1fr, gap 24px)
+   820→- Confirmed API response shapes via curl: GET /api/blog returns {items: BlogPost[], total: number} with each post having {id, title, slug, excerpt, content, coverImage, coverAlt, author, authorBio, authorAvatar, categoryId, category: {id,name,slug}|null, tags: string[], status, views, readingTime, publishedAt, createdAt}; GET /api/blog/categories returns array with {id,name,slug,description,...,postCount}; GET /api/blog/<slug> returns single post (404 if not found) and increments views
+   821→- Created /home/z/my-project/src/components/elevate/pages/BlogPage.tsx (~789 lines) as a "use client" component:
+   822→  * Preserved hero section exactly (badge "Our Blog" + fa-blog, h1 with gradient-text "Insights &" + text-muted "Industry Tips", hero-sub paragraph)
+   823→  * Category filter bar (All + each category from /api/blog/categories) — pill buttons with active gradient-primary background + white text, inactive pills use bg-card + border
+   824→  * Search input with fa-search icon prefix, debounced 300ms via setTimeout/setSearchQuery, resets offset to 0 on search change
+   825→  * Blog grid uses services-grid CSS class — each card is <article className="service-card reveal"> with 16:9 cover image (object-cover) + fallback fa-image icon if no coverImage, category overlay pill (top-left, black bg + white text + uppercase), title (h3, clickable + hover-color to primary), excerpt (3-line clamp via -webkit-box), author row (avatar or initial circle + author + reading time + date), "Read More" btn btn-primary (navigates to /blog/<slug>)
+   826→  * Card click handler triggers onNavigate(`/blog/${slug}`) — wired through article onClick, title onClick (stopPropagation), button onClick (stopPropagation)
+   827→  * Pagination (only if total > 12): Prev/Next buttons with disabled state at boundaries, "Page X of Y" label, PAGE_SIZE=12 increments
+   828→  * Loading state: 6 skeleton cards with .blog-skeleton-shimmer class (CSS animation in globals.css)
+   829→  * Empty state: "No articles found" with fa-newspaper icon + clear-filters button (if search or category was applied)
+   830→  * Error state: error message + Retry button that re-calls loadPosts
+   831→  * CTA section preserved exactly ("Ready to Elevate Your Business?" + Order Now button to /contact)
+   832→  * Dates formatted via toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) → "Jan 15, 2026"
+   833→- Created /home/z/my-project/src/components/elevate/pages/BlogArticlePage.tsx (~810 lines) as a "use client" component:
+   834→  * Props: { slug: string; onNavigate: (path: string) => void }
+   835→  * Back button at top (fa-arrow-left + "Back to Blog") → onNavigate("/blog") with hover gap animation
+   836→  * Article hero: category badge (uppercase, primary-tinted bg), large h1 title (clamp 1.8-2.6rem responsive), author row with avatar (or initial circle) + author name + date + reading time + view count, all separated with ·
+   837→  * Cover image full-width 16:9 with rounded border (only if coverImage present)
+   838→  * Article content rendered via <div className="blog-article-content" dangerouslySetInnerHTML={{__html: post.content}} /> — content already sanitized by API per Task 4
+   839→  * Tags pills below content (#tag format) if tags array non-empty
+   840→  * Share buttons: WhatsApp (wa.me), Facebook (sharer.php), X/Twitter (intent/tweet), LinkedIn (sharing/share-offsite), Copy Link (navigator.clipboard.writeText with "Copied!" feedback for 2s) — each opens in new tab with noopener noreferrer, hover color matches brand color
+   841→  * Author bio card (only if authorBio exists) — 70px avatar (or initial circle with gradient-primary bg + primary border), "Written by" label, author name h3, bio paragraph
+   842→  * Related articles: fetches 3 from same category (excluding current post), falls back to latest if fewer than 3 available, displayed as RelatedCard components with cover image + title (2-line clamp) + reading time + date
+   843→  * CTA section: "Want Results Like These?" + "Order Now" button to /contact
+   844→  * Loading state: spinner (CSS keyframe blog-spin) + skeleton blocks for title/hero/image/paragraphs
+   845→  * 404 state: fa-search icon + "Article not found" h1 + explanation + Back to Blog button
+   846→  * useEffect on [slug] fetches post by slug; resets state on slug change; scrolls to top on mount
+   847→- Added CSS to /home/z/my-project/src/app/globals.css for:
+   848→  * .blog-skeleton-shimmer + @keyframes blog-skeleton-shimmer (background-position scroll animation for loading skeletons)
+   849→  * .blog-article-content typography rules: h1-h6 (sized 2rem→0.95rem, bold, 1.3 line-height, 1.6em top margin), p (1.1em bottom margin, 1.85 line-height), a (primary color, underline, hover to primary-light), ul/ol (disc/decimal, 1.6em padding-left), blockquote (primary left border, primary-tinted bg, italic, muted text), img (max-width 100%, 10px border-radius, 1.4em margins), figure (centered, 1.6em margins), figcaption (italic, 0.85rem, muted), pre (#0d0d18 dark bg, monospace 0.88rem, 10px radius, overflow-x auto), code (primary-tinted bg, primary-light color, monospace, 5px radius), pre code (transparent bg, inherits), table (100% width, border-collapse, 0.92rem), th/td (1px border, 10px/14px padding, th has primary-tinted bg + bold), hr (2px border-top, 2em margins), mark (yellow-tinted bg), iframe (16:9 aspect ratio, 10px radius), [data-youtube-video] + .youtube-wrapper (responsive 16:9 iframe container), ul[data-type="taskList"] (flex layout for TipTap task lists)
+   850→- Wired up dynamic blog article route in /home/z/my-project/src/app/page.tsx:
+   851→  * Imported BlogArticlePage from "@/components/elevate/pages/BlogArticlePage"
+   852→  * Added pre-switch check in renderPage(): if currentPath.startsWith("/blog/") and slug non-empty, render <BlogArticlePage slug={slug} onNavigate={navigate} />
+   853→  * Updated useEffect to set document.title to "Article | ElevateEdge Digital" for /blog/<slug> paths (routeTitles map only has exact strings)
+   854→- Removed 6 unused `// eslint-disable-next-line @next/next/no-img-element` comments via sed across both files (the rule is disabled in eslint.config.mjs so the directives produced "Unused eslint-disable directive" warnings)
+   855→- Ran `bun run lint` → exit 0 (0 errors, 0 warnings) — clean
+   856→- Smoke-tested API endpoints via curl:
+   857→  * GET /api/blog?status=published&limit=12&offset=0 → 200, returns {items: [...6 posts], total: 6}
+   858→  * GET /api/blog/categories → 200, returns 6 categories with postCount
+   859→  * GET /api/blog/mobile-first-design-why-it-matters-more-than-ever → 200, returns single post + increments views
+   860→  * GET /api/blog?status=published&category=web-design&search=design&limit=12&offset=0 → 200, returns filtered items correctly
+   861→  * GET / → 200 (home page renders without errors)
+   862→- Wrote work record to /home/z/my-project/agent-ctx/9+10-Public-Blog-Pages-Agent.md
+   863→- Verified dev.log shows no compile errors — Next.js compiled cleanly and all API requests return 200
+   864→
+   865→Stage Summary:
+   866→- 2 new files created:
+   867→  1. /home/z/my-project/src/components/elevate/pages/BlogPage.tsx (~789 lines) — redesigned blog listing with hero section, category filter pills, debounced search input, services-grid of cards (cover image + category overlay + title + excerpt + author row + Read More button), Prev/Next pagination, skeleton loading state, empty state, error state, preserved CTA section
+   868→  2. /home/z/my-project/src/components/elevate/pages/BlogArticlePage.tsx (~810 lines) — full article view with back button, article hero (category badge + title + author row), cover image, article content via dangerouslySetInnerHTML in .blog-article-content class, tags, share buttons (WhatsApp/Facebook/X/LinkedIn/Copy Link with feedback), author bio card, related articles (3 from same category with fallback to latest), CTA section, loading skeleton, 404 state
+   869→- Modified files:
+   870→  1. /home/z/my-project/src/app/globals.css — added .blog-skeleton-shimmer keyframe animation + comprehensive .blog-article-content typography rules covering all TipTap editor output (h1-h6, p, ul, ol, li, blockquote, pre, code, a, img, figure, figcaption, table, th, td, hr, mark, iframe, [data-youtube-video], .youtube-wrapper, ul[data-type=taskList])
+   871→  2. /home/z/my-project/src/app/page.tsx — imported BlogArticlePage, added dynamic /blog/<slug> route check before switch statement, added "Article | ElevateEdge Digital" document title fallback for blog article routes
+   872→- API integration per spec:
+   873→  - BlogPage uses GET /api/blog?status=published&limit=12&offset=N&category=<slug>&search=<text> for listing + pagination
+   874→  - BlogPage uses GET /api/blog/categories for category pills
+   875→  - BlogArticlePage uses GET /api/blog/<slug> for single article (auto-increments views via API)
+   876→  - BlogArticlePage uses GET /api/blog?status=published&category=<cat-slug>&limit=4 for related posts (excludes current, falls back to latest if <3 from same category)
+   877→- Card click behavior: clicking cover image, title, or "Read More" button all call onNavigate(`/blog/${post.slug}`)
+   878→- All CSS uses existing classes from globals.css (hero, hero-content, hero-badge, gradient-text, hero-sub, services-section, services-grid, service-card, cta-section, btn btn-primary, btn-pulse, reveal) + new .blog-article-content + .blog-skeleton-shimmer classes
+   879→- Lint passes with 0 errors, 0 warnings — all 6 unused eslint-disable directive warnings were resolved by removing the no-longer-needed directives
+   880→- Dev server compiles cleanly (no errors in dev.log) and home page returns HTTP 200; blog list/categories/article/filtered APIs all return 200
+   881→
+   882→---
+   883→Task ID: 5+5b+6+7+8+9+10+11
+   884→Agent: Main Build Agent (Admin + Blog System)
+   885→Task: Build complete admin panel (testimonials + blog management) + WordPress-style blog editor + public blog pages + routing + auth gate
+   886→
+   887→Work Log:
+   888→- Task 5 (AdminAuth): Built password gate component using useSyncExternalStore + useState for immediate UI updates. Password verified locally (@#$&16609) + API parity call. Login form with lock icon, error handling, loading state. Session persistence via sessionStorage + custom event for cross-component sync.
+   889→- Task 5b (AdminPage): Updated AdminPage to accept onLogout prop, removed broken localStorage auth check (now handled by AdminAuth), added 2 new tabs (Testimonials, Blog Management) to the tab navigation, rendering AdminTestimonials and AdminBlog components.
+   890→- Task 6 (AdminTestimonials): Built full CRUD component with drag-and-drop reordering (HTML5 drag API), add/edit form (name, role, avatar, rating 1-5, quote, company, companyUrl, featured, published toggles), star ratings, featured/published badges, edit/hide/feature/delete actions per card.
+   891→- Task 8 (BlogEditor): Built via subagent — full TipTap v3 rich-text editor with 20+ extensions, sticky toolbar (bold/italic/underline/strikethrough/subscript/superscript, H1-H4, color picker, highlight, alignment, lists, blockquote, code block with syntax highlighting, link with prompt, image insertion, YouTube embed, table creation, horizontal rule, clear formatting, undo/redo), character/word count, cursor-jump protection, placeholder.
+   892→- Task 7 (AdminBlog): Built via subagent — WordPress-style blog management with dashboard (8 stat cards), article table (checkbox, thumbnail, title, author, category, tags, status badge, published date, views, actions dropdown with Edit/Preview/Duplicate/Publish/Unpublish/Schedule/Delete), filters (search, category, status, sort), bulk actions (bulk publish/draft/delete), full-page article editor (title, slug auto-generate, excerpt, featured image, TipTap BlogEditor, right sidebar with Publish/Category/Tags/Featured Image/Author/SEO/Social panels, 30-second autosave, dirty flag with beforeunload warning).
+   893→- Task 9 (BlogPage redesign): Built via subagent — redesigned public blog listing with hero, category filter bar, search, blog cards (cover image, category badge, title, excerpt, author/date/reading time, Read More button), pagination, loading skeleton, empty/error states.
+   894→- Task 10 (BlogArticlePage): Built via subagent — full article view with back button, article hero (category badge, title, author row), cover image, article content (dangerouslySetInnerHTML with styled typography for all TipTap output), tags, 5 share buttons (WhatsApp/Facebook/X/LinkedIn/Copy Link), author bio card, 3 related articles, CTA section.
+   895→- Task 11 (Routing): Updated page.tsx — replaced AdminPage with AdminAuth (password gate) for /admin route, added dynamic /blog/:slug route (checks currentPath.startsWith("/blog/") before switch), imported BlogArticlePage, added "Article | ElevateEdge Digital" title fallback.
+   896→- Fixed AdminAuth SSR hydration issue: initial readStored() returned "" on server → used useSyncExternalStore for SSR-safe sessionStorage reading + useState for immediate local UI updates on login/logout.
+   897→
+   898→Stage Summary:
+   899→- Complete blog management system built: Prisma schema (BlogPost, BlogCategory, BlogRevision, BlogMedia, BlogTag, Testimonial) + 14 API routes + TipTap rich-text editor + WordPress-style admin dashboard + public blog listing + article detail page
+   900→- Admin panel now has 5 tabs: Manage Projects, Order Tracking, Registered Partners, Testimonials (new), Blog Management (new)
+   901→- Admin password gate: /admin requires password @#$&16609, stored in sessionStorage, login form with lock icon
+   902→- Testimonials: full CRUD with drag-to-reorder, featured/published toggles, star ratings
+   903→- Blog: dashboard with 8 stat cards, article table with filters/bulk actions, full-page editor with TipTap, 30-second autosave, SEO panel, social/OG panel, scheduling, revisions
+   904→- Public blog: redesigned listing with category filter + search + pagination, full article view with share buttons + related articles
+   905→- Routing: /admin → AdminAuth (password gate), /blog → BlogPage, /blog/:slug → BlogArticlePage
+   906→- Lint passes with 0 errors
+   907→- Verified in browser: admin login works, 5 tabs visible, blog dashboard shows stats + filters + table, blog listing shows cards with cover images + category filter + search
+   908→
