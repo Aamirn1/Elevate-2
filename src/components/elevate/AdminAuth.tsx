@@ -110,11 +110,13 @@ export function AdminAuth({ onNavigate }: AdminAuthProps) {
           alignItems: "center",
           justifyContent: "center",
           background: "var(--gradient-hero)",
-          padding: "20px",
+          padding: "100px 20px 40px",
+          position: "relative",
+          zIndex: 1,
         }}
       >
         <div
-          className="admin-login-card reveal"
+          className="admin-login-card"
           style={{
             maxWidth: "440px",
             width: "100%",
